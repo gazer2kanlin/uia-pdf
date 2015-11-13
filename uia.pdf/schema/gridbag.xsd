@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        xmlns:uia="http://gridbag.pdf.uia/layout"
+        targetNamespace="http://gridbag.pdf.uia/layout"
+        elementFormDefault="qualified"
+        version="1.0">
+		
+    <element name="gridbag" type="uia:GridBagType" nillable="false" />
+    <complexType name="GridBagType" mixed="false">
+    	<sequence>
+    		<element name="layout">
+				<complexType>
+			        <sequence>
+						<element name="grid" type="uia:GridType" maxOccurs="unbounded"></element>
+			        </sequence>
+				</complexType>
+    		</element>
+    	</sequence>
+    </complexType>
+
+    <complexType name="GridType">
+    	<sequence>
+    		<element name="columns">
+				<complexType>
+			        <sequence>
+						<element name="column" type="uia:ColumnType" maxOccurs="unbounded"></element>
+			        </sequence>
+				</complexType>
+    		</element>
+    		<element name="row" type="uia:RowType" maxOccurs="unbounded"></element>
+    	</sequence>
+    	<attribute name="name" type="string" use="required"></attribute>
+    	<attribute name="x" type="string" use="required"></attribute>
+    	<attribute name="y" type="string" use="required"></attribute>
+    	<attribute name="width" type="string" use="required"></attribute>
+    	<attribute name="height" type="string" use="required"></attribute>
+    	<attribute name="borderEnabled" type="boolean" default="true"></attribute>
+    	<attribute name="borderSize" type="float" default="1.0"></attribute>
+    	<attribute name="borderColor" type="string" default="0,0,0"></attribute>
+        <attribute name="fontSize" type="int" default="9" />
+    </complexType>
+    
+    <complexType name="ColumnType">
+    	<attribute name="width" type="string" use="required"></attribute>
+    	<attribute name="background" type="string"></attribute>
+    </complexType>
+
+    <complexType name="RowType">
+        <sequence>
+            <choice maxOccurs="unbounded">
+    		<element name="textCell" type="uia:TextCellType"></element>
+    		<element name="bindCell" type="uia:BindCellType"></element>
+    		<element name="layoutCell" type="uia:LayoutCellType"></element>
+    		<element name="bindLayoutCell" type="uia:BindLayoutCellType"></element>
+            </choice>
+    	</sequence>
+    	<attribute name="background" type="string"></attribute>
+    	<attribute name="height" type="string" use="required"></attribute>
+    	<attribute name="borderSize" type="float" default="0.5"></attribute>
+        <attribute name="fontSize" type="int" />
+    </complexType>
+    
+    <complexType name="CellType" abstract="true">
+    	<attribute name="background" type="string"></attribute>
+    	<attribute name="rowspan" type="int" default="1"></attribute>
+    	<attribute name="colspan" type="int" default="1"></attribute>
+    	<attribute name="borderSize" type="float" default="0.5"></attribute>
+    	<attribute name="borderColor" type="string"></attribute>
+    </complexType>
+
+    <complexType name="TextCellType">
+        <complexContent>
+            <extension base="uia:CellType">
+		    	<sequence>
+		    		<element name="text">
+					    <complexType>
+					        <simpleContent>
+					            <extension base="string">
+							    	<attribute name="foreground" type="string" default="0,0,0"></attribute>
+					                <attribute name="fontSize" type="int" />
+					            </extension>
+					        </simpleContent>
+					    </complexType>
+		    		</element>
+		    		<element name="subtext">
+					    <complexType>
+					        <simpleContent>
+					            <extension base="string">
+							    	<attribute name="foreground" type="string" default="0,0,0"></attribute>
+					                <attribute name="fontSize" type="int" />
+					            </extension>
+					        </simpleContent>
+					    </complexType>
+		    		</element>
+		    	</sequence>
+		    	<attribute name="alignment" type="string" default="CENTER"></attribute>
+		    </extension>
+	    </complexContent>
+    </complexType>
+
+    <complexType name="BindCellType">
+        <complexContent>
+            <extension base="uia:CellType">
+		    	<sequence>
+		    		<element name="id" type="string"></element>
+		    		<element name="renderer" type="string"></element>
+		    	</sequence>
+		    </extension>
+	    </complexContent>
+    </complexType>
+
+    <complexType name="LayoutCellType">
+        <complexContent>
+            <extension base="uia:CellType">
+		    	<sequence>
+		    		<element name="gridbag">
+						<complexType>
+					        <sequence>
+								<element name="grid" type="uia:GridType" maxOccurs="unbounded"></element>
+					        </sequence>
+						</complexType>
+		    		</element>
+		    	</sequence>
+		    </extension>
+	    </complexContent>
+    </complexType>
+    
+    <complexType name="BindLayoutCellType">
+        <complexContent>
+            <extension base="uia:LayoutCellType">
+		    	<sequence>
+		    		<element name="id" type="string"></element>
+			   	</sequence>
+		    </extension>
+	    </complexContent>
+    </complexType>
+</schema>

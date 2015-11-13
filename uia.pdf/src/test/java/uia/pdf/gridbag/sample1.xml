@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gridbag>
+	<layout>
+		<grid name="grid1" x="0" y="0" width="100%" height="100%">
+			<columns>
+				<column width="100"></column>
+				<column width="+30%"></column>
+				<column width="200"></column>
+				<column width="+100%"></column>
+			</columns>
+			<row height="30">
+				<textCell>
+					<text>text11</text>
+					<subtext>Subtext</subtext>
+				</textCell>
+				<textCell rowspan="3">
+					<text>text112</text>
+					<subtext>Subtext</subtext>
+				</textCell>
+				<textCell>
+					<text>text13</text>
+					<subtext>Subtext</subtext>
+				</textCell>
+				<textCell>
+					<text>text14</text>
+					<subtext>Subtext</subtext>
+				</textCell>
+			</row>
+			<row height="30">
+				<textCell rowspan="3">
+					<text>text21</text>
+					<subtext>Subtext</subtext>
+				</textCell>
+				<bindCell>
+					<id>fullName</id>
+				</bindCell>
+				<textCell>
+					<text>text24</text>
+					<subtext>Subtext</subtext>
+				</textCell>
+			</row>
+			<row height="30">
+				<textCell rowspan="2" colspan="2">
+					<text>text33</text>
+					<subtext>Subtext</subtext>
+				</textCell>
+			</row>
+			<row height="+50%">
+				<textCell>
+					<text>text42</text>
+					<subtext>Subtext</subtext>
+				</textCell>
+			</row>
+			<row height="+100%">
+				<textCell>
+					<text>text51</text>
+					<subtext>Subtext</subtext>
+				</textCell>
+				<textCell>
+					<text>text52</text>
+					<subtext>Subtext</subtext>
+				</textCell>
+				<textCell>
+					<text>text53</text>
+					<subtext>Subtext</subtext>
+				</textCell>
+				<textCell>
+					<text>text54</text>
+					<subtext>Subtext</subtext>
+				</textCell>
+			</row>
+		</grid>
+	</layout>
+</gridbag>

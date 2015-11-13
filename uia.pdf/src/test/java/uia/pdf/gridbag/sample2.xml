@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gridbag>
+	<layout>
+		<grid name="grid1" x="0" y="0" width="100%" height="50%">
+			<columns>
+				<column width="100"></column>
+				<column width="+30%"></column>
+				<column width="200"></column>
+				<column width="+100%"></column>
+			</columns>
+			<row height="100">
+				<textCell>
+					<text>text</text>
+					<subtext>Subtext</subtext>
+				</textCell>
+				<bindCell>
+					<id>firstName</id>
+				</bindCell>
+				<textCell>
+					<text>text</text>
+					<subtext>Subtext</subtext>
+				</textCell>
+				<textCell>
+					<text>text</text>
+					<subtext>Subtext</subtext>
+				</textCell>
+			</row>
+			<row height="+100%">
+				<textCell>
+					<text>text</text>
+					<subtext>Subtext</subtext>
+				</textCell>
+				<textCell>
+					<text>text</text>
+					<subtext>Subtext</subtext>
+				</textCell>
+				<textCell>
+					<text>text</text>
+					<subtext>Subtext</subtext>
+				</textCell>
+				<textCell>
+					<text>text</text>
+					<subtext>Subtext</subtext>
+				</textCell>
+			</row>
+		</grid>
+		<grid name="grid2" x="55%" y="55%" width="+100%" height="+100%">
+			<columns>
+				<column width="70"></column>
+				<column width="+30%"></column>
+				<column width="80"></column>
+				<column width="+100%"></column>
+			</columns>
+			<row height="30">
+				<textCell>
+					<text>text</text>
+					<subtext>Subtext</subtext>
+				</textCell>
+				<textCell rowspan="3"></textCell>
+				<textCell>
+					<text>text</text>
+					<subtext>Subtext</subtext>
+				</textCell>
+				<textCell>
+					<text>text</text>
+					<subtext>Subtext</subtext>
+				</textCell>
+			</row>
+			<row height="30">
+				<textCell rowspan="3"></textCell>
+				<textCell>
+					<text>text</text>
+					<subtext>Subtext</subtext>
+				</textCell>
+				<textCell>
+					<text>text</text>
+					<subtext>Subtext</subtext>
+				</textCell>
+			</row>
+			<row height="30">
+				<textCell rowspan="2" colspan="2"></textCell>
+			</row>
+			<row height="+50%">
+				<textCell>
+					<text>text</text>
+					<subtext>Subtext</subtext>
+				</textCell>
+			</row>
+			<row height="+100%">
+				<textCell>
+					<text>text</text>
+					<subtext>Subtext</subtext>
+				</textCell>
+				<textCell>
+					<text>text</text>
+					<subtext>Subtext</subtext>
+				</textCell>
+				<textCell>
+					<text>text</text>
+					<subtext>Subtext</subtext>
+				</textCell>
+				<textCell>
+					<text>text</text>
+					<subtext>Subtext</subtext>
+				</textCell>
+			</row>
+		</grid>
+	</layout>
+</gridbag>
