@@ -1,10 +1,3 @@
-//
-// 此檔案是由 JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.8-b130911.1802 所產生 
-// 請參閱 <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// 一旦重新編譯來源綱要, 對此檔案所做的任何修改都將會遺失. 
-// 產生時間: 2015.11.13 於 12:31:05 PM CST 
-//
-
 
 package uia.pdf.gridbag.layout;
 
@@ -15,9 +8,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>ColumnType complex type 的 Java 類別.
+ * <p>Java class for ColumnType complex type.
  * 
- * <p>下列綱要片段會指定此類別中包含的預期內容.
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="ColumnType">
@@ -36,13 +29,13 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "ColumnType")
 public class ColumnType {
 
-    @XmlAttribute(name = "width", required = true)
+    @XmlAttribute(required = true)
     protected String width;
-    @XmlAttribute(name = "background")
+    @XmlAttribute
     protected String background;
 
     /**
-     * 取得 width 特性的值.
+     * Gets the value of the width property.
      * 
      * @return
      *     possible object is
@@ -54,7 +47,7 @@ public class ColumnType {
     }
 
     /**
-     * 設定 width 特性的值.
+     * Sets the value of the width property.
      * 
      * @param value
      *     allowed object is
@@ -66,7 +59,7 @@ public class ColumnType {
     }
 
     /**
-     * 取得 background 特性的值.
+     * Gets the value of the background property.
      * 
      * @return
      *     possible object is
@@ -78,7 +71,7 @@ public class ColumnType {
     }
 
     /**
-     * 設定 background 特性的值.
+     * Sets the value of the background property.
      * 
      * @param value
      *     allowed object is

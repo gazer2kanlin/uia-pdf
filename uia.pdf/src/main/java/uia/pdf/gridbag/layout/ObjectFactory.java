@@ -1,10 +1,3 @@
-//
-// 此檔案是由 JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.8-b130911.1802 所產生 
-// 請參閱 <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// 一旦重新編譯來源綱要, 對此檔案所做的任何修改都將會遺失. 
-// 產生時間: 2015.11.13 於 12:31:05 PM CST 
-//
-
 
 package uia.pdf.gridbag.layout;
 
@@ -31,37 +24,13 @@ import javax.xml.namespace.QName;
 @XmlRegistry
 public class ObjectFactory {
 
-    private final static QName _Gridbag_QNAME = new QName("http://gridbag.pdf.uia/layout", "gridbag");
+    private final static QName _Layout_QNAME = new QName("http://gridbag.pdf.uia/layout", "layout");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: uia.pdf.gridbag.layout
      * 
      */
     public ObjectFactory() {
-    }
-
-    /**
-     * Create an instance of {@link GridType }
-     * 
-     */
-    public GridType createGridType() {
-        return new GridType();
-    }
-
-    /**
-     * Create an instance of {@link LayoutCellType }
-     * 
-     */
-    public LayoutCellType createLayoutCellType() {
-        return new LayoutCellType();
-    }
-
-    /**
-     * Create an instance of {@link TextCellType }
-     * 
-     */
-    public TextCellType createTextCellType() {
-        return new TextCellType();
     }
 
     /**
@@ -73,11 +42,19 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link ColumnType }
+     * Create an instance of {@link GridBagType.Columns }
      * 
      */
-    public ColumnType createColumnType() {
-        return new ColumnType();
+    public GridBagType.Columns createGridBagTypeColumns() {
+        return new GridBagType.Columns();
+    }
+
+    /**
+     * Create an instance of {@link TextType }
+     * 
+     */
+    public TextType createTextType() {
+        return new TextType();
     }
 
     /**
@@ -89,11 +66,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link BindLayoutCellType }
+     * Create an instance of {@link ColumnType }
      * 
      */
-    public BindLayoutCellType createBindLayoutCellType() {
-        return new BindLayoutCellType();
+    public ColumnType createColumnType() {
+        return new ColumnType();
     }
 
     /**
@@ -105,52 +82,44 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link GridType.Columns }
+     * Create an instance of {@link TextCellType }
      * 
      */
-    public GridType.Columns createGridTypeColumns() {
-        return new GridType.Columns();
+    public TextCellType createTextCellType() {
+        return new TextCellType();
     }
 
     /**
-     * Create an instance of {@link LayoutCellType.Gridbag }
+     * Create an instance of {@link LayoutType }
      * 
      */
-    public LayoutCellType.Gridbag createLayoutCellTypeGridbag() {
-        return new LayoutCellType.Gridbag();
+    public LayoutType createLayoutType() {
+        return new LayoutType();
     }
 
     /**
-     * Create an instance of {@link TextCellType.Text }
+     * Create an instance of {@link GridBagType.Rows }
      * 
      */
-    public TextCellType.Text createTextCellTypeText() {
-        return new TextCellType.Text();
+    public GridBagType.Rows createGridBagTypeRows() {
+        return new GridBagType.Rows();
     }
 
     /**
-     * Create an instance of {@link TextCellType.Subtext }
+     * Create an instance of {@link ImageCellType }
      * 
      */
-    public TextCellType.Subtext createTextCellTypeSubtext() {
-        return new TextCellType.Subtext();
+    public ImageCellType createImageCellType() {
+        return new ImageCellType();
     }
 
     /**
-     * Create an instance of {@link GridBagType.Layout }
+     * Create an instance of {@link JAXBElement }{@code <}{@link LayoutType }{@code >}}
      * 
      */
-    public GridBagType.Layout createGridBagTypeLayout() {
-        return new GridBagType.Layout();
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link GridBagType }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://gridbag.pdf.uia/layout", name = "gridbag")
-    public JAXBElement<GridBagType> createGridbag(GridBagType value) {
-        return new JAXBElement<GridBagType>(_Gridbag_QNAME, GridBagType.class, null, value);
+    @XmlElementDecl(namespace = "http://gridbag.pdf.uia/layout", name = "layout")
+    public JAXBElement<LayoutType> createLayout(LayoutType value) {
+        return new JAXBElement<LayoutType>(_Layout_QNAME, LayoutType.class, null, value);
     }
 
 }

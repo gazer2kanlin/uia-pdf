@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        xmlns:uia="http://grid.pdf.uia/layout"
+        targetNamespace="http://grid.pdf.uia/layout"
+        elementFormDefault="qualified"
+        version="1.0">
+		
+    <element name="layout" type="uia:LayoutType" nillable="false" />
+    <complexType name="LayoutType" mixed="false">
+    	<sequence>
+			<element name="grid" type="uia:GridType" maxOccurs="unbounded"></element>
+    	</sequence>
+    </complexType>
+
+    <complexType name="GridType">
+    	<sequence>
+    		<element name="columns">
+				<complexType>
+			        <sequence>
+						<element name="column" type="uia:ColumnType" maxOccurs="unbounded"></element>
+			        </sequence>
+			    	<attribute name="height" type="int" default="13"></attribute>
+			        <attribute name="fontSize" type="int" />
+			        <attribute name="background" type="string" default="212,212,212" />
+				</complexType>
+    		</element>
+    	</sequence>
+    	<attribute name="name" type="string" use="required"></attribute>
+        <attribute name="fontSize" type="int" default="9" />
+    </complexType>
+    
+    <complexType name="ColumnType">
+        <sequence>
+			<element name="text" type="string"></element>
+        </sequence>
+    	<attribute name="width" type="string" use="required"></attribute>
+    	<attribute name="background" type="string"></attribute>
+    	<attribute name="bind" type="string" use="required"></attribute>
+    	<attribute name="alignment" type="string" default="NEAR"></attribute>
+        <attribute name="wrap" type="boolean" default="false" />
+    </complexType>
+</schema>

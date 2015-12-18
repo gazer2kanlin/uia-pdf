@@ -5,36 +5,40 @@ import java.net.URISyntaxException;
 
 import org.junit.Test;
 
-import uia.pdf.gridbag.layout.GridBagType;
+import uia.pdf.gridbag.layout.LayoutType;
+import uia.pdf.gridbag.model.Cell;
+import uia.pdf.gridbag.model.Column;
+import uia.pdf.gridbag.model.GridBag;
+import uia.pdf.gridbag.model.Row;
 
 public class GridBagLayoutTest {
 
     @Test
     public void testSample1() throws URISyntaxException, Exception {
-        GridBagType gbType = GridBagTypeHelper.load(new File(GridBagTypeHelperTest.class.getResource("sample1.xml").toURI()));
-        GridBagLayout tv = new GridBagLayout(gbType);
-        tv.load(700, 900);
-        print(tv);
+        LayoutType layoutType = GridBagTypeHelper.load(new File(GridBagTypeHelperTest.class.getResource("sample1.xml").toURI()));
+        GridBagLayout layout = new GridBagLayout(layoutType);
+        layout.load(700, 900);
+        print(layout);
     }
 
     @Test
     public void testSample2() throws URISyntaxException, Exception {
-        GridBagType gbType = GridBagTypeHelper.load(new File(GridBagTypeHelperTest.class.getResource("sample2.xml").toURI()));
-        GridBagLayout tv = new GridBagLayout(gbType);
-        tv.load(700, 900);
-        print(tv);
+    	LayoutType layoutType = GridBagTypeHelper.load(new File(GridBagTypeHelperTest.class.getResource("sample2.xml").toURI()));
+        GridBagLayout layout = new GridBagLayout(layoutType);
+        layout.load(700, 900);
+        print(layout);
     }
 
     @Test
     public void testMR() throws URISyntaxException, Exception {
-        GridBagType gbType = GridBagTypeHelper.load(new File(GridBagTypeHelperTest.class.getResource("mr.xml").toURI()));
-        GridBagLayout tv = new GridBagLayout(gbType);
-        tv.load(700, 900);
-        print(tv);
+    	LayoutType layoutType = GridBagTypeHelper.load(new File(GridBagTypeHelperTest.class.getResource("sample3.xml").toURI()));
+        GridBagLayout layout = new GridBagLayout(layoutType);
+        layout.load(700, 900);
+        print(layout);
     }
 
-    private void print(GridBagLayout tv) {
-        for (Grid grid : tv.getGrids()) {
+    private void print(GridBagLayout layout) {
+        for (GridBag grid : layout.getGrids()) {
             System.out.println(grid);
             for (Column col : grid.columns) {
                 System.out.println(" " + col);
@@ -46,14 +50,10 @@ public class GridBagLayoutTest {
             }
             System.out.println();
 
-            int r = 0;
             for (Cell[] cells : grid.cells) {
-                int c = 0;
                 for (Cell cell : cells) {
-                    System.out.println(String.format(" c[%s,%s]: %s", r, c, cell));
-                    c++;
+                    System.out.println(String.format(" %s", cell));
                 }
-                r++;
             }
             System.out.println();
         }

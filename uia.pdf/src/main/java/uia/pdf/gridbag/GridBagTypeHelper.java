@@ -1,3 +1,19 @@
+/*
+ * Copyright 2015 uia.pdf
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package uia.pdf.gridbag;
 
 import java.io.ByteArrayInputStream;
@@ -17,7 +33,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLFilterImpl;
 
-import uia.pdf.gridbag.layout.GridBagType;
+import uia.pdf.gridbag.layout.LayoutType;
 
 public class GridBagTypeHelper {
 
@@ -29,7 +45,7 @@ public class GridBagTypeHelper {
      * @return Model.
      * @throws Exception Load failure.
      */
-    public static GridBagType load(File file) throws Exception {
+    public static LayoutType load(File file) throws Exception {
         Scanner freader = new Scanner(file);
         StringBuilder content = new StringBuilder();
         while (freader.hasNextLine()) {
@@ -45,7 +61,7 @@ public class GridBagTypeHelper {
      * @return Model.
      * @throws Exception Load failure.
      */
-    public static GridBagType load(InputStream stream) throws Exception {
+    public static LayoutType load(InputStream stream) throws Exception {
         if (UNMARSHALLER == null) {
             initial();
         }
@@ -61,7 +77,7 @@ public class GridBagTypeHelper {
         SAXSource source = new SAXSource(xmlFilter, new InputSource(stream));
 
         @SuppressWarnings("unchecked")
-        JAXBElement<GridBagType> elem = (JAXBElement<GridBagType>) UNMARSHALLER.unmarshal(source);
+        JAXBElement<LayoutType> elem = (JAXBElement<LayoutType>) UNMARSHALLER.unmarshal(source);
         return elem.getValue();
     }
 
@@ -71,7 +87,7 @@ public class GridBagTypeHelper {
      * @return Model.
      * @throws Exception Load failure.
      */
-    public static GridBagType load(String content) throws Exception {
+    public static LayoutType load(String content) throws Exception {
         if (UNMARSHALLER == null) {
             initial();
         }
@@ -88,7 +104,7 @@ public class GridBagTypeHelper {
         SAXSource source = new SAXSource(xmlFilter, new InputSource(inStream));
 
         @SuppressWarnings("unchecked")
-        JAXBElement<GridBagType> elem = (JAXBElement<GridBagType>) UNMARSHALLER.unmarshal(source);
+        JAXBElement<LayoutType> elem = (JAXBElement<LayoutType>) UNMARSHALLER.unmarshal(source);
         return elem.getValue();
     }
 

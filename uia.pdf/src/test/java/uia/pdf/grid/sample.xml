@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout>
+	<grid name="employee">
+		<columns>
+			<column width="100" bind="id"><text>ID</text></column>
+			<column width="100" bind="name" wrap="true"><text>Name</text></column>
+			<column width="100" bind="birthday"><text>Birthday</text></column>
+			<column width="+100%" bind="address"><text>Address</text></column>
+		</columns>
+	</grid>
+	<grid name="employeeProject">
+		<columns>
+			<column width="100" bind="projectName"><text>Project Name</text></column>
+			<column width="100" bind="startDate"><text>Start Date</text></column>
+			<column width="100" bind="endDate"><text>End Date</text></column>
+			<column width="100" bind="location"><text>Location</text></column>
+			<column width="100" bind="pm"><text>PM</text></column>
+			<column width="100" bind="qm"><text>QM</text></column>
+			<column width="+100%" bind="remark"><text>Remark</text></column>
+		</columns>
+	</grid>
+</layout>

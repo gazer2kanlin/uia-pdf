@@ -1,175 +1,143 @@
+/*
+ * Copyright 2015 uia.pdf
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package uia.pdf.gridbag;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeMap;
 
-import uia.pdf.PDFUtil;
 import uia.pdf.gridbag.layout.BindCellType;
 import uia.pdf.gridbag.layout.CellType;
 import uia.pdf.gridbag.layout.ColumnType;
 import uia.pdf.gridbag.layout.GridBagType;
-import uia.pdf.gridbag.layout.GridType;
+import uia.pdf.gridbag.layout.ImageCellType;
+import uia.pdf.gridbag.layout.LayoutType;
 import uia.pdf.gridbag.layout.RowType;
 import uia.pdf.gridbag.layout.TextCellType;
+import uia.pdf.gridbag.model.BindCell;
+import uia.pdf.gridbag.model.Cell;
+import uia.pdf.gridbag.model.Column;
+import uia.pdf.gridbag.model.GridBag;
+import uia.pdf.gridbag.model.ImageCell;
+import uia.pdf.gridbag.model.Row;
+import uia.pdf.gridbag.model.TextCell;
 
 public class GridBagLayout {
 
-    private GridBagType gbType;
+    private LayoutType layoutType;
 
-    private ArrayList<Grid> grids;
+    private ArrayList<GridBag> grids;
 
-    public GridBagLayout(GridBagType gbType) {
-        this.grids = new ArrayList<Grid>();
-        this.gbType = gbType;
+    private TreeMap<String, GridBagType> gbts;
+
+    private int viewWidth;
+
+    private int viewHeight;
+
+    public GridBagLayout(LayoutType layoutType) {
+        this.grids = new ArrayList<GridBag>();
+        this.layoutType = layoutType;
+        this.gbts = new TreeMap<String, GridBagType>();
+        for (GridBagType gbt : this.layoutType.getGridbag()) {
+            this.gbts.put(gbt.getName(), gbt);
+        }
     }
 
-    public List<Grid> getGrids() {
+    public GridBagType getGridBagType(String name) {
+        return this.gbts.get(name);
+    }
+
+    /**
+     * Get grids.
+     * @return Grids.
+     */
+    public List<GridBag> getGrids() {
         return this.grids;
     }
 
     /**
-     * Convert coordinates to PdfBox system.
-     * @param left Left point.
-     * @param top Top point.
+     *
+     * @param viewWidth
+     * @param viewHeight
      */
-    public void convertCoordinates(int left, int top) {
-    }
+    public void load(int viewWidth, int viewHeight) {
+        if (this.viewWidth == viewWidth && this.viewHeight == viewHeight) {
+            return;
+        }
 
-    public void load(int width, int height) {
+        this.viewHeight = viewHeight;
+        this.viewWidth = viewWidth;
         this.grids.clear();
-        for (GridType gt : this.gbType.getLayout().getGrid()) {
-            Grid grid = new Grid(gt.getColumns().getColumn().size(), gt.getRow().size());
-            grid.x = calculate(gt.getX(), width, 0);
-            grid.y = calculate(gt.getY(), height, 0);
-            grid.width = calculate(gt.getWidth(), width, grid.x);
-            grid.height = calculate(gt.getHeight(), height, grid.y);
-            grid.borderEnabled = gt.isBorderEnabled();
-            grid.borderSize = gt.getBorderSize();
-            grid.borderColor = PDFUtil.toColor(gt.getBorderColor());
+        for (GridBagType gbt : this.layoutType.getGridbag()) {
+            // grid
+            GridBag grid = new GridBag(gbt, viewWidth, viewHeight);
             this.grids.add(grid);
 
-            int colx = grid.x;
-            int coli = 0;
-            for (ColumnType ct : gt.getColumns().getColumn()) {
-                Column col = new Column();
-                col.grid = grid;
-                col.index = coli;
-                col.x = coli == 0 ? colx : grid.columns[coli - 1].x + grid.columns[coli - 1].width;
-                col.width = calculate(ct.getWidth(), grid.width, colx - grid.x);
-                if (ct.getBackground() != null) {
-                    col.background = PDFUtil.toColor(ct.getBackground());
-                }
-                grid.columns[coli] = col;
-
-                colx += col.width;
-                coli++;
+            // columns
+            int colIndex = 0;
+            for (ColumnType ct : gbt.getColumns().getColumn()) {
+                Column col = new Column(ct, grid, colIndex);
+                grid.columns[colIndex] = col;
+                colIndex++;
             }
 
-            int ri = 0;
-            int rowy = grid.y;
-            for (RowType rt : gt.getRow()) {
-                Row row = new Row();
-                row.grid = grid;
-                row.index = ri;
-                row.y = rowy;
-                row.height = calculate(rt.getHeight(), grid.height, rowy - grid.y);
-                if (rt.getBackground() != null) {
-                    row.background = PDFUtil.toColor(rt.getBackground());
-                }
-                grid.rows[ri] = row;
+            // rows
+            int rowIndex = 0;
+            for (RowType rt : gbt.getRows().getRow()) {
+                Row row = new Row(rt, grid, rowIndex);
+                grid.rows[rowIndex] = row;
 
-                int celli = 0;
-                for (CellType ct : rt.getTextCellOrBindCellOrLayoutCell()) {
-                    while (grid.cells[ri][celli] != null) {
-                        celli++;
-                    }
-
-                    Color background = null;
-                    if (ct.getBackground() != null) {
-                        background = PDFUtil.toColor(ct.getBackground());
+                // cells
+                int cellIndex = 0;
+                for (CellType ct : rt.getTextCellOrBindCellOrImageCell()) {
+                    // handle column span
+                    while (grid.cells[rowIndex][cellIndex] != null) {
+                        cellIndex++;
                     }
 
                     Cell cell = null;
                     if (ct instanceof TextCellType) {
-                        TextCellType tc = ((TextCellType) ct);
-
-                        Text text;
-                        if (tc.getText() == null) {
-                            text = new Text();
-                        }
-                        else {
-                            int tfs = tc.getText().getFontSize() != null ? tc.getText().getFontSize() : rt.getFontSize() != null ? rt.getFontSize() : gt.getFontSize();
-                            text = new Text(tc.getText().getValue(), tc.getText().getForeground(), tfs);
-                        }
-
-                        Text subText;
-                        if (tc.getSubtext() == null) {
-                            subText = new Text();
-                        }
-                        else {
-                            int tfs = tc.getSubtext().getFontSize() != null ? tc.getSubtext().getFontSize() : rt.getFontSize() != null ? rt.getFontSize() - 2 : gt.getFontSize() - 2;
-                            subText = new Text(tc.getSubtext().getValue(), tc.getSubtext().getForeground(), tfs);
-                        }
-
-                        cell = new TextCell(
-                                grid,
-                                ri,
-                                celli,
-                                ct.getRowspan(),
-                                ct.getColspan(),
-                                background,
-                                ct.getBorderSize(),
-                                PDFUtil.toColor(ct.getBorderColor()),
-                                tc.getAlignment(),
-                                text,
-                                subText);
+                        cell = new TextCell((TextCellType) ct, grid, rowIndex, cellIndex);
                     }
                     else if (ct instanceof BindCellType) {
-                        BindCellType bc = (BindCellType) ct;
-                        cell = new BindCell(
-                                grid,
-                                ri,
-                                celli,
-                                ct.getRowspan(),
-                                ct.getColspan(),
-                                background,
-                                ct.getBorderSize(),
-                                PDFUtil.toColor(ct.getBorderColor()),
-                                bc.getId());
+                        cell = new BindCell((BindCellType) ct, grid, rowIndex, cellIndex);
+                    }
+                    else if (ct instanceof ImageCellType) {
+                        cell = new ImageCell((ImageCellType) ct, grid, rowIndex, cellIndex);
                     }
                     else {
-                        cell = new TextCell(
-                                grid,
-                                ri,
-                                celli,
-                                ct.getRowspan(),
-                                ct.getColspan(),
-                                background,
-                                ct.getBorderSize(),
-                                PDFUtil.toColor(ct.getBorderColor()),
-                                "NEAR",
-                                new Text(),
-                                new Text());
+                        cell = new Cell(ct, grid, rowIndex, cellIndex);
                     }
 
+                    // handle row & column span
                     for (int cs = 0; cs < cell.colspan; cs++) {
                         for (int rs = 0; rs < cell.rowspan; rs++) {
-                            grid.cells[ri + rs][celli] = cell;
+                            grid.cells[rowIndex + rs][cellIndex] = cell;
                         }
-                        grid.cells[ri][celli] = cell;
-                        celli++;
+                        cellIndex++;
                     }
-
                 }
 
-                rowy += row.height;
-                ri++;
+                rowIndex++;
             }
         }
     }
 
-    private int calculate(String value, int total, int offset) {
+    public static int calculate(String value, int total, int offset) {
         if (value.endsWith("%")) {
             if (value.startsWith("+")) {
                 int p = Integer.parseInt(value.substring(1, value.length() - 1));

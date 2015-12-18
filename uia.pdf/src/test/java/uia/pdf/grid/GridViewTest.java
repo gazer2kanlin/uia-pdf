@@ -9,31 +9,63 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import uia.pdf.FooterView;
-import uia.pdf.HeaderView;
 import uia.pdf.PDFMaker;
-import uia.pdf.grid.ColumnModel;
+import uia.pdf.SimpleFooterView;
+import uia.pdf.SimpleHeaderView;
 import uia.pdf.grid.ColumnModel.AlignmentType;
-import uia.pdf.grid.DefaultGridModel;
-import uia.pdf.grid.GridView;
+import uia.pdf.grid.exs.Employee;
+import uia.pdf.grid.exs.EmployeeProject;
 import uia.pdf.papers.A4Paper;
+import uia.pdf.parsers.ValueParser;
 
 public class GridViewTest {
 
     @Test
-    public void testGen() throws Exception {
-        // 1. new document
-        PDFMaker pdf = new PDFMaker(PDFMaker.TRADITIONAL);
+    public void testGenUsingXML() throws Exception {
+        GridModelFactory modelFactory = new GridModelFactory(new File(GridTypeHelperTest.class.getResource("sample.xml").toURI()));
 
-        // 2. new headers
-        HeaderView hv1 = new HeaderView("第一章節", 20);
-        HeaderView hv2 = new HeaderView("第二章節", 20);
+        // 1. document
+        PDFMaker pdf = new PDFMaker(new File(System.getProperty("user.idr") + "\\fonts\\traditional.ttf"));
 
-        // 3. new footer
-        FooterView fv = new FooterView("DOC-0001-AAA0-12.32B", "2015-11-06");
+        // 2. footer
+        SimpleFooterView fv = new SimpleFooterView("DOC-0001-AAA0-12.32B", "2015-11-06", 11);
 
-        // 4. new section 1 view WITH customize renderer
-        GridView vg1 = new GridView(pdf, new A4Paper(true), new DefaultGridModel(
+        // 3. chapter 1
+        SimpleHeaderView hv1 = new SimpleHeaderView("第一章 A4 橫式測試頁", 20);
+        A4Paper paper1 = new A4Paper(true);
+        GridView view1 = new GridView(pdf, paper1, modelFactory.create("employee", paper1.getDrawableSize().width));
+        view1.setHeaderView(hv1);
+        view1.setFooterView(fv);
+        view1.draw(Employee.createSample(), "員工基本資料");
+        hv1.draw();
+
+        // 4. chapter 2
+        SimpleHeaderView hv2 = new SimpleHeaderView("第二章 A4 直式測試頁", 20);
+        A4Paper paper2 = new A4Paper();
+        GridView view2 = new GridView(pdf, paper2, modelFactory.create("employeeProject", paper2.getDrawableSize().width));
+        view2.setHeaderView(hv2);
+        view2.setFooterView(fv);
+        view2.draw(EmployeeProject.createSample(), "專案基本資料");
+        hv2.draw();
+
+        // 5. draw footer
+        fv.draw();
+
+        // 6. save
+        pdf.save(new File("C:\\TEMP\\GRID_SAMPLE_XML.PDF"));
+    }
+
+    @Test
+    public void testGenUsingCode() throws Exception {
+        // 1. document
+        PDFMaker pdf = new PDFMaker(new File(System.getProperty("user.idr") + "\\fonts\\traditional.ttf"));
+
+        // 2. footer
+        SimpleFooterView fv = new SimpleFooterView("DOC-0001-AAA0-12.32B", "2015-11-06", 12);
+
+        // 3. chapter 1
+        SimpleHeaderView hv1 = new SimpleHeaderView("第一章 A4 橫式測試頁", 20);
+        GridView view1 = new GridView(pdf, new A4Paper(true), new DefaultGridModel(
                 new ColumnModel[] {
                         new ColumnModel("Byte", "BYTE", 30, AlignmentType.FAR),
                         new ColumnModel("Short", "SHORT", 45, AlignmentType.FAR),
@@ -45,18 +77,25 @@ public class GridViewTest {
                         new ColumnModel("Value", "VALUE", 100, AlignmentType.NEAR)
                 },
                 new MyCellRenderer()));
-        // 4.1 add MyData value parser
-        vg1.getValueParserFactory().register(MyData.class, value -> "Name:" + ((MyData) value).getName());
-        // 4.2 set header to section 1
-        vg1.setHeaderView(hv1);
-        // 4.3 set footer to section 1
-        vg1.setFooterView(fv);
-        // 4.4 draw section 1
-        vg1.draw(prepareData1(), "Chapter 1");
+        view1.getValueParserFactory().register(MyData.class, new ValueParser() {
+
+            @Override
+            public String read(Object value) {
+                return "Name:" + ((MyData) value).getName();
+            }
+
+        });
+        view1.setHeaderView(hv1);
+        view1.setFooterView(fv);
+        view1.beginBookmarkGroup("Topic 1 Group");
+        view1.draw(prepareData1(), "1-1 Topic 1-1");
+        view1.draw(prepareData1(), "1-2 Topic 1-2");
+        view1.endBookmarkGroup();
         hv1.draw();
 
-        // 5. new section 2 view WITHOUT customize renderer
-        GridView vg2 = new GridView(pdf, new A4Paper(), new DefaultGridModel(
+        // 4. chapter 2
+        SimpleHeaderView hv2 = new SimpleHeaderView("第二章 A4 直式測試頁", 20);
+        GridView view2 = new GridView(pdf, new A4Paper(), new DefaultGridModel(
                 new ColumnModel[] {
                         new ColumnModel("Byte", "BYTE", 30, AlignmentType.NEAR),
                         new ColumnModel("Short", "SHORT", 40, AlignmentType.NEAR),
@@ -65,18 +104,18 @@ public class GridViewTest {
                         new ColumnModel("Boolean", "BOOL", 30, AlignmentType.NEAR),
                         new ColumnModel("Value", "VALUE", 150, AlignmentType.NEAR)
                 }));
-        // 5.1 set header to section 2
-        vg2.setHeaderView(hv2);
-        // 5.2 set footer to section 2 (share with section 1)
-        vg2.setFooterView(fv);
-        // 5.3 draw section 2
-        vg2.draw(prepareData1(), "Chapter 2");
+        view2.setHeaderView(hv2);
+        view2.setFooterView(fv);
+        view2.draw(prepareData1(), "2-1 Topic 2-1");
         hv2.draw();
+
+        // 5. draw footer
+        fv.draw();
 
         // 6. draw footer
         fv.draw();
 
-        pdf.save(new File("C:\\TEMP\\SAMPLE_GRID.PDF"));
+        pdf.save(new File("C:\\TEMP\\GRID_SAMPLE_CODE.PDF"));
     }
 
     private List<Map<String, Object>> prepareData1() {

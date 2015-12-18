@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<gridbag>
-	<layout>
-		<grid name="title" x="0" y="0" width="100%" height="50" borderEnabled="false">
-			<columns>
-				<column width="100%"></column>
-			</columns>
+<layout>
+	<gridbag name="title" x="0" y="0" width="100%" height="50" borderEnabled="false">
+		<columns>
+			<column width="100%"></column>
+		</columns>
+		<rows>
 			<row height="100%">
 				<bindCell>
 					<id>titleInfo</id>
 				</bindCell>
 			</row>
-		</grid>
-		<grid name="header" x="0" y="50" width="100%" height="150">
-			<columns>
-				<column width="15%"></column>
-				<column width="*40%"></column>
-				<column width="*70%"></column>
-				<column width="+100%"></column>
-			</columns>
+		</rows>
+	</gridbag>
+	<gridbag name="header" x="0" y="50" width="100%" height="150">
+		<columns>
+			<column width="15%"></column>
+			<column width="*40%"></column>
+			<column width="*70%"></column>
+			<column width="+100%"></column>
+		</columns>
+		<rows>
 			<row height="30">
 				<textCell>
 					<text>產品名稱</text>
@@ -30,7 +32,7 @@
 				</textCell>
 				<textCell></textCell>
 			</row>
-			<row height="30">
+			<row height="30" fontSize="12">
 				<textCell>
 					<text>P/N 號</text>
 					<subtext>P/N No.</subtext>
@@ -48,19 +50,19 @@
 					<subtext>Production Date</subtext>
 				</textCell>
 				<textCell></textCell>
-				<textCell>
+				<textCell fontSize="14">
 					<text>效期</text>
 					<subtext>Expiry Date</subtext>
 				</textCell>
 				<textCell></textCell>
 			</row>
-			<row height="30">
+			<row height="30" background="128,128,255">
 				<textCell>
 					<text>包裝規格</text>
 					<subtext>Package Size</subtext>
 				</textCell>
 				<textCell></textCell>
-				<textCell>
+				<textCell background="255,0,0">
 					<text>銷售</text>
 					<subtext>Selling Kit</subtext>
 				</textCell>
@@ -73,17 +75,19 @@
 				</textCell>
 				<textCell colspan="3"></textCell>
 			</row>
-		</grid>
-		<grid name="inspection" x="0" y="200" width="100%" height="350">
-			<columns>
-				<column width="15%"></column>
-				<column width="*40%"></column>
-				<column width="*55%"></column>
-				<column width="*70%"></column>
-				<column width="*90%"></column>
-				<column width="+100%"></column>
-			</columns>
-			<row height="10%"  background="232,232,232">
+		</rows>
+	</gridbag>
+	<gridbag name="inspection" x="0" y="200" width="100%" height="350">
+		<columns>
+			<column width="15%"></column>
+			<column width="*40%"></column>
+			<column width="*55%"></column>
+			<column width="*70%"></column>
+			<column width="*90%"></column>
+			<column width="+100%"></column>
+		</columns>
+		<rows>
+			<row height="10%">
 				<textCell>
 					<text>檢驗項目</text>
 					<subtext>Items</subtext>
@@ -178,16 +182,18 @@
 				<textCell></textCell>
 				<textCell></textCell>
 			</row>
-		</grid>
-		<grid name="result" x="0" y="550" width="100%" height="+100%">
-			<columns>
-				<column width="15%"></column>
-				<column width="*40%"></column>
-				<column width="*55%"></column>
-				<column width="*70%"></column>
-				<column width="+50%"></column>
-				<column width="+100%"></column>
-			</columns>
+		</rows>
+	</gridbag>
+	<gridbag name="result" x="0" y="550" width="100%" height="+100%" background="210,210,210">
+		<columns>
+			<column width="15%"></column>
+			<column width="*40%"></column>
+			<column width="*55%"></column>
+			<column width="*70%"></column>
+			<column width="+50%"></column>
+			<column width="+100%"></column>
+		</columns>
+		<rows>
 			<row height="25%">
 				<textCell>
 					<text>結論</text>
@@ -212,7 +218,7 @@
 					<text foreground="0,0,255">審核人</text>
 					<subtext foreground="100,100,255">Reviewed By</subtext>
 				</textCell>
-				<textCell></textCell>
+				<textCell background="255,255,255"></textCell>
 				<textCell>
 					<text>批准人</text>
 					<subtext>Approval By</subtext>
@@ -236,6 +242,6 @@
 				</textCell>
 				<textCell></textCell>
 			</row>
-		</grid>
-	</layout>
-</gridbag>
+		</rows>
+	</gridbag>
+</layout>

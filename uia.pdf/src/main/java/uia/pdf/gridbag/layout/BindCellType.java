@@ -1,10 +1,3 @@
-//
-// 此檔案是由 JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.8-b130911.1802 所產生 
-// 請參閱 <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// 一旦重新編譯來源綱要, 對此檔案所做的任何修改都將會遺失. 
-// 產生時間: 2015.11.13 於 12:31:05 PM CST 
-//
-
 
 package uia.pdf.gridbag.layout;
 
@@ -15,9 +8,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>BindCellType complex type 的 Java 類別.
+ * <p>Java class for BindCellType complex type.
  * 
- * <p>下列綱要片段會指定此類別中包含的預期內容.
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="BindCellType">
@@ -25,7 +18,6 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;extension base="{http://gridbag.pdf.uia/layout}CellType">
  *       &lt;sequence>
  *         &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="renderer" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
  *     &lt;/extension>
  *   &lt;/complexContent>
@@ -36,8 +28,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "BindCellType", propOrder = {
-    "id",
-    "renderer"
+    "id"
 })
 public class BindCellType
     extends CellType
@@ -45,11 +36,9 @@ public class BindCellType
 
     @XmlElement(required = true)
     protected String id;
-    @XmlElement(required = true)
-    protected String renderer;
 
     /**
-     * 取得 id 特性的值.
+     * Gets the value of the id property.
      * 
      * @return
      *     possible object is
@@ -61,7 +50,7 @@ public class BindCellType
     }
 
     /**
-     * 設定 id 特性的值.
+     * Sets the value of the id property.
      * 
      * @param value
      *     allowed object is
@@ -70,30 +59,6 @@ public class BindCellType
      */
     public void setId(String value) {
         this.id = value;
-    }
-
-    /**
-     * 取得 renderer 特性的值.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getRenderer() {
-        return renderer;
-    }
-
-    /**
-     * 設定 renderer 特性的值.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setRenderer(String value) {
-        this.renderer = value;
     }
 
 }

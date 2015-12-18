@@ -1,165 +1,155 @@
+/*
+ * Copyright 2015 uia.pdf
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package uia.pdf.gridbag;
 
-import java.awt.Color;
-import java.awt.Point;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.font.PDFont;
 
 import uia.pdf.ContentView;
 import uia.pdf.PDFMaker;
 import uia.pdf.papers.Paper;
 
+/**
+ *
+ * @author Kan Lin
+ *
+ */
 public class GridBagView extends ContentView {
 
-    private GridBagLayout gbLayout;
+    private GridBagDrawer drawer;
 
-    private DefaultBindCellRenderer bindRenderer0;
+    private String bookmarkGroup;
 
-    private HashMap<String, GridBagCellRenderer> bindRenderers;
-
-    private HashMap<Class<?>, GridBagCellRenderer> classRenderers;
-
+    /**
+     *
+     * @param pdf
+     * @param paper
+     * @param layoutFile
+     * @throws Exception
+     */
     public GridBagView(PDFMaker pdf, Paper paper, File layoutFile) throws Exception {
         super(pdf, paper);
-        this.gbLayout = new GridBagLayout(GridBagTypeHelper.load(layoutFile));
-        this.bindRenderer0 = new DefaultBindCellRenderer();
-        this.bindRenderers = new HashMap<String, GridBagCellRenderer>();
-        this.classRenderers = new HashMap<Class<?>, GridBagCellRenderer>();
+        this.drawer = new GridBagDrawer(layoutFile);
     }
 
-    public void registerBindCellRenderer(String id, GridBagCellRenderer renderer) {
-        this.bindRenderers.put(id, renderer);
+    public void registerBindIdCellRenderer(String id, GridBagCellRenderer renderer) {
+        this.drawer.registerBindIdCellRenderer(id, renderer);
     }
 
-    public void registerClassCellRenderer(Class<?> cls, GridBagCellRenderer renderer) {
-        this.classRenderers.put(cls, renderer);
+    public void registerBindClassCellRenderer(Class<?> cls, GridBagCellRenderer renderer) {
+        this.drawer.registerBindClassCellRenderer(cls, renderer);
     }
 
-    public void draw(List<Map<String, Object>> table, List<String> bookmarks) throws IOException {
-        int p = 0;
-        for (Map<String, Object> data : table) {
-            draw(data, bookmarks.get(p));
-            p++;
-        }
+    @Override
+    public void beginBookmarkGroup() {
+        this.pdf.beginBookmarkGroup();
     }
 
-    public PDPage draw(Map<String, Object> data, String bookmark) throws IOException {
+    @Override
+    public void beginBookmarkGroup(String bookmarkGroup) {
+        this.bookmarkGroup = bookmarkGroup;
+    }
+
+    @Override
+    public void endBookmarkGroup() {
+        this.bookmarkGroup = null;
+        this.pdf.endBookmarkGroup();
+    }
+
+    /**
+     *
+     * @param gridsData
+     * @param bookmark
+     * @return
+     * @throws IOException
+     */
+    public PDPage addPageEx(Map<String, Map<String, Object>> gridsData, String bookmark) throws IOException {
         PDPage page = this.paper.createPage();
         this.pdf.getDocument().addPage(page);
         this.pages.add(page);
-        this.pdf.addBookmark(page, bookmark);
-
-        this.gbLayout.load(getWidth(), getHeight());
-
-        PDPageContentStream contentStream = new PDPageContentStream(this.pdf.getDocument(), page, true, false, false);
-        PDFont font = this.pdf.getFont();
-        contentStream.setFont(font, 9);
-
-        Point topLeft = getTopLeft();
-        for (Grid grid : this.gbLayout.getGrids()) {
-            contentStream.setLineWidth(0.5f);
-
-            ArrayList<Cell> colorBorder = new ArrayList<Cell>();
-            // draw grid
-            if (grid.borderEnabled) {
-                for (Cell[] cells : grid.cells) {
-                    for (Cell cell : cells) {
-                        contentStream.setLineWidth(cell.boderSize);
-
-                        Point cellBottomLeft = cell.bottomLeft(topLeft);
-                        if (cell.background != null) {
-                            contentStream.setNonStrokingColor(cell.background);
-                            contentStream.addRect(cellBottomLeft.x, cellBottomLeft.y, cell.getWidth(), cell.getHeight());
-                            contentStream.fill();
-                        }
-                        else if (grid.rows[cell.row].background != null) {
-                            contentStream.setNonStrokingColor(grid.rows[cell.row].background);
-                            contentStream.addRect(cellBottomLeft.x, cellBottomLeft.y, cell.getWidth(), cell.getHeight());
-                            contentStream.fill();
-                        }
-                        else if (grid.columns[cell.col].background != null) {
-                            contentStream.setNonStrokingColor(grid.columns[cell.col].background);
-                            contentStream.addRect(cellBottomLeft.x, cellBottomLeft.y, cell.getWidth(), cell.getHeight());
-                            contentStream.fill();
-                        }
-
-                        contentStream.addRect(cellBottomLeft.x, cellBottomLeft.y, cell.getWidth(), cell.getHeight());
-                        contentStream.stroke();
-
-                        if (cell.borderColor != null) {
-                            colorBorder.add(cell);
-                        }
-                    }
-                }
-
-                // draw border
-                for (Cell cell : colorBorder) {
-                    Point cellBottomLeft = cell.bottomLeft(topLeft);
-                    contentStream.setLineWidth(cell.boderSize);
-                    contentStream.setStrokingColor(cell.borderColor);
-                    contentStream.addRect(cellBottomLeft.x, cellBottomLeft.y, cell.getWidth(), cell.getHeight());
-                    contentStream.stroke();
-                }
-            }
-
-            if (data == null) {
-                continue;
-            }
-
-            // draw data
-            int r = 0;
-            for (Cell[] cells : grid.cells) {
-                int c = 0;
-                for (Cell cell : cells) {
-                    if (cell.col != c || cell.row != r) {
-                        continue;
-                    }
-                    cell.accept(this, contentStream, cell.bottomLeft(topLeft), data);
-                    c++;
-                }
-                r++;
-            }
-
-            if (grid.borderEnabled) {
-                contentStream.setStrokingColor(grid.borderColor);
-                contentStream.setLineWidth(1.0f);
-                contentStream.addRect(topLeft.x + grid.x, topLeft.y - grid.height - grid.y, grid.width, grid.height);
-                contentStream.stroke();
-            }
-
-            contentStream.setStrokingColor(Color.black);
+        if (this.bookmarkGroup != null) {
+            this.pdf.addBookmark(page, this.bookmarkGroup);
+            this.bookmarkGroup = null;
+            this.pdf.beginBookmarkGroup();
         }
-        contentStream.close();
+        this.pdf.addBookmark(page, bookmark);
+        return addPageEx(page, gridsData);
+    }
 
+    /**
+     *
+     * @param gridsData
+     * @return
+     * @throws IOException
+     */
+    public PDPage addPageEx(Map<String, Map<String, Object>> gridsData) throws IOException {
+        PDPage page = this.paper.createPage();
+        this.pdf.getDocument().addPage(page);
+        this.pages.add(page);
+        return addPageEx(page, gridsData);
+    }
+
+    /**
+     *
+     * @param data
+     * @param bookmark
+     * @return
+     * @throws IOException
+     */
+    public PDPage addPage(Map<String, Object> data, String bookmark) throws IOException {
+        PDPage page = this.paper.createPage();
+        this.pdf.getDocument().addPage(page);
+        this.pages.add(page);
+        if (this.bookmarkGroup != null) {
+            this.pdf.addBookmark(page, this.bookmarkGroup);
+            this.bookmarkGroup = null;
+            this.pdf.beginBookmarkGroup();
+        }
+        this.pdf.addBookmark(page, bookmark);
+        return addPage(page, data);
+    }
+
+    /**
+     *
+     * @param data
+     * @return
+     * @throws IOException
+     */
+    public PDPage addPage(Map<String, Object> data) throws IOException {
+        PDPage page = this.paper.createPage();
+        this.pdf.getDocument().addPage(page);
+        this.pages.add(page);
+        return addPage(page, data);
+    }
+
+    private PDPage addPageEx(PDPage page, Map<String, Map<String, Object>> gridsData) throws IOException {
+        this.drawer.drawEx(this, page, gridsData);
+        return page;
+    }
+
+    private PDPage addPage(PDPage page, Map<String, Object> data) throws IOException {
+        this.drawer.draw(this, page, data);
         return page;
     }
 
     GridBagCellRenderer getBindRenderer(String id, Object value) {
-        if (id == null || value == null) {
-            return this.bindRenderer0;
-        }
-
-        // id first
-        GridBagCellRenderer bindRenderer = this.bindRenderers.get(id);
-        if (bindRenderer != null) {
-            return bindRenderer;
-        }
-
-        // class type
-        GridBagCellRenderer classRenderer = this.classRenderers.get(value.getClass());
-        if (classRenderer != null) {
-            return classRenderer;
-        }
-
-        // default
-        return this.bindRenderer0;
+        return this.drawer.getBindRenderer(id, value);
     }
 }

@@ -1,10 +1,3 @@
-//
-// 此檔案是由 JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.8-b130911.1802 所產生 
-// 請參閱 <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// 一旦重新編譯來源綱要, 對此檔案所做的任何修改都將會遺失. 
-// 產生時間: 2015.11.13 於 12:31:05 PM CST 
-//
-
 
 package uia.pdf.gridbag.layout;
 
@@ -19,9 +12,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>RowType complex type 的 Java 類別.
+ * <p>Java class for RowType complex type.
  * 
- * <p>下列綱要片段會指定此類別中包含的預期內容.
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="RowType">
@@ -31,14 +24,16 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;choice maxOccurs="unbounded">
  *           &lt;element name="textCell" type="{http://gridbag.pdf.uia/layout}TextCellType"/>
  *           &lt;element name="bindCell" type="{http://gridbag.pdf.uia/layout}BindCellType"/>
- *           &lt;element name="layoutCell" type="{http://gridbag.pdf.uia/layout}LayoutCellType"/>
- *           &lt;element name="bindLayoutCell" type="{http://gridbag.pdf.uia/layout}BindLayoutCellType"/>
+ *           &lt;element name="imageCell" type="{http://gridbag.pdf.uia/layout}ImageCellType"/>
  *         &lt;/choice>
  *       &lt;/sequence>
- *       &lt;attribute name="background" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="height" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="borderSize" type="{http://www.w3.org/2001/XMLSchema}float" default="0.5" />
+ *       &lt;attribute name="borderColor" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="background" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="fontSize" type="{http://www.w3.org/2001/XMLSchema}int" />
+ *       &lt;attribute name="alignment" type="{http://www.w3.org/2001/XMLSchema}string" default="CENTER" />
+ *       &lt;attribute name="valignment" type="{http://www.w3.org/2001/XMLSchema}string" default="CENTER" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -48,84 +43,64 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "RowType", propOrder = {
-    "textCellOrBindCellOrLayoutCell"
+    "textCellOrBindCellOrImageCell"
 })
 public class RowType {
 
     @XmlElements({
-        @XmlElement(name = "textCell", type = TextCellType.class),
         @XmlElement(name = "bindCell", type = BindCellType.class),
-        @XmlElement(name = "layoutCell", type = LayoutCellType.class),
-        @XmlElement(name = "bindLayoutCell", type = BindLayoutCellType.class)
+        @XmlElement(name = "textCell", type = TextCellType.class),
+        @XmlElement(name = "imageCell", type = ImageCellType.class)
     })
-    protected List<CellType> textCellOrBindCellOrLayoutCell;
-    @XmlAttribute(name = "background")
-    protected String background;
-    @XmlAttribute(name = "height", required = true)
+    protected List<CellType> textCellOrBindCellOrImageCell;
+    @XmlAttribute(required = true)
     protected String height;
-    @XmlAttribute(name = "borderSize")
+    @XmlAttribute
     protected Float borderSize;
-    @XmlAttribute(name = "fontSize")
+    @XmlAttribute
+    protected String borderColor;
+    @XmlAttribute
+    protected String background;
+    @XmlAttribute
     protected Integer fontSize;
+    @XmlAttribute
+    protected String alignment;
+    @XmlAttribute
+    protected String valignment;
 
     /**
-     * Gets the value of the textCellOrBindCellOrLayoutCell property.
+     * Gets the value of the textCellOrBindCellOrImageCell property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the textCellOrBindCellOrLayoutCell property.
+     * This is why there is not a <CODE>set</CODE> method for the textCellOrBindCellOrImageCell property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getTextCellOrBindCellOrLayoutCell().add(newItem);
+     *    getTextCellOrBindCellOrImageCell().add(newItem);
      * </pre>
      * 
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link TextCellType }
      * {@link BindCellType }
-     * {@link LayoutCellType }
-     * {@link BindLayoutCellType }
+     * {@link TextCellType }
+     * {@link ImageCellType }
      * 
      * 
      */
-    public List<CellType> getTextCellOrBindCellOrLayoutCell() {
-        if (textCellOrBindCellOrLayoutCell == null) {
-            textCellOrBindCellOrLayoutCell = new ArrayList<CellType>();
+    public List<CellType> getTextCellOrBindCellOrImageCell() {
+        if (textCellOrBindCellOrImageCell == null) {
+            textCellOrBindCellOrImageCell = new ArrayList<CellType>();
         }
-        return this.textCellOrBindCellOrLayoutCell;
+        return this.textCellOrBindCellOrImageCell;
     }
 
     /**
-     * 取得 background 特性的值.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getBackground() {
-        return background;
-    }
-
-    /**
-     * 設定 background 特性的值.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setBackground(String value) {
-        this.background = value;
-    }
-
-    /**
-     * 取得 height 特性的值.
+     * Gets the value of the height property.
      * 
      * @return
      *     possible object is
@@ -137,7 +112,7 @@ public class RowType {
     }
 
     /**
-     * 設定 height 特性的值.
+     * Sets the value of the height property.
      * 
      * @param value
      *     allowed object is
@@ -149,7 +124,7 @@ public class RowType {
     }
 
     /**
-     * 取得 borderSize 特性的值.
+     * Gets the value of the borderSize property.
      * 
      * @return
      *     possible object is
@@ -165,7 +140,7 @@ public class RowType {
     }
 
     /**
-     * 設定 borderSize 特性的值.
+     * Sets the value of the borderSize property.
      * 
      * @param value
      *     allowed object is
@@ -177,7 +152,55 @@ public class RowType {
     }
 
     /**
-     * 取得 fontSize 特性的值.
+     * Gets the value of the borderColor property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getBorderColor() {
+        return borderColor;
+    }
+
+    /**
+     * Sets the value of the borderColor property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setBorderColor(String value) {
+        this.borderColor = value;
+    }
+
+    /**
+     * Gets the value of the background property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getBackground() {
+        return background;
+    }
+
+    /**
+     * Sets the value of the background property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setBackground(String value) {
+        this.background = value;
+    }
+
+    /**
+     * Gets the value of the fontSize property.
      * 
      * @return
      *     possible object is
@@ -189,7 +212,7 @@ public class RowType {
     }
 
     /**
-     * 設定 fontSize 特性的值.
+     * Sets the value of the fontSize property.
      * 
      * @param value
      *     allowed object is
@@ -198,6 +221,62 @@ public class RowType {
      */
     public void setFontSize(Integer value) {
         this.fontSize = value;
+    }
+
+    /**
+     * Gets the value of the alignment property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getAlignment() {
+        if (alignment == null) {
+            return "CENTER";
+        } else {
+            return alignment;
+        }
+    }
+
+    /**
+     * Sets the value of the alignment property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setAlignment(String value) {
+        this.alignment = value;
+    }
+
+    /**
+     * Gets the value of the valignment property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getValignment() {
+        if (valignment == null) {
+            return "CENTER";
+        } else {
+            return valignment;
+        }
+    }
+
+    /**
+     * Sets the value of the valignment property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setValignment(String value) {
+        this.valignment = value;
     }
 
 }

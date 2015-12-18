@@ -1,3 +1,19 @@
+/*
+ * Copyright 2015 uia.pdf
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package uia.pdf;
 
 import java.awt.Point;
@@ -28,9 +44,9 @@ public abstract class ContentView {
 
     protected final ArrayList<PDPage> pages;
 
-    protected DescriptionView hv;
+    protected DescriptionView headerView;
 
-    protected DescriptionView fv;
+    protected DescriptionView footerView;
 
     protected ValueParserFactory factory;
 
@@ -63,21 +79,21 @@ public abstract class ContentView {
     }
 
     public DescriptionView getHeaderView() {
-        return this.hv;
+        return this.headerView;
     }
 
     public void setHeaderView(DescriptionView hv) {
-        this.hv = hv;
-        this.hv.add(this);
+        this.headerView = hv;
+        this.headerView.add(this);
     }
 
     public DescriptionView getFooterView() {
-        return this.fv;
+        return this.footerView;
     }
 
     public void setFooterView(DescriptionView fv) {
-        this.fv = fv;
-        this.fv.add(this);
+        this.footerView = fv;
+        this.footerView.add(this);
     }
 
     public PDFMaker getDoc() {
@@ -93,11 +109,11 @@ public abstract class ContentView {
     }
 
     protected int getTop() {
-        return this.hv == null ? this.paper.getTop() : this.paper.getTop() - this.hv.getHeight();
+        return this.headerView == null ? this.paper.getTop() : this.paper.getTop() - this.headerView.getHeight();
     }
 
     protected int getBottom() {
-        return this.fv == null ? this.paper.getBottom() : this.paper.getBottom() + this.fv.getHeight();
+        return this.footerView == null ? this.paper.getBottom() : this.paper.getBottom() + this.footerView.getHeight();
     }
 
     public int getLeft() {
@@ -113,10 +129,16 @@ public abstract class ContentView {
     }
 
     public int getWidth() {
-        return this.paper.getViewSzie().width;
+        return this.paper.getDrawableSize().width;
     }
 
     public int getHeight() {
         return getTop() - getBottom();
     }
+
+    public abstract void beginBookmarkGroup();
+
+    public abstract void beginBookmarkGroup(String bookmarkGroup);
+
+    public abstract void endBookmarkGroup();
 }
