@@ -7,22 +7,22 @@ import java.util.TreeMap;
 import org.junit.Test;
 
 import uia.pdf.PDFMaker;
-import uia.pdf.SimpleFooterView;
-import uia.pdf.SimpleHeaderView;
 import uia.pdf.papers.A4Paper;
 
 public class GridBagViewTest {
 
     @Test
-    public void testGen() throws Exception {
+    public void testTutorial1() throws Exception {
+        File hfFile = new File(GridBagViewTest.class.getResource("sample_headerFooter.xml").toURI());
+
         // 1. new document
-        PDFMaker pdf = new PDFMaker(new File(System.getProperty("user.idr") + "\\fonts\\traditional.ttf"));
+        PDFMaker pdf = new PDFMaker(new File(System.getProperty("user.dir") + "\\fonts\\simplified.ttf"));
 
         // 2. new headers
-        SimpleHeaderView hv = new SimpleHeaderView("Baseball Report for Fun", 20);
+        GridBagDescriptionView hv = new GridBagDescriptionView(hfFile, "header");
 
         // 3. new footer
-        SimpleFooterView fv = new SimpleFooterView("BASEBALL-2005.1021", "2015-10-21", 11);
+        GridBagDescriptionView fv = new GridBagDescriptionView(hfFile, "footer");
 
         // 4. new layout content view
         GridBagView cv = new GridBagView(pdf, new A4Paper(), new File(GridBagTypeHelperTest.class.getResource("sample3.xml").toURI()));
@@ -39,7 +39,7 @@ public class GridBagViewTest {
         hv.draw();
         fv.draw();
 
-        pdf.save(new File("C:\\TEMP\\GRIDBAG_SAMPLE3.PDF"));
+        pdf.save(new File("C:\\TEMP\\GRIDBAG_TUTORIAL1.PDF"));
     }
 
     private Map<String, Object> prepareData1() {

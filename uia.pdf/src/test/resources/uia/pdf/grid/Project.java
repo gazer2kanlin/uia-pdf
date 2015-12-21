@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uia.pdf.grid.exs;
+package uia.pdf.grid;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,23 +22,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class Employee {
+public class Project {
 
     public static List<Map<String, Object>> createSample() {
         ArrayList<Map<String, Object>> all = new ArrayList<Map<String, Object>>();
         for (int i = 0; i < 100; i++) {
-            all.add(createOne());
+            all.add(createOne(i));
         }
         return all;
     }
 
-    public static Map<String, Object> createOne() {
+    public static Map<String, Object> createOne(int i) {
         TreeMap<String, Object> data = new TreeMap<String, Object>();
-        data.put("id", "004981");
-        data.put("name", "這1是一個什麼狀況，要自動換行，或是自動截斷，可能嗎。");
-        data.put("birthday", new Date());
-        data.put("address", "????");
+        data.put("projectName", "CIM Project #" + i);
+        data.put("startDate", new Date());
+        data.put("endDate", new Date());
+        data.put("location", "SZ, China");
+        data.put("pm", "Ming Wang");
+        data.put("qm", "Apple Zhao");
+        data.put("remark", "Remark Info #" + i);
         return data;
     }
-
 }

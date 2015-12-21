@@ -13,52 +13,16 @@ import uia.pdf.PDFMaker;
 import uia.pdf.SimpleFooterView;
 import uia.pdf.SimpleHeaderView;
 import uia.pdf.grid.ColumnModel.AlignmentType;
-import uia.pdf.grid.exs.Employee;
-import uia.pdf.grid.exs.EmployeeProject;
 import uia.pdf.papers.A4Paper;
 import uia.pdf.parsers.ValueParser;
 
 public class GridViewTest {
 
     @Test
-    public void testGenUsingXML() throws Exception {
-        GridModelFactory modelFactory = new GridModelFactory(new File(GridTypeHelperTest.class.getResource("sample.xml").toURI()));
-
+    public void testTutorial0() throws Exception {
         // 1. document
-        PDFMaker pdf = new PDFMaker(new File(System.getProperty("user.idr") + "\\fonts\\traditional.ttf"));
-
-        // 2. footer
-        SimpleFooterView fv = new SimpleFooterView("DOC-0001-AAA0-12.32B", "2015-11-06", 11);
-
-        // 3. chapter 1
-        SimpleHeaderView hv1 = new SimpleHeaderView("第一章 A4 橫式測試頁", 20);
-        A4Paper paper1 = new A4Paper(true);
-        GridView view1 = new GridView(pdf, paper1, modelFactory.create("employee", paper1.getDrawableSize().width));
-        view1.setHeaderView(hv1);
-        view1.setFooterView(fv);
-        view1.draw(Employee.createSample(), "員工基本資料");
-        hv1.draw();
-
-        // 4. chapter 2
-        SimpleHeaderView hv2 = new SimpleHeaderView("第二章 A4 直式測試頁", 20);
-        A4Paper paper2 = new A4Paper();
-        GridView view2 = new GridView(pdf, paper2, modelFactory.create("employeeProject", paper2.getDrawableSize().width));
-        view2.setHeaderView(hv2);
-        view2.setFooterView(fv);
-        view2.draw(EmployeeProject.createSample(), "專案基本資料");
-        hv2.draw();
-
-        // 5. draw footer
-        fv.draw();
-
-        // 6. save
-        pdf.save(new File("C:\\TEMP\\GRID_SAMPLE_XML.PDF"));
-    }
-
-    @Test
-    public void testGenUsingCode() throws Exception {
-        // 1. document
-        PDFMaker pdf = new PDFMaker(new File(System.getProperty("user.idr") + "\\fonts\\traditional.ttf"));
+        File font = new File(System.getProperty("user.dir") + "\\fonts\\traditional.ttf");
+        PDFMaker pdf = new PDFMaker(font);
 
         // 2. footer
         SimpleFooterView fv = new SimpleFooterView("DOC-0001-AAA0-12.32B", "2015-11-06", 12);
@@ -87,9 +51,9 @@ public class GridViewTest {
         });
         view1.setHeaderView(hv1);
         view1.setFooterView(fv);
-        view1.beginBookmarkGroup("Topic 1 Group");
-        view1.draw(prepareData1(), "1-1 Topic 1-1");
-        view1.draw(prepareData1(), "1-2 Topic 1-2");
+        view1.beginBookmarkGroup("第一章 A4 橫式測試頁");
+        view1.draw(prepareData1(), "1-1 第一次資料");
+        view1.draw(prepareData1(), "1-2 第二次資料");
         view1.endBookmarkGroup();
         hv1.draw();
 
@@ -106,7 +70,9 @@ public class GridViewTest {
                 }));
         view2.setHeaderView(hv2);
         view2.setFooterView(fv);
-        view2.draw(prepareData1(), "2-1 Topic 2-1");
+        view2.beginBookmarkGroup("第二章 A4 直式測試頁");
+        view2.draw(prepareData1(), "2-1 第一次資料");
+        view2.endBookmarkGroup();
         hv2.draw();
 
         // 5. draw footer
@@ -115,7 +81,87 @@ public class GridViewTest {
         // 6. draw footer
         fv.draw();
 
-        pdf.save(new File("C:\\TEMP\\GRID_SAMPLE_CODE.PDF"));
+        pdf.save(new File("C:\\TEMP\\GRID_TUTORIAL0.PDF"));
+    }
+
+    @Test
+    public void testTutorial1() throws Exception {
+        File layout = new File(GridTypeHelperTest.class.getResource("sample.xml").toURI());
+        GridModelFactory modelFactory = new GridModelFactory(layout);
+
+        File font = new File(System.getProperty("user.dir") + "\\fonts\\traditional.ttf");
+        PDFMaker pdf = new PDFMaker(font);
+
+        A4Paper paper = new A4Paper(true);
+        GridView view = new GridView(
+                pdf,
+                paper,
+                modelFactory.create("employee", paper));
+        view.draw(Employee.createSample(), "員工基本資料");
+
+        pdf.save(new File("C:\\TEMP\\GRID_TUTORIAL1.PDF"));
+    }
+
+    @Test
+    public void testTutorial2() throws Exception {
+        File layout = new File(GridTypeHelperTest.class.getResource("sample.xml").toURI());
+        GridModelFactory modelFactory = new GridModelFactory(layout);
+
+        File font = new File(System.getProperty("user.dir") + "\\fonts\\traditional.ttf");
+        PDFMaker pdf = new PDFMaker(font);
+
+        A4Paper paper1 = new A4Paper();
+        GridView view1 = new GridView(
+                pdf,
+                paper1,
+                modelFactory.create("employee", paper1));
+        view1.draw(Employee.createSample(), "員工基本資料");
+
+        A4Paper paper2 = new A4Paper(true);
+        GridView view2 = new GridView(
+                pdf,
+                paper2,
+                modelFactory.create("project", paper2));
+        view2.draw(Project.createSample(), "專案基本資料");
+
+        pdf.save(new File("C:\\TEMP\\GRID_TUTORIAL2.PDF"));
+    }
+
+    @Test
+    public void testToturial3() throws Exception {
+        File layout = new File(GridTypeHelperTest.class.getResource("sample.xml").toURI());
+        GridModelFactory modelFactory = new GridModelFactory(layout);
+
+        // 1. document
+        File font = new File(System.getProperty("user.dir") + "\\fonts\\traditional.ttf");
+        PDFMaker pdf = new PDFMaker(font);
+
+        // 2. footer
+        SimpleFooterView fv = new SimpleFooterView("DOC-0001-AAA0-12.32B", "2015-11-06", 11);
+
+        // 3. chapter 1
+        SimpleHeaderView hv1 = new SimpleHeaderView("第一章 A4 橫式測試頁", 20);
+        A4Paper paper1 = new A4Paper(true);
+        GridView view1 = new GridView(pdf, paper1, modelFactory.create("employee", paper1));
+        view1.setHeaderView(hv1);
+        view1.setFooterView(fv);
+        view1.draw(Employee.createSample(), "員工基本資料");
+        hv1.draw();
+
+        // 4. chapter 2
+        SimpleHeaderView hv2 = new SimpleHeaderView("第二章 A4 直式測試頁", 20);
+        A4Paper paper2 = new A4Paper();
+        GridView view2 = new GridView(pdf, paper2, modelFactory.create("employeeProject", paper2));
+        view2.setHeaderView(hv2);
+        view2.setFooterView(fv);
+        view2.draw(Project.createSample(), "專案基本資料");
+        hv2.draw();
+
+        // 5. draw footer
+        fv.draw();
+
+        // 6. save
+        pdf.save(new File("C:\\TEMP\\GRID_TUTORIAL3.PDF"));
     }
 
     private List<Map<String, Object>> prepareData1() {
@@ -136,7 +182,7 @@ public class GridViewTest {
             LinkedHashMap<String, Object> r2 = new LinkedHashMap<String, Object>();
             r2.put("Byte", Byte.MIN_VALUE);
             r2.put("Short", Short.MIN_VALUE);
-            r2.put("Integer", Integer.MIN_VALUE);
+            r2.put("Integer", i);
             r2.put("Long", Long.MIN_VALUE);
             r2.put("Boolean", false);
             r2.put("Time", new Date());

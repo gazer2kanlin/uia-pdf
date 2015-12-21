@@ -71,17 +71,11 @@ public class PDFMaker {
 
     }
 
-    public boolean save(File file) {
-        try {
-            createIndex();
-            this.docOutline.openNode();
-            this.doc.save(file);
-            this.doc.close();
-            return true;
-        }
-        catch (Exception e) {
-            return false;
-        }
+    public void save(File file) throws IOException {
+        createIndex();
+        this.docOutline.openNode();
+        this.doc.save(file);
+        this.doc.close();
     }
 
     public PDDocument getDocument() {
