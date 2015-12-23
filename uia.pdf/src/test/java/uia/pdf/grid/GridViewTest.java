@@ -1,3 +1,19 @@
+/*
+ * Copyright ${year} uia.pdf
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package uia.pdf.grid;
 
 import java.io.File;
@@ -141,7 +157,7 @@ public class GridViewTest {
 
         // 3. chapter 1
         SimpleHeaderView hv1 = new SimpleHeaderView("第一章 A4 橫式測試頁", 20);
-        A4Paper paper1 = new A4Paper(true);
+        A4Paper paper1 = new A4Paper();
         GridView view1 = new GridView(pdf, paper1, modelFactory.create("employee", paper1));
         view1.setHeaderView(hv1);
         view1.setFooterView(fv);
@@ -150,8 +166,8 @@ public class GridViewTest {
 
         // 4. chapter 2
         SimpleHeaderView hv2 = new SimpleHeaderView("第二章 A4 直式測試頁", 20);
-        A4Paper paper2 = new A4Paper();
-        GridView view2 = new GridView(pdf, paper2, modelFactory.create("employeeProject", paper2));
+        A4Paper paper2 = new A4Paper(true);
+        GridView view2 = new GridView(pdf, paper2, modelFactory.create("project", paper2));
         view2.setHeaderView(hv2);
         view2.setFooterView(fv);
         view2.draw(Project.createSample(), "專案基本資料");

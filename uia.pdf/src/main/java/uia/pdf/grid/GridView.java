@@ -120,7 +120,7 @@ public class GridView extends ContentView {
         PDPageContentStream contentStream = new PDPageContentStream(this.pdf.getDocument(), page, true, false, false);
         contentStream.setFont(font, this.fontSize);
 
-        int h = PDFUtil.getStringHeight("", font, this.fontSize);
+        int h = PDFUtil.getContentHeight("", font, this.fontSize);
 
         ColumnModel[] cms = this.model.getColumnModels();
         for (int i = 0; i < cms.length; i++) {
@@ -132,7 +132,7 @@ public class GridView extends ContentView {
             }
 
             String content = cms[i].getDisplayName();
-            int offset = (cms[i].getWidth() - PDFUtil.getStringWidth(content, font, this.fontSize)) / 2;
+            int offset = (cms[i].getWidth() - PDFUtil.getContentWidth(content, font, this.fontSize)) / 2;
             if (this.columnH + offset > getRight()) {
                 break;
             }

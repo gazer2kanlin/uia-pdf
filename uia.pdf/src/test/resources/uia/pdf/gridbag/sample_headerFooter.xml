@@ -9,7 +9,7 @@
 		<rows>
 			<row height="100%">
 				<imageCell>
-					<url>C:\Temp\mindray.jpg</url>
+					<url>C:\Temp\test_logo.jpg</url>
 				</imageCell>
 				<textCell fontSize="18">
 					<text>保密等级：机密</text>
@@ -27,12 +27,12 @@
 		<rows>
 			<row height="25">
 				<textCell alignment="NEAR" valignment="FAR">
-					<text>地址：東亞 地球</text>
+					<text>地址：未知</text>
 				</textCell>
 			</row>
 			<row height="15">
 				<textCell alignment="NEAR" valignment="FAR">
-					<text>公開文件，自由使用。</text>
+					<text>公開文件，可自由使用。</text>
 				</textCell>
 			</row>
 		</rows>

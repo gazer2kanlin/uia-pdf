@@ -1,4 +1,3 @@
-
 package uia.pdf.grid.layout;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -7,12 +6,11 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
  * <p>Java class for ColumnType complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="ColumnType">
  *   &lt;complexContent>
@@ -29,47 +27,52 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ColumnType", propOrder = {
-    "text"
+        "text"
 })
 public class ColumnType {
 
     @XmlElement(required = true)
     protected String text;
+
     @XmlAttribute(required = true)
     protected String width;
+
     @XmlAttribute
     protected String background;
+
     @XmlAttribute(required = true)
     protected String bind;
+
     @XmlAttribute
     protected String alignment;
+
     @XmlAttribute
     protected Boolean wrap;
 
     /**
      * Gets the value of the text property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getText() {
-        return text;
+        return this.text;
     }
 
     /**
      * Sets the value of the text property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setText(String value) {
         this.text = value;
@@ -77,23 +80,23 @@ public class ColumnType {
 
     /**
      * Gets the value of the width property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getWidth() {
-        return width;
+        return this.width;
     }
 
     /**
      * Sets the value of the width property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setWidth(String value) {
         this.width = value;
@@ -101,23 +104,23 @@ public class ColumnType {
 
     /**
      * Gets the value of the background property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getBackground() {
-        return background;
+        return this.background;
     }
 
     /**
      * Sets the value of the background property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setBackground(String value) {
         this.background = value;
@@ -125,23 +128,23 @@ public class ColumnType {
 
     /**
      * Gets the value of the bind property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getBind() {
-        return bind;
+        return this.bind;
     }
 
     /**
      * Sets the value of the bind property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setBind(String value) {
         this.bind = value;
@@ -149,27 +152,28 @@ public class ColumnType {
 
     /**
      * Gets the value of the alignment property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getAlignment() {
-        if (alignment == null) {
+        if (this.alignment == null) {
             return "NEAR";
-        } else {
-            return alignment;
+        }
+        else {
+            return this.alignment;
         }
     }
 
     /**
      * Sets the value of the alignment property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setAlignment(String value) {
         this.alignment = value;
@@ -177,27 +181,28 @@ public class ColumnType {
 
     /**
      * Gets the value of the wrap property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link Boolean }
-     *     
+     *
      */
     public boolean isWrap() {
-        if (wrap == null) {
+        if (this.wrap == null) {
             return false;
-        } else {
-            return wrap;
+        }
+        else {
+            return this.wrap;
         }
     }
 
     /**
      * Sets the value of the wrap property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link Boolean }
-     *     
+     *
      */
     public void setWrap(Boolean value) {
         this.wrap = value;

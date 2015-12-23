@@ -49,13 +49,13 @@ public class DefaultCellRenderer implements CellRenderer {
 
         try {
             PDFont font = view.getDoc().getFont();
-            h = PDFUtil.getStringHeight("", font, view.getFontSize());
+            h = PDFUtil.getContentHeight("", font, view.getFontSize());
 
             String content = view.getValueParserFactory().parse(value);
-            int contentWidth = PDFUtil.getStringWidth(content, font, view.getFontSize());
+            int contentWidth = PDFUtil.getContentWidth(content, font, view.getFontSize());
             if (cm.getWidth() - contentWidth < 4) {
-                content = PDFUtil.cutString(content, font, view.getFontSize(), cm.getWidth() - 4);
-                contentWidth = PDFUtil.getStringWidth(content, font, view.getFontSize());
+                content = PDFUtil.cutContent(content, font, view.getFontSize(), cm.getWidth() - 4);
+                contentWidth = PDFUtil.getContentWidth(content, font, view.getFontSize());
             }
             contentWidth = Math.min(cm.getWidth() - 4, contentWidth);
 
@@ -85,7 +85,7 @@ public class DefaultCellRenderer implements CellRenderer {
 
         try {
             PDFont font = view.getDoc().getFont();
-            h = PDFUtil.getStringHeight("", font, view.getFontSize());
+            h = PDFUtil.getContentHeight("", font, view.getFontSize());
 
             String content = view.getValueParserFactory().parse(value);
 
@@ -94,7 +94,7 @@ public class DefaultCellRenderer implements CellRenderer {
 
             int ht = 0;
             for (int i = 0; i < cs.size(); i++) {
-                int contentWidth = PDFUtil.getStringWidth(cs.get(i), font, view.getFontSize());
+                int contentWidth = PDFUtil.getContentWidth(cs.get(i), font, view.getFontSize());
                 contentWidth = Math.min(cm.getWidth() - 4, contentWidth);
 
                 int offset = 3;

@@ -55,7 +55,7 @@ public class GridModelFactory {
         ColumnModel[] cms = new ColumnModel[gt.getColumns().getColumn().size()];
         int c = 0;
         for (ColumnType ct : gt.getColumns().getColumn()) {
-            int x = PDFUtil.calculate(ct.getWidth(), width, x0);
+            int w = PDFUtil.calculateWidth(ct.getWidth(), width, x0);
             AlignmentType at = AlignmentType.CENTER;
             if ("NEAR".equalsIgnoreCase(ct.getAlignment())) {
                 at = AlignmentType.NEAR;
@@ -63,11 +63,11 @@ public class GridModelFactory {
             else if ("FAR".equalsIgnoreCase(ct.getAlignment())) {
                 at = AlignmentType.FAR;
             }
-            ColumnModel cm = new ColumnModel(ct.getBind(), ct.getText(), x, at);
+            ColumnModel cm = new ColumnModel(ct.getBind(), ct.getText(), w, at);
             cm.setWrap(ct.isWrap());
             cm.setBackground(PDFUtil.toColor(ct.getBackground()));
             cms[c++] = cm;
-            x0 += x;
+            x0 += w;
         }
 
         return new DefaultGridModel(cms);

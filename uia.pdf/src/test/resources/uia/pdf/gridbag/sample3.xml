@@ -6,7 +6,7 @@
 		</columns>
 		<rows>
 			<row height="100%">
-				<bindCell>
+				<bindCell fontSize="20">
 					<id>titleInfo</id>
 				</bindCell>
 			</row>

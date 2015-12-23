@@ -24,46 +24,71 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
 
 public class PDFUtil {
 
-    public static int getStringHeight(String content, PDFont font, int fontSize) {
+    /**
+     * Get height.
+     * @param content
+     * @param font
+     * @param fontSize
+     * @return
+     */
+    public static int getContentHeight(String content, PDFont font, int fontSize) {
         return content == null ? 0 : (int) (font.getFontDescriptor().getAscent() / 1000 * fontSize);
     }
 
-    public static int getStringWidth(String content, PDFont font, int fontSize) throws IOException {
+    public static int getContentWidth(String content, PDFont font, int fontSize) throws IOException {
         if (content == null) {
             return 0;
         }
         return (int) (font.getStringWidth(content) / 1000 * fontSize);
     }
 
-    public static int[] getStringWdidths(String[] content, PDFont font, int fontSize) throws IOException {
+    public static int[] getContentWdidths(String[] content, PDFont font, int fontSize) throws IOException {
         int[] widths = new int[content.length];
         for (int i = 0; i < content.length; i++) {
-            widths[i] = getStringWidth(content[i], font, fontSize);
+            widths[i] = getContentWidth(content[i], font, fontSize);
         }
         return widths;
     }
 
     public static int fixFontSzie(String content, PDFont font, int fontSize, int maxWidth) throws IOException {
-        int w = getStringWidth(content, font, fontSize);
+        int w = getContentWidth(content, font, fontSize);
         return w < maxWidth ? fontSize : fixFontSzie(content, font, fontSize - 1, maxWidth);
     }
 
-    public static String cutString(String content, PDFont font, int fontSize, int maxWidth) throws IOException {
-        if (getStringWidth(content, font, fontSize) < maxWidth) {
+    /**
+     * Cut content based on max width.
+     * @param content Content.
+     * @param font Font
+     * @param fontSize font size.
+     * @param maxWidth Max width.
+     * @return Cut content.
+     * @throws IOException
+     */
+    public static String cutContent(String content, PDFont font, int fontSize, int maxWidth) throws IOException {
+        if (getContentWidth(content, font, fontSize) < maxWidth) {
             return content;
         }
         else {
-            return cutString(content.substring(0, content.length() - 1), font, fontSize, maxWidth);
+            return cutContent(content.substring(0, content.length() - 1), font, fontSize, maxWidth);
         }
     }
 
+    /**
+     * Split content based on max width.
+     * @param content Content.
+     * @param font Font
+     * @param fontSize font size.
+     * @param maxWidth Max width.
+     * @param result Split result.
+     * @throws IOException
+     */
     public static void split(String content, PDFont font, int fontSize, int maxWidth, List<String> result) throws IOException {
         if (content == null) {
             return;
         }
 
         for (int c = 0; c <= content.length(); c++) {
-            if (getStringWidth(content.substring(0, c), font, fontSize) >= maxWidth) {
+            if (getContentWidth(content.substring(0, c), font, fontSize) >= maxWidth) {
                 result.add(content.substring(0, c - 1));
                 split(content.substring(c - 1, content.length()), font, fontSize, maxWidth, result);
                 return;
@@ -72,26 +97,49 @@ public class PDFUtil {
         result.add(content);
     }
 
-    public static int calculate(String value, int total, int offset) {
+    /**
+     *
+     * Value has 4 format: fix value, % value, % value with + prefix, % value with * prefix.<br>
+     * fix value: actual width.
+     * % value: calculate based on full size.<br>
+     * % value with + prefix: calculate based on (full size - offset).<br>
+     * % value with * prefix: calculate based on full size then reduce offset.<br>
+     *
+     * @param value
+     * @param fullSize
+     * @param offset
+     * @return
+     */
+    public static int calculateWidth(String value, int fullSize, int offset) {
         if (value.endsWith("%")) {
             if (value.startsWith("+")) {
                 int p = Integer.parseInt(value.substring(1, value.length() - 1));
-                return (total - offset) * p / 100;
+                return (fullSize - offset) * p / 100;
             }
             else if (value.startsWith("*")) {
                 int p = Integer.parseInt(value.substring(1, value.length() - 1));
-                return total * p / 100 - offset;
+                return fullSize * p / 100 - offset;
             }
             else {
                 int p = Integer.parseInt(value.substring(0, value.length() - 1));
-                return total * p / 100;
+                return fullSize * p / 100;
             }
         }
         else {
-            return Integer.parseInt(value);
+            if (value.startsWith("-")) {
+                return fullSize + Integer.parseInt(value) - offset;
+            }
+            else {
+                return Integer.parseInt(value);
+            }
         }
     }
 
+    /**
+     *
+     * @param rgbString
+     * @return
+     */
     public static Color toColor(String rgbString) {
         if (rgbString == null) {
             return null;

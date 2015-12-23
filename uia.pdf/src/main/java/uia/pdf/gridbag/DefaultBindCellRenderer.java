@@ -44,8 +44,8 @@ public class DefaultBindCellRenderer implements GridBagCellRenderer {
             return;
         }
 
-        int cw = PDFUtil.getStringWidth(content, font, fontSize);
-        int ch = PDFUtil.getStringHeight(content, font, fontSize);
+        int cw = PDFUtil.getContentWidth(content, font, fontSize);
+        int ch = PDFUtil.getContentHeight(content, font, fontSize);
         int textLine = bottomLeft.y + (cell.getHeight() - ch) / 2;
 
         contentStream.setNonStrokingColor(Color.black);

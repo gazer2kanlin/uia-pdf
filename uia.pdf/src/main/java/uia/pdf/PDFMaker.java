@@ -1,12 +1,12 @@
 /*
  * Copyright 2015 uia.pdf
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -53,6 +53,33 @@ public class PDFMaker {
 
     private PDOutlineItem lastOI;
 
+    /**
+     * Constructor.
+     * @param font Font.
+     * @throws IOException
+     */
+    public PDFMaker(PDFont font) throws IOException {
+        this.doc = new PDDocument();
+        this.font = font;
+
+        this.docOutline = new PDDocumentOutline();
+        this.doc.getDocumentCatalog().setDocumentOutline(this.docOutline);
+
+        PDOutlineItem rootOI = new PDOutlineItem();
+        rootOI.setTitle("All");
+        this.docOutline.addLast(rootOI);
+
+        this.hierarchyOI = new ArrayDeque<PDOutlineItem>();
+        this.hierarchyOI.push(rootOI);
+
+        this.index = new LinkedHashMap<String, String>();
+    }
+
+    /**
+     * Constructor.
+     * @param fontFile TTF font file.
+     * @throws IOException
+     */
     public PDFMaker(File fontFile) throws IOException {
         this.doc = new PDDocument();
         this.font = PDType0Font.load(this.doc, fontFile);
@@ -68,9 +95,13 @@ public class PDFMaker {
         this.hierarchyOI.push(rootOI);
 
         this.index = new LinkedHashMap<String, String>();
-
     }
 
+    /**
+     * Save
+     * @param file PDF file.
+     * @throws IOException
+     */
     public void save(File file) throws IOException {
         createIndex();
         this.docOutline.openNode();
@@ -78,10 +109,27 @@ public class PDFMaker {
         this.doc.close();
     }
 
+    /**
+     * Get document.
+     * @return PDF document.
+     */
     public PDDocument getDocument() {
         return this.doc;
     }
 
+    /**
+     * Get font.
+     * @return Font.
+     */
+    public PDFont getFont() {
+        return this.font;
+    }
+
+    /**
+     * Add bookmark.
+     * @param page Page.
+     * @param title bookmark text.
+     */
     public void addBookmark(PDPage page, String title) {
         PDPageFitDestination dest = new PDPageFitDestination();
         dest.setPage(page);
@@ -92,20 +140,22 @@ public class PDFMaker {
         this.index.put(title, "" + this.doc.getNumberOfPages());
     }
 
+    /**
+     * Begin bookmark group.
+     */
     public void beginBookmarkGroup() {
         if (this.hierarchyOI.peek() != this.lastOI) {
             this.hierarchyOI.push(this.lastOI);
         }
     }
 
+    /**
+     * End bookmark group.
+     */
     public void endBookmarkGroup() {
         if (this.hierarchyOI.size() > 1) {
             this.hierarchyOI.pop();
         }
-    }
-
-    public PDFont getFont() {
-        return this.font;
     }
 
     private void createIndex() throws IOException {
@@ -117,7 +167,7 @@ public class PDFMaker {
         PDPageContentStream contentStream = new PDPageContentStream(this.doc, page, true, false, false);
 
         contentStream.setFont(this.font, 16);
-        int cw = PDFUtil.getStringWidth("INDEX", this.font, 11);
+        int cw = PDFUtil.getContentWidth("INDEX", this.font, 11);
         contentStream.beginText();
         contentStream.newLineAtOffset(a4.getLeft() + (a4.getDrawableSize().width - cw) / 2, a4.getTop() - 12);
         contentStream.showText("INDEX");
@@ -137,8 +187,8 @@ public class PDFMaker {
                 top = a4.getTop() - 20;
             }
 
-            int cw1 = PDFUtil.getStringWidth(e.getKey(), this.font, 11);
-            int cw2 = PDFUtil.getStringWidth(e.getValue(), this.font, 11);
+            int cw1 = PDFUtil.getContentWidth(e.getKey(), this.font, 11);
+            int cw2 = PDFUtil.getContentWidth(e.getValue(), this.font, 11);
 
             contentStream.moveTo(a4.getLeft() + cw1 + 10, top - 10);
             contentStream.lineTo(a4.getRight() - 18, top - 10);

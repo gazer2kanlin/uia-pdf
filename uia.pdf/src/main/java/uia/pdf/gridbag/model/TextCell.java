@@ -55,12 +55,12 @@ public class TextCell extends Cell {
             PDFont font = cv.getDoc().getFont();
 
             int fontSize1 = PDFUtil.fixFontSzie(this.text.value, font, this.text.getFontSize(), getWidth());
-            int cw1 = PDFUtil.getStringWidth(this.text.value, font, fontSize1);
-            int ch1 = PDFUtil.getStringHeight(this.text.value, font, fontSize1);
+            int cw1 = PDFUtil.getContentWidth(this.text.value, font, fontSize1);
+            int ch1 = PDFUtil.getContentHeight(this.text.value, font, fontSize1);
 
             int fontSize2 = PDFUtil.fixFontSzie(this.subText.value, font, this.subText.getFontSize(), getWidth());
-            int cw2 = PDFUtil.getStringWidth(this.subText.value, font, fontSize2);
-            int ch2 = PDFUtil.getStringHeight(this.subText.value, font, fontSize2);
+            int cw2 = PDFUtil.getContentWidth(this.subText.value, font, fontSize2);
+            int ch2 = PDFUtil.getContentHeight(this.subText.value, font, fontSize2);
 
             int textLine = bottomLeft.y + getHeight() / 2 - 3;
             if ("NEAR".equals(getVAlignment())) {
