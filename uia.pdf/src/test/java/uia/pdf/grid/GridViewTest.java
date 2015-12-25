@@ -30,7 +30,6 @@ import uia.pdf.SimpleFooterView;
 import uia.pdf.SimpleHeaderView;
 import uia.pdf.grid.ColumnModel.AlignmentType;
 import uia.pdf.papers.A4Paper;
-import uia.pdf.parsers.ValueParser;
 
 public class GridViewTest {
 
@@ -57,6 +56,7 @@ public class GridViewTest {
                         new ColumnModel("Value", "VALUE", 100, AlignmentType.NEAR)
                 },
                 new MyCellRenderer()));
+        /**
         view1.getValueParserFactory().register(MyData.class, new ValueParser() {
 
             @Override
@@ -65,12 +65,13 @@ public class GridViewTest {
             }
 
         });
+         */
         view1.setHeaderView(hv1);
         view1.setFooterView(fv);
-        view1.beginBookmarkGroup("第一章 A4 橫式測試頁");
+        pdf.beginBookmarkGroup("第一章 A4 橫式測試頁");
         view1.draw(prepareData1(), "1-1 第一次資料");
         view1.draw(prepareData1(), "1-2 第二次資料");
-        view1.endBookmarkGroup();
+        pdf.endBookmarkGroup();
         hv1.draw();
 
         // 4. chapter 2
@@ -83,12 +84,12 @@ public class GridViewTest {
                         new ColumnModel("Long", "LONG", 110, AlignmentType.NEAR),
                         new ColumnModel("Boolean", "BOOL", 30, AlignmentType.NEAR),
                         new ColumnModel("Value", "VALUE", 150, AlignmentType.NEAR)
-                }));
+                }, 11));
         view2.setHeaderView(hv2);
         view2.setFooterView(fv);
-        view2.beginBookmarkGroup("第二章 A4 直式測試頁");
+        pdf.beginBookmarkGroup("第二章 A4 直式測試頁");
         view2.draw(prepareData1(), "2-1 第一次資料");
-        view2.endBookmarkGroup();
+        pdf.endBookmarkGroup();
         hv2.draw();
 
         // 5. draw footer
@@ -103,7 +104,7 @@ public class GridViewTest {
     @Test
     public void testTutorial1() throws Exception {
         File layout = new File(GridTypeHelperTest.class.getResource("sample.xml").toURI());
-        GridModelFactory modelFactory = new GridModelFactory(layout);
+        GridXMLModelFactory modelFactory = new GridXMLModelFactory(layout);
 
         File font = new File(System.getProperty("user.dir") + "\\fonts\\traditional.ttf");
         PDFMaker pdf = new PDFMaker(font);
@@ -121,7 +122,7 @@ public class GridViewTest {
     @Test
     public void testTutorial2() throws Exception {
         File layout = new File(GridTypeHelperTest.class.getResource("sample.xml").toURI());
-        GridModelFactory modelFactory = new GridModelFactory(layout);
+        GridXMLModelFactory modelFactory = new GridXMLModelFactory(layout);
 
         File font = new File(System.getProperty("user.dir") + "\\fonts\\traditional.ttf");
         PDFMaker pdf = new PDFMaker(font);
@@ -146,7 +147,7 @@ public class GridViewTest {
     @Test
     public void testToturial3() throws Exception {
         File layout = new File(GridTypeHelperTest.class.getResource("sample.xml").toURI());
-        GridModelFactory modelFactory = new GridModelFactory(layout);
+        GridXMLModelFactory modelFactory = new GridXMLModelFactory(layout);
 
         // 1. document
         File font = new File(System.getProperty("user.dir") + "\\fonts\\traditional.ttf");

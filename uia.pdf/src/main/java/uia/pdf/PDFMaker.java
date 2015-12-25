@@ -1,12 +1,12 @@
 /*
  * Copyright 2015 uia.pdf
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,8 +19,7 @@ package uia.pdf;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayDeque;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.ArrayList;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -47,11 +46,13 @@ public class PDFMaker {
 
     private final PDFont font;
 
-    private LinkedHashMap<String, String> index;
+    private ArrayList<BookmarkPage> bookmarkPages;
 
     private ArrayDeque<PDOutlineItem> hierarchyOI;
 
     private PDOutlineItem lastOI;
+
+    private ArrayList<PDOutlineItem> temp;
 
     /**
      * Constructor.
@@ -59,6 +60,7 @@ public class PDFMaker {
      * @throws IOException
      */
     public PDFMaker(PDFont font) throws IOException {
+        this.temp = new ArrayList<PDOutlineItem>();
         this.doc = new PDDocument();
         this.font = font;
 
@@ -72,7 +74,7 @@ public class PDFMaker {
         this.hierarchyOI = new ArrayDeque<PDOutlineItem>();
         this.hierarchyOI.push(rootOI);
 
-        this.index = new LinkedHashMap<String, String>();
+        this.bookmarkPages = new ArrayList<BookmarkPage>();
     }
 
     /**
@@ -81,6 +83,7 @@ public class PDFMaker {
      * @throws IOException
      */
     public PDFMaker(File fontFile) throws IOException {
+        this.temp = new ArrayList<PDOutlineItem>();
         this.doc = new PDDocument();
         this.font = PDType0Font.load(this.doc, fontFile);
 
@@ -94,7 +97,7 @@ public class PDFMaker {
         this.hierarchyOI = new ArrayDeque<PDOutlineItem>();
         this.hierarchyOI.push(rootOI);
 
-        this.index = new LinkedHashMap<String, String>();
+        this.bookmarkPages = new ArrayList<BookmarkPage>();
     }
 
     /**
@@ -128,16 +131,28 @@ public class PDFMaker {
     /**
      * Add bookmark.
      * @param page Page.
-     * @param title bookmark text.
+     * @param text bookmark text.
+     * @throws IOException
      */
-    public void addBookmark(PDPage page, String title) {
+    public void addBookmark(ContentView view, PDPage page, String text) throws IOException {
         PDPageFitDestination dest = new PDPageFitDestination();
         dest.setPage(page);
-        this.lastOI = new PDOutlineItem();
-        this.lastOI.setDestination(dest);
-        this.lastOI.setTitle(title);
-        this.hierarchyOI.peek().addLast(this.lastOI);
-        this.index.put(title, "" + this.doc.getNumberOfPages());
+
+        for (PDOutlineItem oi : this.temp) {
+            oi.setDestination(dest);
+        }
+
+        if (text != null && text.trim().length() > 0) {
+            this.lastOI = new PDOutlineItem();
+            this.lastOI.setDestination(dest);
+            this.lastOI.setTitle(text);
+            this.hierarchyOI.peek().addLast(this.lastOI);
+            this.bookmarkPages.add(new BookmarkPage(text, "" + this.doc.getNumberOfPages()));
+        }
+
+        this.temp.add(this.lastOI);
+        view.drawBookmarks(page, this.temp);
+        this.temp.clear();
     }
 
     /**
@@ -147,6 +162,20 @@ public class PDFMaker {
         if (this.hierarchyOI.peek() != this.lastOI) {
             this.hierarchyOI.push(this.lastOI);
         }
+    }
+
+    /**
+     *
+     * @param text
+     */
+    public void beginBookmarkGroup(String text) {
+        this.lastOI = new PDOutlineItem();
+        this.lastOI.setTitle(text);
+        this.hierarchyOI.peek().addLast(this.lastOI);
+        this.bookmarkPages.add(new BookmarkPage(text, "" + (this.doc.getNumberOfPages() + 1)));
+        this.temp.add(this.lastOI);
+
+        this.hierarchyOI.push(this.lastOI);
     }
 
     /**
@@ -175,7 +204,7 @@ public class PDFMaker {
 
         contentStream.setFont(this.font, 11);
         int top = a4.getTop() - 20;
-        for (Map.Entry<String, String> e : this.index.entrySet()) {
+        for (BookmarkPage bp : this.bookmarkPages) {
             if (top <= a4.getBottom()) {
                 contentStream.close();
 
@@ -187,26 +216,41 @@ public class PDFMaker {
                 top = a4.getTop() - 20;
             }
 
-            int cw1 = PDFUtil.getContentWidth(e.getKey(), this.font, 11);
-            int cw2 = PDFUtil.getContentWidth(e.getValue(), this.font, 11);
+            int cw1 = PDFUtil.getContentWidth(bp.text, this.font, 11);
+            int cw2 = PDFUtil.getContentWidth(bp.pageNo, this.font, 11);
 
-            contentStream.moveTo(a4.getLeft() + cw1 + 10, top - 10);
-            contentStream.lineTo(a4.getRight() - 18, top - 10);
+            int right = a4.getRight() - 18;
+            int w = 4 * (int) Math.ceil((right - (a4.getLeft() + cw1 + 10)) / 4);
+            contentStream.setLineDashPattern(new float[] { 1, 3 }, 0);
+            contentStream.moveTo(right - w - 1, top - 10);
+            contentStream.lineTo(right, top - 10);
             contentStream.stroke();
 
             contentStream.beginText();
             contentStream.newLineAtOffset(a4.getLeft(), top - 10);
-            contentStream.showText(e.getKey());
+            contentStream.showText(bp.text);
             contentStream.endText();
 
             contentStream.beginText();
             contentStream.newLineAtOffset(a4.getRight() - cw2, top - 10);
-            contentStream.showText(e.getValue());
+            contentStream.showText(bp.pageNo);
             contentStream.endText();
 
             top -= 15;
         }
 
         contentStream.close();
+    }
+
+    class BookmarkPage {
+
+        final String text;
+
+        final String pageNo;
+
+        public BookmarkPage(String text, String pageNo) {
+            this.text = text;
+            this.pageNo = pageNo;
+        }
     }
 }

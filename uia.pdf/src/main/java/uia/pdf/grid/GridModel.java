@@ -24,6 +24,8 @@ package uia.pdf.grid;
  */
 public interface GridModel {
 
+    public int getFontSize();
+
     /**
      * Get column models.
      * @return Column models.

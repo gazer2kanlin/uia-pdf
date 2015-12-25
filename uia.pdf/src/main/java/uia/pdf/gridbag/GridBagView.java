@@ -1,12 +1,12 @@
 /*
  * Copyright 2015 uia.pdf
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,9 +18,11 @@ package uia.pdf.gridbag;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.interactive.documentnavigation.outline.PDOutlineItem;
 
 import uia.pdf.ContentView;
 import uia.pdf.PDFMaker;
@@ -34,8 +36,6 @@ import uia.pdf.papers.Paper;
 public class GridBagView extends ContentView {
 
     private GridBagDrawer drawer;
-
-    private String bookmarkGroup;
 
     /**
      *
@@ -57,22 +57,6 @@ public class GridBagView extends ContentView {
         this.drawer.registerBindClassCellRenderer(cls, renderer);
     }
 
-    @Override
-    public void beginBookmarkGroup() {
-        this.pdf.beginBookmarkGroup();
-    }
-
-    @Override
-    public void beginBookmarkGroup(String bookmarkGroup) {
-        this.bookmarkGroup = bookmarkGroup;
-    }
-
-    @Override
-    public void endBookmarkGroup() {
-        this.bookmarkGroup = null;
-        this.pdf.endBookmarkGroup();
-    }
-
     /**
      *
      * @param gridsData
@@ -84,12 +68,7 @@ public class GridBagView extends ContentView {
         PDPage page = this.paper.createPage();
         this.pdf.getDocument().addPage(page);
         this.pages.add(page);
-        if (this.bookmarkGroup != null) {
-            this.pdf.addBookmark(page, this.bookmarkGroup);
-            this.bookmarkGroup = null;
-            this.pdf.beginBookmarkGroup();
-        }
-        this.pdf.addBookmark(page, bookmark);
+        this.pdf.addBookmark(this, page, bookmark);
         return addPageEx(page, gridsData);
     }
 
@@ -117,12 +96,7 @@ public class GridBagView extends ContentView {
         PDPage page = this.paper.createPage();
         this.pdf.getDocument().addPage(page);
         this.pages.add(page);
-        if (this.bookmarkGroup != null) {
-            this.pdf.addBookmark(page, this.bookmarkGroup);
-            this.bookmarkGroup = null;
-            this.pdf.beginBookmarkGroup();
-        }
-        this.pdf.addBookmark(page, bookmark);
+        this.pdf.addBookmark(this, page, bookmark);
         return addPage(page, data);
     }
 
@@ -137,6 +111,10 @@ public class GridBagView extends ContentView {
         this.pdf.getDocument().addPage(page);
         this.pages.add(page);
         return addPage(page, data);
+    }
+
+    @Override
+    public void drawBookmarks(PDPage page, List<PDOutlineItem> ois) throws IOException {
     }
 
     private PDPage addPageEx(PDPage page, Map<String, Map<String, Object>> gridsData) throws IOException {

@@ -1,12 +1,12 @@
 /*
  * Copyright 2015 uia.pdf
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,11 +17,13 @@
 package uia.pdf;
 
 import java.awt.Point;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.interactive.documentnavigation.outline.PDOutlineItem;
 
 import uia.pdf.papers.Paper;
 import uia.pdf.parsers.ValueParserFactory;
@@ -108,14 +110,6 @@ public abstract class ContentView {
         return this.pages;
     }
 
-    protected int getTop() {
-        return this.headerView == null ? this.paper.getTop() : this.paper.getTop() - this.headerView.getHeight();
-    }
-
-    protected int getBottom() {
-        return this.footerView == null ? this.paper.getBottom() : this.paper.getBottom() + this.footerView.getHeight();
-    }
-
     public int getLeft() {
         return this.paper.getLeft();
     }
@@ -136,9 +130,13 @@ public abstract class ContentView {
         return getTop() - getBottom();
     }
 
-    public abstract void beginBookmarkGroup();
+    public abstract void drawBookmarks(PDPage page, List<PDOutlineItem> ois) throws IOException;
 
-    public abstract void beginBookmarkGroup(String bookmarkGroup);
+    protected int getTop() {
+        return this.headerView == null ? this.paper.getTop() : this.paper.getTop() - this.headerView.getHeight();
+    }
 
-    public abstract void endBookmarkGroup();
+    protected int getBottom() {
+        return this.footerView == null ? this.paper.getBottom() : this.paper.getBottom() + this.footerView.getHeight();
+    }
 }

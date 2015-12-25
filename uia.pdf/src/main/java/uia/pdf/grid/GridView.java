@@ -25,6 +25,7 @@ import java.util.Map;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.interactive.documentnavigation.outline.PDOutlineItem;
 
 import uia.pdf.ContentView;
 import uia.pdf.PDFMaker;
@@ -43,19 +44,19 @@ public class GridView extends ContentView {
 
     private int rowV;
 
+    private int tableTop;
+
     private int columnH;
 
     private boolean columnEachPage;
 
     private int fontSize;
 
-    private String bookmarkGroup;
-
     public GridView(PDFMaker pdf, Paper paper, GridModel model) {
         super(pdf, paper);
         this.model = model;
         this.columnEachPage = true;
-        this.fontSize = 11;
+        this.fontSize = model.getFontSize();
     }
 
     public boolean isColumnEachPage() {
@@ -74,35 +75,16 @@ public class GridView extends ContentView {
         this.fontSize = fontSize;
     }
 
-    @Override
-    public void beginBookmarkGroup() {
-        this.pdf.beginBookmarkGroup();
-    }
-
-    @Override
-    public void beginBookmarkGroup(String bookmarkGroup) {
-        this.bookmarkGroup = bookmarkGroup;
-    }
-
-    @Override
-    public void endBookmarkGroup() {
-        this.bookmarkGroup = null;
-        this.pdf.endBookmarkGroup();
-    }
-
     public void draw(List<Map<String, Object>> data, String bookmark) throws IOException {
+        this.rowV = getTop();
+        this.tableTop = this.rowV;
+        this.columnH = getLeft();
+
         PDPage page = this.paper.createPage();
         this.pdf.getDocument().addPage(page);
         this.pages.add(page);
-        if (this.bookmarkGroup != null) {
-            this.pdf.addBookmark(page, this.bookmarkGroup);
-            this.bookmarkGroup = null;
-            this.pdf.beginBookmarkGroup();
-        }
-        this.pdf.addBookmark(page, bookmark);
+        this.pdf.addBookmark(this, page, bookmark);
 
-        this.rowV = getTop();
-        this.columnH = getLeft();
         drawColumns(page);
 
         if (data == null) {
@@ -113,6 +95,23 @@ public class GridView extends ContentView {
             page = drawRow(page, rowCells, row, false);
         }
         drawGridLine(page);
+    }
+
+    @Override
+    public void drawBookmarks(PDPage page, List<PDOutlineItem> ois) throws IOException {
+        PDFont font = this.pdf.getFont();
+        PDPageContentStream contentStream = new PDPageContentStream(this.pdf.getDocument(), page, true, false, false);
+        contentStream.setFont(font, 14);
+        for (PDOutlineItem oi : ois) {
+            contentStream.beginText();
+            contentStream.newLineAtOffset(getLeft(), this.rowV - 16);
+            contentStream.showText(oi.getTitle());
+            contentStream.endText();
+            this.rowV -= 16;
+        }
+        contentStream.close();
+        this.rowV -= 10;
+        this.tableTop = this.rowV;
     }
 
     private void drawColumns(PDPage page) throws IOException {
@@ -138,12 +137,12 @@ public class GridView extends ContentView {
             }
 
             contentStream.beginText();
-            contentStream.newLineAtOffset(this.columnH + offset, getTop() - h - 3);
+            contentStream.newLineAtOffset(this.columnH + offset, this.rowV - h - 3);
             contentStream.showText(content);
             contentStream.endText();
         }
-        contentStream.moveTo(getLeft(), getTop() - h - 8);
-        contentStream.lineTo(getRight(), getTop() - h - 8);
+        contentStream.moveTo(getLeft(), this.rowV - h - 8);
+        contentStream.lineTo(getRight(), this.rowV - h - 8);
         contentStream.stroke();
         this.rowV -= (h + 8);
         contentStream.close();
@@ -154,6 +153,7 @@ public class GridView extends ContentView {
         if (forceNewPage || (this.rowV - 12) < getBottom()) {
             drawGridLine(page);
             this.rowV = getTop();
+            this.tableTop = this.rowV;
             currPage = this.paper.createPage();
             this.pdf.getDocument().addPage(currPage);
             this.pages.add(currPage);
@@ -210,7 +210,7 @@ public class GridView extends ContentView {
         int columnH = getLeft();
         for (int i = 0; i < cms.length; i++) {
             columnH += cms[i].getWidth();
-            contentStream.moveTo(columnH, getTop());
+            contentStream.moveTo(columnH, this.tableTop);
             contentStream.lineTo(columnH, this.rowV);
             contentStream.stroke();
 
@@ -219,7 +219,7 @@ public class GridView extends ContentView {
                 getLeft(),
                 this.rowV,
                 (float) this.getPaper().getDrawableSize().getWidth(),
-                getTop() - this.rowV);
+                this.tableTop - this.rowV);
         contentStream.stroke();
 
         contentStream.close();

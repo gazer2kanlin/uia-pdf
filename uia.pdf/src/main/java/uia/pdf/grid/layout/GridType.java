@@ -1,20 +1,19 @@
-
 package uia.pdf.grid.layout;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
  * <p>Java class for GridType complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="GridType">
  *   &lt;complexContent>
@@ -41,41 +40,43 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "GridType", propOrder = {
-    "columns"
+        "columns"
 })
 public class GridType {
 
     @XmlElement(required = true)
     protected GridType.Columns columns;
+
     @XmlAttribute(required = true)
     protected String name;
+
     @XmlAttribute
     protected Integer fontSize;
 
     /**
      * Gets the value of the columns property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link GridType.Columns }
-     *     
+     *
      */
     public GridType.Columns getColumns() {
-        return columns;
+        return this.columns;
     }
 
     /**
      * Sets the value of the columns property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link GridType.Columns }
-     *     
+     *
      */
     public void setColumns(GridType.Columns value) {
         this.columns = value;
@@ -83,23 +84,23 @@ public class GridType {
 
     /**
      * Gets the value of the name property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getName() {
-        return name;
+        return this.name;
     }
 
     /**
      * Sets the value of the name property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setName(String value) {
         this.name = value;
@@ -107,38 +108,38 @@ public class GridType {
 
     /**
      * Gets the value of the fontSize property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link Integer }
-     *     
+     *
      */
     public int getFontSize() {
-        if (fontSize == null) {
-            return  9;
-        } else {
-            return fontSize;
+        if (this.fontSize == null) {
+            return 9;
+        }
+        else {
+            return this.fontSize;
         }
     }
 
     /**
      * Sets the value of the fontSize property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link Integer }
-     *     
+     *
      */
     public void setFontSize(Integer value) {
         this.fontSize = value;
     }
 
-
     /**
      * <p>Java class for anonymous complex type.
-     * 
+     *
      * <p>The following schema fragment specifies the expected content contained within this class.
-     * 
+     *
      * <pre>
      * &lt;complexType>
      *   &lt;complexContent>
@@ -153,76 +154,80 @@ public class GridType {
      *   &lt;/complexContent>
      * &lt;/complexType>
      * </pre>
-     * 
-     * 
+     *
+     *
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
-        "column"
+            "column"
     })
     public static class Columns {
 
         @XmlElement(required = true)
         protected List<ColumnType> column;
+
         @XmlAttribute
         protected Integer height;
+
         @XmlAttribute
         protected Integer fontSize;
+
         @XmlAttribute
         protected String background;
 
         /**
          * Gets the value of the column property.
-         * 
+         *
          * <p>
          * This accessor method returns a reference to the live list,
          * not a snapshot. Therefore any modification you make to the
          * returned list will be present inside the JAXB object.
          * This is why there is not a <CODE>set</CODE> method for the column property.
-         * 
+         *
          * <p>
          * For example, to add a new item, do as follows:
          * <pre>
          *    getColumn().add(newItem);
          * </pre>
-         * 
-         * 
+         *
+         *
          * <p>
          * Objects of the following type(s) are allowed in the list
          * {@link ColumnType }
-         * 
-         * 
+         *
+         *
          */
         public List<ColumnType> getColumn() {
-            if (column == null) {
-                column = new ArrayList<ColumnType>();
+            if (this.column == null) {
+                this.column = new ArrayList<ColumnType>();
             }
             return this.column;
         }
 
         /**
          * Gets the value of the height property.
-         * 
+         *
          * @return
          *     possible object is
          *     {@link Integer }
-         *     
+         *
          */
         public int getHeight() {
-            if (height == null) {
-                return  13;
-            } else {
-                return height;
+            if (this.height == null) {
+                return 13;
+            }
+            else {
+                return this.height;
             }
         }
 
         /**
          * Sets the value of the height property.
-         * 
+         *
          * @param value
          *     allowed object is
          *     {@link Integer }
-         *     
+         *
          */
         public void setHeight(Integer value) {
             this.height = value;
@@ -230,23 +235,23 @@ public class GridType {
 
         /**
          * Gets the value of the fontSize property.
-         * 
+         *
          * @return
          *     possible object is
          *     {@link Integer }
-         *     
+         *
          */
         public Integer getFontSize() {
-            return fontSize;
+            return this.fontSize;
         }
 
         /**
          * Sets the value of the fontSize property.
-         * 
+         *
          * @param value
          *     allowed object is
          *     {@link Integer }
-         *     
+         *
          */
         public void setFontSize(Integer value) {
             this.fontSize = value;
@@ -254,27 +259,28 @@ public class GridType {
 
         /**
          * Gets the value of the background property.
-         * 
+         *
          * @return
          *     possible object is
          *     {@link String }
-         *     
+         *
          */
         public String getBackground() {
-            if (background == null) {
+            if (this.background == null) {
                 return "212,212,212";
-            } else {
-                return background;
+            }
+            else {
+                return this.background;
             }
         }
 
         /**
          * Sets the value of the background property.
-         * 
+         *
          * @param value
          *     allowed object is
          *     {@link String }
-         *     
+         *
          */
         public void setBackground(String value) {
             this.background = value;

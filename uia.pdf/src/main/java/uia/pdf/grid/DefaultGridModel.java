@@ -24,6 +24,8 @@ package uia.pdf.grid;
  */
 public class DefaultGridModel implements GridModel {
 
+    private int fontSize;
+
     private final ColumnModel[] columnModels;
 
     private CellRenderer renderer;
@@ -32,7 +34,8 @@ public class DefaultGridModel implements GridModel {
      * Constructor.
      * @param columnModels Column models.
      */
-    public DefaultGridModel(ColumnModel[] columnModels) {
+    public DefaultGridModel(ColumnModel[] columnModels, int fontSize) {
+        this.fontSize = fontSize;
         this.columnModels = columnModels;
         this.renderer = new DefaultCellRenderer();
     }
@@ -43,8 +46,14 @@ public class DefaultGridModel implements GridModel {
      * @param renderer Cell renderer.
      */
     public DefaultGridModel(ColumnModel[] columnModels, CellRenderer renderer) {
+        this.fontSize = 9;
         this.columnModels = columnModels;
         this.renderer = renderer;
+    }
+
+    @Override
+    public int getFontSize() {
+        return this.fontSize;
     }
 
     @Override

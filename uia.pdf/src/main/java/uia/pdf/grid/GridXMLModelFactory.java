@@ -19,57 +19,32 @@ package uia.pdf.grid;
 import java.io.File;
 import java.util.TreeMap;
 
-import uia.pdf.PDFUtil;
-import uia.pdf.grid.ColumnModel.AlignmentType;
-import uia.pdf.grid.layout.ColumnType;
 import uia.pdf.grid.layout.GridType;
 import uia.pdf.grid.layout.LayoutType;
 import uia.pdf.papers.Paper;
 
-public class GridModelFactory {
+public class GridXMLModelFactory extends GridModelFactory {
 
     private TreeMap<String, GridType> grids;
 
-    public GridModelFactory(File file) throws Exception {
+    public GridXMLModelFactory(File file) throws Exception {
         this(GridTypeHelper.load(file));
     }
 
-    public GridModelFactory(LayoutType layoutType) {
+    public GridXMLModelFactory(LayoutType layoutType) {
         this.grids = new TreeMap<String, GridType>();
         for (GridType gt : layoutType.getGrid()) {
             this.grids.put(gt.getName(), gt);
         }
     }
 
+    @Override
     public GridModel create(String gridName, Paper paper) {
         return create(gridName, paper.getDrawableSize().width);
     }
 
+    @Override
     public GridModel create(String gridName, int width) {
-        GridType gt = this.grids.get(gridName);
-        if (gt == null) {
-            return null;
-        }
-
-        int x0 = 0;
-        ColumnModel[] cms = new ColumnModel[gt.getColumns().getColumn().size()];
-        int c = 0;
-        for (ColumnType ct : gt.getColumns().getColumn()) {
-            int w = PDFUtil.calculateWidth(ct.getWidth(), width, x0);
-            AlignmentType at = AlignmentType.CENTER;
-            if ("NEAR".equalsIgnoreCase(ct.getAlignment())) {
-                at = AlignmentType.NEAR;
-            }
-            else if ("FAR".equalsIgnoreCase(ct.getAlignment())) {
-                at = AlignmentType.FAR;
-            }
-            ColumnModel cm = new ColumnModel(ct.getBind(), ct.getText(), w, at);
-            cm.setWrap(ct.isWrap());
-            cm.setBackground(PDFUtil.toColor(ct.getBackground()));
-            cms[c++] = cm;
-            x0 += w;
-        }
-
-        return new DefaultGridModel(cms);
+        return create(this.grids.get(gridName), width);
     }
 }
