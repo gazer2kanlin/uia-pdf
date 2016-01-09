@@ -17,7 +17,6 @@
 package uia.pdf.gridbag.model;
 
 import java.awt.Point;
-import java.io.File;
 import java.util.Map;
 
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -47,7 +46,7 @@ public class ImageCell extends Cell {
         PDImageXObject img = null;
         try {
             img = PDImageXObject.createFromFile(
-                    new File(this.fileName),
+                    this.fileName,
                     cv.getDoc().getDocument());
             float pct = (float) getHeight() / (float) img.getHeight();
             contentStream.drawImage(

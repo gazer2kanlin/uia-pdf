@@ -16,8 +16,6 @@
 
 package uia.pdf;
 
-import java.io.File;
-
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -39,7 +37,7 @@ public class PDFMakerTest {
             contents.stroke();
             contents.close();
 
-            PDImageXObject pdImage = PDImageXObject.createFromFile(new File(PDFMakerTest.class.getResource("sample.jpg").toURI()), doc);
+            PDImageXObject pdImage = PDImageXObject.createFromFile(PDFMakerTest.class.getResource("sample.jpg").getFile(), doc);
             contents = new PDPageContentStream(doc, page, true, false, false);
             contents.drawImage(pdImage, 20, 700);
             contents.close();

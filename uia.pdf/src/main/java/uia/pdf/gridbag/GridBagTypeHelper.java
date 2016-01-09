@@ -18,8 +18,8 @@ package uia.pdf.gridbag;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.Scanner;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -46,13 +46,7 @@ public class GridBagTypeHelper {
      * @throws Exception Load failure.
      */
     public static LayoutType load(File file) throws Exception {
-        Scanner freader = new Scanner(file);
-        StringBuilder content = new StringBuilder();
-        while (freader.hasNextLine()) {
-            content.append(freader.nextLine().trim());
-        }
-        freader.close();
-        return load(content.toString());
+        return load(new FileInputStream(file));
     }
 
     /**

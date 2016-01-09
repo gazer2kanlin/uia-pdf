@@ -1,12 +1,12 @@
 /*
  * Copyright 2015 uia.pdf
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -135,6 +135,7 @@ public class PDFMaker {
      * @throws IOException
      */
     public void addBookmark(ContentView view, PDPage page, String text) throws IOException {
+        text = text == null ? "" : text.trim();
         PDPageFitDestination dest = new PDPageFitDestination();
         dest.setPage(page);
 
@@ -148,9 +149,10 @@ public class PDFMaker {
             this.lastOI.setTitle(text);
             this.hierarchyOI.peek().addLast(this.lastOI);
             this.bookmarkPages.add(new BookmarkPage(text, "" + this.doc.getNumberOfPages()));
+
+            this.temp.add(this.lastOI);
         }
 
-        this.temp.add(this.lastOI);
         view.drawBookmarks(page, this.temp);
         this.temp.clear();
     }
@@ -169,6 +171,7 @@ public class PDFMaker {
      * @param text
      */
     public void beginBookmarkGroup(String text) {
+        text = text == null ? "" : text.trim();
         this.lastOI = new PDOutlineItem();
         this.lastOI.setTitle(text);
         this.hierarchyOI.peek().addLast(this.lastOI);
@@ -191,7 +194,12 @@ public class PDFMaker {
         A4Paper a4 = new A4Paper();
 
         PDPage page = a4.createPage();
-        this.doc.getPages().insertBefore(page, this.doc.getPage(0));
+        if (this.doc.getPages().getCount() > 0) {
+            this.doc.getPages().insertBefore(page, this.doc.getPage(0));
+        }
+        else {
+            this.doc.addPage(page);
+        }
 
         PDPageContentStream contentStream = new PDPageContentStream(this.doc, page, true, false, false);
 
@@ -203,6 +211,7 @@ public class PDFMaker {
         contentStream.endText();
 
         contentStream.setFont(this.font, 11);
+        contentStream.setLineWidth(0.5f);
         int top = a4.getTop() - 20;
         for (BookmarkPage bp : this.bookmarkPages) {
             if (top <= a4.getBottom()) {

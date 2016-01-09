@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.interactive.documentnavigation.outline.PDOutlineItem;
 
 import uia.pdf.ContentView;
@@ -115,6 +117,20 @@ public class GridBagView extends ContentView {
 
     @Override
     public void drawBookmarks(PDPage page, List<PDOutlineItem> ois) throws IOException {
+
+        PDFont font = this.pdf.getFont();
+        PDPageContentStream contentStream = new PDPageContentStream(this.pdf.getDocument(), page, true, false, false);
+        contentStream.setFont(font, 14);
+
+        int rowV = getTop();
+        for (PDOutlineItem oi : ois) {
+            contentStream.beginText();
+            contentStream.newLineAtOffset(getLeft(), rowV - 16);
+            contentStream.showText(oi.getTitle().trim());
+            contentStream.endText();
+            rowV -= 16;
+        }
+        contentStream.close();
     }
 
     private PDPage addPageEx(PDPage page, Map<String, Map<String, Object>> gridsData) throws IOException {

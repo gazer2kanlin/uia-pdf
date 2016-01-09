@@ -105,7 +105,7 @@ public class GridView extends ContentView {
         for (PDOutlineItem oi : ois) {
             contentStream.beginText();
             contentStream.newLineAtOffset(getLeft(), this.rowV - 16);
-            contentStream.showText(oi.getTitle());
+            contentStream.showText(oi.getTitle().trim());
             contentStream.endText();
             this.rowV -= 16;
         }
@@ -197,6 +197,12 @@ public class GridView extends ContentView {
             return drawRow(page, rowCells, row, true);
         }
         else {
+
+            contentStream.setLineWidth(0.1f);
+            contentStream.moveTo(getLeft(), this.rowV);
+            contentStream.lineTo(getRight(), this.rowV);
+            contentStream.stroke();
+
             contentStream.close();
         }
 
@@ -205,6 +211,7 @@ public class GridView extends ContentView {
 
     private void drawGridLine(PDPage page) throws IOException {
         PDPageContentStream contentStream = new PDPageContentStream(this.pdf.getDocument(), page, true, false, false);
+        contentStream.setLineWidth(1.0f);
 
         ColumnModel[] cms = this.model.getColumnModels();
         int columnH = getLeft();
