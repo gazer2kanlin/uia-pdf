@@ -1,12 +1,12 @@
 /*
- * Copyright ${year} uia.pdf
- * 
+ * Copyright 2015 uia.pdf
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,6 +24,7 @@ import org.apache.pdfbox.pdmodel.PDPage;
 
 import uia.pdf.ContentView;
 import uia.pdf.DescriptionView;
+import uia.pdf.PDFException;
 
 public class GridBagDescriptionView extends DescriptionView {
 
@@ -33,14 +34,22 @@ public class GridBagDescriptionView extends DescriptionView {
 
     private int height;
 
-    public GridBagDescriptionView(File file, String name) throws Exception {
+    public GridBagDescriptionView(File file, String name) throws PDFException {
         this(file, name, null);
     }
 
-    public GridBagDescriptionView(File file, String name, Map<String, Object> data) throws Exception {
-        this.gbView = new GridBagDrawer(file);
-        this.data = data;
-        this.height = Integer.parseInt(this.gbView.gbLayout.getGridBagType(name).getHeight());
+    public GridBagDescriptionView(File file, String name, Map<String, Object> data) throws PDFException {
+        try {
+            this.gbView = new GridBagDrawer(file);
+            this.data = data;
+            this.height = Integer.parseInt(this.gbView.gbLayout.getGridBagType(name).getHeight());  // TODO: bug!!
+        }
+        catch (PDFException ex1) {
+            throw ex1;
+        }
+        catch (Exception ex2) {
+            throw new PDFException(ex2.getMessage(), ex2);
+        }
     }
 
     @Override

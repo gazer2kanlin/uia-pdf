@@ -19,12 +19,15 @@ package uia.pdf.gridbag;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.sax.SAXSource;
 
@@ -43,6 +46,7 @@ public class GridBagTypeHelper {
      * Load TMD XML and convert to model.
      * @param file TMD XML file.
      * @return Model.
+     * @throws FileNotFoundException
      * @throws Exception Load failure.
      */
     public static LayoutType load(File file) throws Exception {
@@ -79,6 +83,9 @@ public class GridBagTypeHelper {
      * Load TMD XML and convert to model.
      * @param content TDM XML string content.
      * @return Model.
+     * @throws ParserConfigurationException
+     * @throws SAXException
+     * @throws UnsupportedEncodingException
      * @throws Exception Load failure.
      */
     public static LayoutType load(String content) throws Exception {
@@ -102,7 +109,7 @@ public class GridBagTypeHelper {
         return elem.getValue();
     }
 
-    static void initial() throws Exception {
+    static void initial() throws JAXBException {
         try {
             JAXBContext jc = JAXBContext.newInstance("uia.pdf.gridbag.layout");
             UNMARSHALLER = jc.createUnmarshaller();

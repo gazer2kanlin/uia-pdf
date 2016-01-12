@@ -29,6 +29,7 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 
 import uia.pdf.ContentView;
+import uia.pdf.PDFException;
 import uia.pdf.gridbag.model.Cell;
 import uia.pdf.gridbag.model.GridBag;
 
@@ -47,11 +48,16 @@ public class GridBagDrawer {
 
     private HashMap<Class<?>, GridBagCellRenderer> bindClassRenderers;
 
-    public GridBagDrawer(File layoutFile) throws Exception {
-        this.gbLayout = new GridBagLayout(GridBagTypeHelper.load(layoutFile));
-        this.bindRenderer0 = new DefaultBindCellRenderer();
-        this.bindIdRenderers = new HashMap<String, GridBagCellRenderer>();
-        this.bindClassRenderers = new HashMap<Class<?>, GridBagCellRenderer>();
+    public GridBagDrawer(File layoutFile) throws PDFException {
+        try {
+            this.gbLayout = new GridBagLayout(GridBagTypeHelper.load(layoutFile));
+            this.bindRenderer0 = new DefaultBindCellRenderer();
+            this.bindIdRenderers = new HashMap<String, GridBagCellRenderer>();
+            this.bindClassRenderers = new HashMap<Class<?>, GridBagCellRenderer>();
+        }
+        catch (Exception ex) {
+            throw new PDFException(layoutFile + " failure", ex);
+        }
     }
 
     public void registerBindIdCellRenderer(String id, GridBagCellRenderer renderer) {
