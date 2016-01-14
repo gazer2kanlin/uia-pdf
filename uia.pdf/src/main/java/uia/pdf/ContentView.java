@@ -86,7 +86,9 @@ public abstract class ContentView {
 
     public void setHeaderView(DescriptionView hv) {
         this.headerView = hv;
-        this.headerView.add(this);
+        if (this.headerView != null) {
+            this.headerView.add(this);
+        }
     }
 
     public DescriptionView getFooterView() {
@@ -95,7 +97,9 @@ public abstract class ContentView {
 
     public void setFooterView(DescriptionView fv) {
         this.footerView = fv;
-        this.footerView.add(this);
+        if (this.footerView != null) {
+            this.footerView.add(this);
+        }
     }
 
     public PDFMaker getDoc() {
@@ -130,7 +134,7 @@ public abstract class ContentView {
         return getTop() - getBottom();
     }
 
-    public abstract void drawBookmarks(PDPage page, List<PDOutlineItem> ois) throws IOException;
+    public abstract PDPage drawBookmarks(PDPage page, List<PDOutlineItem> ois) throws IOException;
 
     protected int getTop() {
         return this.headerView == null ? this.paper.getTop() : this.paper.getTop() - this.headerView.getHeight();

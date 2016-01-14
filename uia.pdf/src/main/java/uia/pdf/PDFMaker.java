@@ -1,12 +1,12 @@
 /*
  * Copyright 2015 uia.pdf
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -134,7 +134,7 @@ public class PDFMaker {
      * @param text bookmark text.
      * @throws IOException
      */
-    public void addBookmark(ContentView view, PDPage page, String text) throws IOException {
+    public PDPage addBookmark(ContentView view, PDPage page, String text) throws IOException {
         text = text == null ? "" : text.trim();
         PDPageFitDestination dest = new PDPageFitDestination();
         dest.setPage(page);
@@ -153,8 +153,10 @@ public class PDFMaker {
             this.temp.add(this.lastOI);
         }
 
-        view.drawBookmarks(page, this.temp);
+        page = view.drawBookmarks(page, this.temp);
         this.temp.clear();
+
+        return page;
     }
 
     /**

@@ -1,12 +1,12 @@
 /*
  * Copyright 2015 uia.pdf
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -52,11 +52,54 @@ public class GridView extends ContentView {
 
     private int fontSize;
 
+    private PDPage currPage;
+
+    private boolean drawColumn;
+
     public GridView(PDFMaker pdf, Paper paper, GridModel model) {
         super(pdf, paper);
         this.model = model;
         this.columnEachPage = true;
         this.fontSize = model.getFontSize();
+        this.drawColumn = true;
+    }
+
+    private GridView(PDFMaker pdf, Paper paper, GridModel model, int rowV, int tableTop, int columnH, boolean columnEachPage, PDPage currPage) {
+        super(pdf, paper);
+        this.model = model;
+        this.columnEachPage = columnEachPage;
+        this.fontSize = model.getFontSize();
+        this.drawColumn = true;
+
+        this.rowV = rowV;
+        this.tableTop = tableTop;
+        this.columnH = columnH;
+        this.currPage = currPage;
+    }
+
+    public boolean isDrawColumn() {
+        return this.drawColumn;
+    }
+
+    public void setDrawColumn(boolean drawColumn) {
+        this.drawColumn = drawColumn;
+    }
+
+    public GridView create(GridModel model) {
+        GridView gv = new GridView(
+                this.pdf,
+                this.paper,
+                model,
+                this.rowV,
+                this.tableTop,
+                this.columnH,
+                this.columnEachPage,
+                this.currPage);
+
+        gv.setHeaderView(getHeaderView());
+        gv.setFooterView(getFooterView());
+
+        return gv;
     }
 
     public boolean isColumnEachPage() {
@@ -75,17 +118,18 @@ public class GridView extends ContentView {
         this.fontSize = fontSize;
     }
 
+    public void endPage() {
+        this.currPage = null;
+    }
+
     public void draw(List<Map<String, Object>> data, String bookmark) throws IOException {
-        this.rowV = getTop();
-        this.tableTop = this.rowV;
-        this.columnH = getLeft();
+        PDPage page = this.currPage;
+        if (page == null) {
+            page = newPage();
+        }
 
-        PDPage page = this.paper.createPage();
-        this.pdf.getDocument().addPage(page);
-        this.pages.add(page);
-        this.pdf.addBookmark(this, page, bookmark);
-
-        drawColumns(page);
+        page = this.pdf.addBookmark(this, page, bookmark);
+        page = drawColumns(page);
 
         if (data == null) {
             return;
@@ -98,11 +142,17 @@ public class GridView extends ContentView {
     }
 
     @Override
-    public void drawBookmarks(PDPage page, List<PDOutlineItem> ois) throws IOException {
+    public PDPage drawBookmarks(PDPage page, List<PDOutlineItem> ois) throws IOException {
         PDFont font = this.pdf.getFont();
         PDPageContentStream contentStream = new PDPageContentStream(this.pdf.getDocument(), page, true, false, false);
         contentStream.setFont(font, 14);
         for (PDOutlineItem oi : ois) {
+            if (this.rowV - 16 < getBottom()) {
+                contentStream.close();
+                page = newPage();
+                contentStream = new PDPageContentStream(this.pdf.getDocument(), page, true, false, false);
+                contentStream.setFont(font, 14);
+            }
             contentStream.beginText();
             contentStream.newLineAtOffset(getLeft(), this.rowV - 16);
             contentStream.showText(oi.getTitle().trim());
@@ -112,14 +162,37 @@ public class GridView extends ContentView {
         contentStream.close();
         this.rowV -= 10;
         this.tableTop = this.rowV;
+
+        return page;
     }
 
-    private void drawColumns(PDPage page) throws IOException {
+    private PDPage newPage() {
+        this.rowV = getTop();
+        this.tableTop = this.rowV;
+        this.columnH = getLeft();
+
+        PDPage page = this.paper.createPage();
+        this.currPage = page;
+        this.pdf.getDocument().addPage(page);
+        this.pages.add(page);
+
+        return page;
+
+    }
+
+    private PDPage drawColumns(PDPage page) throws IOException {
+        if (!this.drawColumn) {
+            return page;
+        }
+
         PDFont font = this.pdf.getFont();
+        int h = PDFUtil.getContentHeight("", font, this.fontSize);
+        if (this.rowV - (5 * h) < getBottom()) {
+            page = newPage();
+        }
+
         PDPageContentStream contentStream = new PDPageContentStream(this.pdf.getDocument(), page, true, false, false);
         contentStream.setFont(font, this.fontSize);
-
-        int h = PDFUtil.getContentHeight("", font, this.fontSize);
 
         ColumnModel[] cms = this.model.getColumnModels();
         for (int i = 0; i < cms.length; i++) {
@@ -129,6 +202,11 @@ public class GridView extends ContentView {
             else {
                 this.columnH += cms[i - 1].getWidth();
             }
+
+            contentStream.setNonStrokingColor(new Color(232, 232, 232));
+            contentStream.addRect(this.columnH, this.rowV - h - 8, cms[i].getWidth(), h + 8);
+            contentStream.fill();
+            contentStream.setNonStrokingColor(new Color(0, 0, 0));
 
             String content = cms[i].getDisplayName();
             int offset = (cms[i].getWidth() - PDFUtil.getContentWidth(content, font, this.fontSize)) / 2;
@@ -146,19 +224,17 @@ public class GridView extends ContentView {
         contentStream.stroke();
         this.rowV -= (h + 8);
         contentStream.close();
+
+        return page;
     }
 
     private PDPage drawRow(PDPage page, Map<String, Object> rowCells, int row, boolean forceNewPage) throws IOException {
         PDPage currPage = page;
         if (forceNewPage || (this.rowV - 12) < getBottom()) {
             drawGridLine(page);
-            this.rowV = getTop();
-            this.tableTop = this.rowV;
-            currPage = this.paper.createPage();
-            this.pdf.getDocument().addPage(currPage);
-            this.pages.add(currPage);
+            currPage = newPage();
             if (this.columnEachPage) {
-                drawColumns(currPage);
+                currPage = drawColumns(currPage);
             }
         }
 
@@ -230,5 +306,7 @@ public class GridView extends ContentView {
         contentStream.stroke();
 
         contentStream.close();
+
+        this.rowV -= 10;
     }
 }
