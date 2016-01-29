@@ -1,12 +1,12 @@
 /*
  * Copyright 2015 uia.pdf
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -39,7 +39,7 @@ public class DefaultBindCellRenderer implements GridBagCellRenderer {
         PDFont font = view.getDoc().getFont();
         int fontSize = cell.getFontSize();
         contentStream.setFont(font, fontSize);
-        String content = view.getValueParserFactory().parse(value);
+        String content = view.getDoc().getValueParserFactory().parse(value);
         if (content == null) {
             return;
         }

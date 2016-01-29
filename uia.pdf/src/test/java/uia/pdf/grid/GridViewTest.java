@@ -1,12 +1,12 @@
 /*
  * Copyright ${year} uia.pdf
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -266,5 +266,65 @@ public class GridViewTest {
         fv.draw();
 
         pdf.save(new File("C:\\TEMP\\GRID_TUTORIAL4.PDF"));
+    }
+
+    @Test
+    public void testTutorial5() throws Exception {
+        // 1. document
+        File font = new File(System.getProperty("user.dir") + "\\fonts\\traditional.ttf");
+        PDFMaker pdf = new PDFMaker(font);
+
+        // 2. footer
+        HeaderDescriptionView fv = new HeaderDescriptionView(pdf, new A4Paper(true), new DefaultGridModel(
+                new ColumnModel[] {
+                        new ColumnModel("C1", "", 100, AlignmentType.NEAR),
+                        new ColumnModel("V1", "", 200, AlignmentType.NEAR),
+                        new ColumnModel("C2", "", 100, AlignmentType.NEAR),
+                        new ColumnModel("V2", "", 200, AlignmentType.NEAR),
+                },
+                new MyCellRenderer()),
+                30);
+        fv.setData(prepareFvData());
+
+        // 3. chapter 1
+        SimpleHeaderView hv1 = new SimpleHeaderView("第一章 A4 橫式測試頁", 20);
+        GridView view1 = new GridView(pdf, new A4Paper(true), new DefaultGridModel(
+                new ColumnModel[] {
+                        new ColumnModel("Byte", "BYTE", 30, AlignmentType.FAR),
+                        new ColumnModel("Short", "SHORT", 45, AlignmentType.FAR),
+                        new ColumnModel("Integer", "INT", 60, AlignmentType.FAR),
+                        new ColumnModel("Long", "LONG", 110, AlignmentType.FAR),
+                        new ColumnModel("Boolean", "BOOL", 40, AlignmentType.CENTER),
+                        new ColumnModel("Time", "TIME", 120, AlignmentType.CENTER),
+                        new ColumnModel("String", "CONTENT", 200, AlignmentType.NEAR),
+                        new ColumnModel("Value", "VALUE", 100, AlignmentType.NEAR)
+                },
+                new MyCellRenderer()));
+        view1.setHeaderView(hv1);
+        view1.setFooterView(fv);
+        pdf.beginBookmarkGroup("第一章 A4 橫式測試頁");
+        view1.draw(prepareData1(), "1-1 第一次資料");
+        view1.draw(prepareData1(), "1-2 第二次資料");
+        pdf.endBookmarkGroup();
+        hv1.draw();
+
+        // 6. draw footer
+        fv.draw();
+
+        pdf.save(new File("C:\\TEMP\\GRID_TUTORIAL5.PDF"));
+    }
+
+    private List<Map<String, Object>> prepareFvData() {
+        ArrayList<Map<String, Object>> table = new ArrayList<Map<String, Object>>();
+        for (int i = 0; i < 3; i++) {
+            LinkedHashMap<String, Object> r = new LinkedHashMap<String, Object>();
+            r.put("C1", "C1 Name");
+            r.put("V1", "C1 value");
+            r.put("C2", "C2 Name");
+            r.put("V2", Long.MAX_VALUE);
+            table.add(r);
+        }
+
+        return table;
     }
 }

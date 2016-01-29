@@ -1,12 +1,12 @@
 /*
  * Copyright 2015 uia.pdf
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,7 +35,7 @@ import uia.pdf.grid.ColumnModel.AlignmentType;
 public class DefaultCellRenderer implements CellRenderer {
 
     @Override
-    public int paint(PDPageContentStream contentStream, Point topLeft, GridView view, ColumnModel cm, Object value, int row, int col) {
+    public int paint(PDPageContentStream contentStream, Point topLeft, AbstractGridView view, ColumnModel cm, Object value, int row, int col) {
         if (cm.isWrap()) {
             return wrap(contentStream, topLeft, view, cm, value, row, col);
         }
@@ -45,7 +45,7 @@ public class DefaultCellRenderer implements CellRenderer {
 
     }
 
-    private int nowrap(PDPageContentStream contentStream, Point topLeft, GridView view, ColumnModel cm, Object value, int row, int col) {
+    private int nowrap(PDPageContentStream contentStream, Point topLeft, AbstractGridView view, ColumnModel cm, Object value, int row, int col) {
         int h = view.getFontSize();
 
         try {
@@ -59,7 +59,7 @@ public class DefaultCellRenderer implements CellRenderer {
                 contentStream.setNonStrokingColor(Color.black);
             }
 
-            String content = view.getValueParserFactory().parse(value);
+            String content = view.getDoc().getValueParserFactory().parse(value);
             int contentWidth = PDFUtil.getContentWidth(content, font, view.getFontSize());
             if (cm.getWidth() - contentWidth < 4) {
                 content = PDFUtil.cutContent(content, font, view.getFontSize(), cm.getWidth() - 4);
@@ -88,14 +88,14 @@ public class DefaultCellRenderer implements CellRenderer {
         return h + 8;
     }
 
-    private int wrap(PDPageContentStream contentStream, Point topLeft, GridView view, ColumnModel cm, Object value, int row, int col) {
+    private int wrap(PDPageContentStream contentStream, Point topLeft, AbstractGridView view, ColumnModel cm, Object value, int row, int col) {
         int h = view.getFontSize();
 
         try {
             PDFont font = view.getDoc().getFont();
             h = PDFUtil.getContentHeight("", font, view.getFontSize());
 
-            String content = view.getValueParserFactory().parse(value);
+            String content = view.getDoc().getValueParserFactory().parse(value);
 
             ArrayList<String> cs = new ArrayList<String>();
             PDFUtil.split(content, font, view.getFontSize(), cm.getWidth() - 4, cs);

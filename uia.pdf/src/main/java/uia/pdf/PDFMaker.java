@@ -1,12 +1,12 @@
 /*
  * Copyright 2015 uia.pdf
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,6 +31,7 @@ import org.apache.pdfbox.pdmodel.interactive.documentnavigation.outline.PDDocume
 import org.apache.pdfbox.pdmodel.interactive.documentnavigation.outline.PDOutlineItem;
 
 import uia.pdf.papers.A4Paper;
+import uia.pdf.parsers.ValueParserFactory;
 
 /**
  * PDF maker.
@@ -42,9 +43,11 @@ public class PDFMaker {
 
     private final PDDocument doc;
 
-    private PDDocumentOutline docOutline;
+    private final ValueParserFactory factory;
 
     private final PDFont font;
+
+    private PDDocumentOutline docOutline;
 
     private ArrayList<BookmarkPage> bookmarkPages;
 
@@ -63,6 +66,7 @@ public class PDFMaker {
         this.temp = new ArrayList<PDOutlineItem>();
         this.doc = new PDDocument();
         this.font = font;
+        this.factory = new ValueParserFactory();
 
         this.docOutline = new PDDocumentOutline();
         this.doc.getDocumentCatalog().setDocumentOutline(this.docOutline);
@@ -86,6 +90,7 @@ public class PDFMaker {
         this.temp = new ArrayList<PDOutlineItem>();
         this.doc = new PDDocument();
         this.font = PDType0Font.load(this.doc, fontFile);
+        this.factory = new ValueParserFactory();
 
         this.docOutline = new PDDocumentOutline();
         this.doc.getDocumentCatalog().setDocumentOutline(this.docOutline);
@@ -98,6 +103,10 @@ public class PDFMaker {
         this.hierarchyOI.push(rootOI);
 
         this.bookmarkPages = new ArrayList<BookmarkPage>();
+    }
+
+    public ValueParserFactory getValueParserFactory() {
+        return this.factory;
     }
 
     /**
@@ -143,7 +152,7 @@ public class PDFMaker {
             oi.setDestination(dest);
         }
 
-        if (text != null && text.trim().length() > 0) {
+        if (text.trim().length() > 0) {
             this.lastOI = new PDOutlineItem();
             this.lastOI.setDestination(dest);
             this.lastOI.setTitle(text);
