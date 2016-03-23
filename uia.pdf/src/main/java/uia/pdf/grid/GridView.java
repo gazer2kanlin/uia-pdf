@@ -1,12 +1,12 @@
 /*
  * Copyright 2015 uia.pdf
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.PDPageContentStream.AppendMode;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.interactive.documentnavigation.outline.PDOutlineItem;
 
@@ -61,7 +62,7 @@ public class GridView extends ContentView implements AbstractGridView {
         this.model = model;
         this.columnEachPage = true;
         this.fontSize = model.getFontSize();
-        this.drawColumn = true;
+        this.drawColumn = model.isHeaderVisible();
     }
 
     private GridView(PDFMaker pdf, Paper paper, GridModel model, int rowV, int tableTop, int columnH, boolean columnEachPage, PDPage currPage) {
@@ -69,7 +70,7 @@ public class GridView extends ContentView implements AbstractGridView {
         this.model = model;
         this.columnEachPage = columnEachPage;
         this.fontSize = model.getFontSize();
-        this.drawColumn = true;
+        this.drawColumn = model.isHeaderVisible();
 
         this.rowV = rowV;
         this.tableTop = tableTop;
@@ -145,13 +146,13 @@ public class GridView extends ContentView implements AbstractGridView {
     @Override
     public PDPage drawBookmarks(PDPage page, List<PDOutlineItem> ois) throws IOException {
         PDFont font = this.pdf.getFont();
-        PDPageContentStream contentStream = new PDPageContentStream(this.pdf.getDocument(), page, true, false, false);
+        PDPageContentStream contentStream = new PDPageContentStream(this.pdf.getDocument(), page, AppendMode.APPEND, false, false);
         contentStream.setFont(font, 14);
         for (PDOutlineItem oi : ois) {
             if (this.rowV - 16 < getBottom()) {
                 contentStream.close();
                 page = newPage();
-                contentStream = new PDPageContentStream(this.pdf.getDocument(), page, true, false, false);
+                contentStream = new PDPageContentStream(this.pdf.getDocument(), page, AppendMode.APPEND, false, false);
                 contentStream.setFont(font, 14);
             }
             contentStream.beginText();
@@ -192,7 +193,7 @@ public class GridView extends ContentView implements AbstractGridView {
             page = newPage();
         }
 
-        PDPageContentStream contentStream = new PDPageContentStream(this.pdf.getDocument(), page, true, false, false);
+        PDPageContentStream contentStream = new PDPageContentStream(this.pdf.getDocument(), page, AppendMode.APPEND, false, false);
         contentStream.setFont(font, this.fontSize);
 
         ColumnModel[] cms = this.model.getColumnModels();
@@ -240,7 +241,7 @@ public class GridView extends ContentView implements AbstractGridView {
         }
 
         PDFont font = this.pdf.getFont();
-        PDPageContentStream contentStream = new PDPageContentStream(this.pdf.getDocument(), currPage, true, false, false);
+        PDPageContentStream contentStream = new PDPageContentStream(this.pdf.getDocument(), currPage, AppendMode.APPEND, false, false);
         contentStream.setFont(font, this.fontSize);
 
         ColumnModel[] cms = this.model.getColumnModels();
@@ -287,7 +288,7 @@ public class GridView extends ContentView implements AbstractGridView {
     }
 
     private void drawGridLine(PDPage page) throws IOException {
-        PDPageContentStream contentStream = new PDPageContentStream(this.pdf.getDocument(), page, true, false, false);
+        PDPageContentStream contentStream = new PDPageContentStream(this.pdf.getDocument(), page, AppendMode.APPEND, false, false);
         contentStream.setLineWidth(1.0f);
 
         ColumnModel[] cms = this.model.getColumnModels();

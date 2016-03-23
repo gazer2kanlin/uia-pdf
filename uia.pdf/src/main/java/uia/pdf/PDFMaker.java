@@ -1,12 +1,12 @@
 /*
  * Copyright 2015 uia.pdf
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.PDPageContentStream.AppendMode;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.interactive.documentnavigation.destination.PDPageFitDestination;
@@ -212,7 +213,7 @@ public class PDFMaker {
             this.doc.addPage(page);
         }
 
-        PDPageContentStream contentStream = new PDPageContentStream(this.doc, page, true, false, false);
+        PDPageContentStream contentStream = new PDPageContentStream(this.doc, page, AppendMode.APPEND, false, false);
 
         contentStream.setFont(this.font, 16);
         int cw = PDFUtil.getContentWidth("INDEX", this.font, 11);
@@ -230,7 +231,7 @@ public class PDFMaker {
 
                 PDPage nextPage = a4.createPage();
                 this.doc.getPages().insertAfter(nextPage, page);
-                contentStream = new PDPageContentStream(this.doc, nextPage, true, false, false);
+                contentStream = new PDPageContentStream(this.doc, nextPage, AppendMode.APPEND, false, false);
                 contentStream.setFont(this.font, 11);
 
                 top = a4.getTop() - 20;

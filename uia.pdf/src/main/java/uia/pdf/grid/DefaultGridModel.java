@@ -1,12 +1,12 @@
 /*
  * Copyright 2015 uia.pdf
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,6 +30,8 @@ public class DefaultGridModel implements GridModel {
 
     private CellRenderer renderer;
 
+    private boolean headerVisible;
+
     /**
      * Constructor.
      * @param columnModels Column models.
@@ -38,6 +40,7 @@ public class DefaultGridModel implements GridModel {
         this.fontSize = fontSize;
         this.columnModels = columnModels;
         this.renderer = new DefaultCellRenderer();
+        this.headerVisible = true;
     }
 
     /**
@@ -49,6 +52,7 @@ public class DefaultGridModel implements GridModel {
         this.fontSize = 9;
         this.columnModels = columnModels;
         this.renderer = renderer;
+        this.headerVisible = true;
     }
 
     @Override
@@ -64,6 +68,15 @@ public class DefaultGridModel implements GridModel {
     @Override
     public CellRenderer getCellRenderer(int row, int column) {
         return this.renderer;
+    }
+
+    @Override
+    public boolean isHeaderVisible() {
+        return this.headerVisible;
+    }
+
+    public void setHeaderVisible(boolean headerVisible) {
+        this.headerVisible = headerVisible;
     }
 
 }

@@ -1,12 +1,12 @@
 /*
  * Copyright 2015 uia.pdf
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -51,6 +51,8 @@ public class ColumnModel {
 
     private boolean wrap;
 
+    private String fontStyle;
+
     /**
      * Constructor.
      * @param id Id.
@@ -64,6 +66,7 @@ public class ColumnModel {
         this.width = width;
         this.horizontalAlignment = horizontalAlignment;
         this.wrap = false;
+        this.fontStyle = "PLAIN";
     }
 
     public String getId() {
@@ -112,6 +115,18 @@ public class ColumnModel {
 
     public void setWrap(boolean wrap) {
         this.wrap = wrap;
+    }
+
+    public String getFontStyle() {
+        return this.fontStyle;
+    }
+
+    public void setFontStyle(String fontStyle) {
+        this.fontStyle = fontStyle;
+    }
+
+    public boolean isBold() {
+        return "BOLD".equalsIgnoreCase(this.fontStyle);
     }
 
 }

@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.PDPageContentStream.AppendMode;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 
 import uia.pdf.ContentView;
@@ -65,7 +66,7 @@ public class HeaderDescriptionView extends DescriptionView implements AbstractGr
     public void setData(List<Map<String, Object>> data) {
         this.data = data;
         int h = PDFUtil.getContentHeight("A", this.pdf.getFont(), this.model.getFontSize());
-        this.height = this.data.size() * (h + 4) + h;
+        this.height = this.data.size() * (h + 8) + h;
     }
 
     @Override
@@ -94,7 +95,7 @@ public class HeaderDescriptionView extends DescriptionView implements AbstractGr
 
     private void drawRow(PDPage page, Map<String, Object> rowCells, int row) throws IOException {
         PDFont font = this.pdf.getFont();
-        PDPageContentStream contentStream = new PDPageContentStream(this.pdf.getDocument(), page, true, false, false);
+        PDPageContentStream contentStream = new PDPageContentStream(this.pdf.getDocument(), page, AppendMode.APPEND, false, false);
         contentStream.setFont(font, this.model.getFontSize());
 
         int h = Short.MIN_VALUE;

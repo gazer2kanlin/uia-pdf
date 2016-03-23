@@ -19,9 +19,9 @@
 			        <sequence>
 						<element name="column" type="uia:ColumnType" maxOccurs="unbounded"></element>
 			        </sequence>
-			    	<attribute name="height" type="int" default="13"></attribute>
-			        <attribute name="fontSize" type="int" />
 			        <attribute name="background" type="string" default="212,212,212" />
+			    	<attribute name="height" type="int" default="13"></attribute>
+			        <attribute name="visible" type="boolean" default="true" />
 				</complexType>
     		</element>
     	</sequence>
@@ -33,10 +33,11 @@
         <sequence>
 			<element name="text" type="string"></element>
         </sequence>
-    	<attribute name="width" type="string" use="required"></attribute>
+    	<attribute name="alignment" type="string" default="NEAR"></attribute>
     	<attribute name="background" type="string"></attribute>
     	<attribute name="bind" type="string" use="required"></attribute>
-    	<attribute name="alignment" type="string" default="NEAR"></attribute>
+        <attribute name="fontStyle" type="string" default="PLAIN" />
+    	<attribute name="width" type="string" use="required"></attribute>
         <attribute name="wrap" type="boolean" default="false" />
     </complexType>
 </schema>
