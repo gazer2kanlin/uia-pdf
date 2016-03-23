@@ -26,6 +26,7 @@ import java.util.Map;
 
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.PDPageContentStream.AppendMode;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 
 import uia.pdf.ContentView;
@@ -71,7 +72,7 @@ public class GridBagDrawer {
     public void drawEx(ContentView cv, PDPage page, Map<String, Map<String, Object>> gridsData) throws IOException {
         this.gbLayout.load(cv.getWidth(), cv.getHeight());
 
-        PDPageContentStream contentStream = new PDPageContentStream(cv.getDoc().getDocument(), page, true, false, false);
+        PDPageContentStream contentStream = new PDPageContentStream(cv.getDoc().getDocument(), page, AppendMode.APPEND, false, false);
         PDFont font = cv.getDoc().getFont();
         contentStream.setFont(font, 9);
 
@@ -154,7 +155,7 @@ public class GridBagDrawer {
     public void draw(ContentView cv, PDPage page, Map<String, Object> data) throws IOException {
         this.gbLayout.load(cv.getWidth(), cv.getHeight());
 
-        PDPageContentStream contentStream = new PDPageContentStream(cv.getDoc().getDocument(), page, true, false, false);
+        PDPageContentStream contentStream = new PDPageContentStream(cv.getDoc().getDocument(), page, AppendMode.APPEND, false, false);
         PDFont font = cv.getDoc().getFont();
         contentStream.setFont(font, 9);
 
