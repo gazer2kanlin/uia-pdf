@@ -34,15 +34,15 @@ public class Row {
 
     public final int index;
 
-    public final int y;
-
-    public final int height;
-
     public final Color background;
 
     public float borderSize;
 
     public final Color borderColor;
+
+    private final int y;
+
+    private final int height;
 
     private final RowType rt;
 
@@ -56,6 +56,19 @@ public class Row {
         this.borderSize = rt.getBorderSize();
         this.borderColor = PDFUtil.toColor(rt.getBorderColor());
     }
+
+	public int getY() {
+    	if(this.index == 0) {
+    		return this.y;
+    	}
+    	
+    	Row prev = this.grid.rows[this.index - 1];
+    	return prev.getY() + prev.getHeigth();
+    }
+	
+	public int getHeigth(){
+		return this.height;
+	}
 
     @Override
     public String toString() {

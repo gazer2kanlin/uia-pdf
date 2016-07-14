@@ -49,6 +49,14 @@ public abstract class GridModelFactory {
             cm.setWrap(ct.isWrap());
             cm.setBackground(PDFUtil.toColor(ct.getBackground()));
             cm.setFontStyle(ct.getFontStyle().toUpperCase());
+            if (ct.getCellRenderer() != null) {
+                try {
+                    cm.setCellRenderer((CellRenderer) Class.forName(ct.getCellRenderer()).newInstance());
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
             cms[c++] = cm;
             x0 += w;
         }

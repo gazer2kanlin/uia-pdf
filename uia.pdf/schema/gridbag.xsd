@@ -65,7 +65,7 @@
     	<attribute name="alignment" type="string" default="CENTER"></attribute>
     	<attribute name="valignment" type="string" default="CENTER"></attribute>
     </complexType>
-    
+
     <complexType name="CellType" abstract="true">
     	<attribute name="rowspan" type="int" default="1"></attribute>
     	<attribute name="colspan" type="int" default="1"></attribute>

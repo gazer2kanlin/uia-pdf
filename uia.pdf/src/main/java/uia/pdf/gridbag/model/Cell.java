@@ -97,7 +97,7 @@ public class Cell {
     }
 
     public int getY() {
-        return this.grid.rows[this.row].y;
+        return this.grid.rows[this.row].getY();
     }
 
     public int getWidth() {
@@ -111,7 +111,7 @@ public class Cell {
     public int getHeight() {
         int h = 0;
         for (int i = 0; i < this.rowspan; i++) {
-            h += this.grid.rows[this.row + i].height;
+            h += this.grid.rows[this.row + i].getHeigth();
         }
         return h;
     }

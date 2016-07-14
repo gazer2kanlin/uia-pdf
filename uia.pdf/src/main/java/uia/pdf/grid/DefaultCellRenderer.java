@@ -34,6 +34,9 @@ import uia.pdf.grid.ColumnModel.AlignmentType;
  */
 public class DefaultCellRenderer implements CellRenderer {
 
+    public DefaultCellRenderer() {
+    }
+
     @Override
     public int paint(PDPageContentStream contentStream, Point topLeft, AbstractGridView view, ColumnModel cm, Object value, int row, int col) {
         if (cm.isWrap()) {

@@ -39,5 +39,6 @@
         <attribute name="fontStyle" type="string" default="PLAIN" />
     	<attribute name="width" type="string" use="required"></attribute>
         <attribute name="wrap" type="boolean" default="false" />
+        <attribute name="cellRenderer" type="string" />
     </complexType>
 </schema>
