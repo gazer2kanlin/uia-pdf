@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.junit.Test;
 
@@ -312,6 +313,45 @@ public class GridViewTest {
         fv.draw();
 
         pdf.save(new File("C:\\TEMP\\GRID_TUTORIAL5.PDF"));
+    }
+
+    @Test
+    public void testToturial6() throws Exception {
+        File layout = new File(GridTypeHelperTest.class.getResource("sample.xml").toURI());
+        GridXMLModelFactory modelFactory = new GridXMLModelFactory(layout);
+
+        // 1. document
+        File font = new File(System.getProperty("user.dir") + "\\fonts\\traditional.ttf");
+        PDFMaker pdf = new PDFMaker(font);
+
+        // 2. footer
+        SimpleFooterView fv = new SimpleFooterView("DOC-0001-AAA0-12.32B", "2015-11-06", 11);
+
+        // 3. chapter 1
+        SimpleHeaderView hv1 = new SimpleHeaderView("第一章 A4 橫式測試頁", 20);
+        A4Paper paper1 = new A4Paper();
+        GridView view1 = new GridView(pdf, paper1, modelFactory.create("image", paper1));
+        view1.setHeaderView(hv1);
+        view1.setFooterView(fv);
+
+        TreeMap<String, Object> imageInfo = new TreeMap<String, Object>();
+        imageInfo.put("imagePath", "c:/temp/ABC.jpg");
+        imageInfo.put("imageText", "WTF Funny Job");
+
+        TreeMap<String, Object> row = new TreeMap<String, Object>();
+        row.put("imageInfo", imageInfo);
+
+        ArrayList<Map<String, Object>> rows = new ArrayList<Map<String, Object>>();
+        rows.add(row);
+
+        view1.draw(rows, "測試圖片");
+        hv1.draw();
+
+        // 5. draw footer
+        fv.draw();
+
+        // 6. save
+        pdf.save(new File("C:\\TEMP\\GRID_TUTORIAL6.PDF"));
     }
 
     private List<Map<String, Object>> prepareFvData() {

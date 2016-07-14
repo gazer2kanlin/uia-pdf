@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <layout>
+	<grid name="image">
+		<columns height="20" visible="false">
+			<column width="100%" bind="imageInfo" cellRenderer="uia.pdf.grid.ImageDescCellRenderer" alignment="CENTER"><text></text></column>
+		</columns>
+	</grid>
 	<grid name="employee">
 		<columns height="20" visible="false">
 			<column width="100" bind="id"><text>編號</text></column>
