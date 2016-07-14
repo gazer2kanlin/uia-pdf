@@ -1,12 +1,12 @@
 /*
  * Copyright 2015 uia.pdf
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -82,19 +82,24 @@ public class PDFUtil {
      * @param result Split result.
      * @throws IOException
      */
-    public static void split(String content, PDFont font, int fontSize, int maxWidth, List<String> result) throws IOException {
+    public static int split(String content, PDFont font, int fontSize, int maxWidth, List<String> result) throws IOException {
         if (content == null) {
-            return;
+            return getContentHeight("", font, fontSize) + 8;
         }
 
         for (int c = 0; c <= content.length(); c++) {
             if (getContentWidth(content.substring(0, c), font, fontSize) >= maxWidth) {
                 result.add(content.substring(0, c - 1));
                 split(content.substring(c - 1, content.length()), font, fontSize, maxWidth, result);
-                return;
+
+                int h = getContentHeight("", font, fontSize);
+                return result.size() * (h + 8);
             }
         }
         result.add(content);
+
+        int h = getContentHeight("", font, fontSize);
+        return result.size() * (h + 8);
     }
 
     /**

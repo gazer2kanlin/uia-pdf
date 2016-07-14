@@ -139,4 +139,13 @@ public class ColumnModel {
         this.cellRenderer = cellRenderer;
     }
 
+    @Override
+    public ColumnModel clone() {
+        ColumnModel other = new ColumnModel(this.id, this.displayName, this.width, this.horizontalAlignment);
+        other.background = this.background;
+        other.fontStyle = this.fontStyle;
+        other.wrap = this.wrap;
+        other.cellRenderer = this.cellRenderer;
+        return other;
+    }
 }

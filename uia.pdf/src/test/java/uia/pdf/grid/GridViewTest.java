@@ -334,13 +334,17 @@ public class GridViewTest {
         view1.setHeaderView(hv1);
         view1.setFooterView(fv);
 
+        // 圖片資訊，利用  Map 儲存，在 bind 整個會當  value 傳給 paint 操作
         TreeMap<String, Object> imageInfo = new TreeMap<String, Object>();
-        imageInfo.put("imagePath", "c:/temp/ABC.jpg");
-        imageInfo.put("imageText", "WTF Funny Job");
+        imageInfo.put("imagePath", "c:/temp/ABC.jpg");  // 圖檔
+        imageInfo.put("imageText", "WTF Funny Job");    // 說明
 
+        // 一筆資料，關鍵字 imageInfo，此值須跟 <column> 中的 bind 匹配。xml 參考 resources/uia/pdf/grid/sample.xml 中的 image grid 定義。
+        // cellRenderer="uia.pdf.grid.ImageDescCellRenderer" 設定，客製化對  row 資料的處理
         TreeMap<String, Object> row = new TreeMap<String, Object>();
         row.put("imageInfo", imageInfo);
 
+        // 資料集合
         ArrayList<Map<String, Object>> rows = new ArrayList<Map<String, Object>>();
         rows.add(row);
 
