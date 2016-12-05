@@ -49,6 +49,11 @@ public abstract class ContentView {
 
     protected DescriptionView footerView;
 
+    /**
+     * Constructor.
+     * @param pdf PDF maker.
+     * @param paper paper.
+     */
     public ContentView(PDFMaker pdf, Paper paper) {
         this.pdf = pdf;
         this.paper = paper;
@@ -56,26 +61,50 @@ public abstract class ContentView {
         this.time = new Date();
     }
 
+    /**
+     * Get the name.
+     * @return Name.
+     */
     public String getName() {
         return this.name;
     }
 
+    /**
+     * Set the name.
+     * @param name Name.
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * Get time.
+     * @return Time.
+     */
     public Date getTime() {
         return this.time;
     }
 
+    /**
+     * Set time.
+     * @param time Time.
+     */
     public void setTime(Date time) {
         this.time = time;
     }
 
+    /**
+     * Get header view.
+     * @return Header view.
+     */
     public DescriptionView getHeaderView() {
         return this.headerView;
     }
 
+    /**
+     * Setup header view.
+     * @param hv Header view.
+     */
     public void setHeaderView(DescriptionView hv) {
         this.headerView = hv;
         if (this.headerView != null) {
@@ -83,10 +112,18 @@ public abstract class ContentView {
         }
     }
 
+    /**
+     * Get footer view.
+     * @return Footer view.
+     */
     public DescriptionView getFooterView() {
         return this.footerView;
     }
 
+    /**
+     * Setup footer view.
+     * @param fv Footer view.
+     */
     public void setFooterView(DescriptionView fv) {
         this.footerView = fv;
         if (this.footerView != null) {
@@ -94,38 +131,77 @@ public abstract class ContentView {
         }
     }
 
+    /**
+     * Get PDF document.
+     * @return PDF document.
+     */
     public PDFMaker getDoc() {
         return this.pdf;
     }
 
+    /**
+     * Get paper.
+     * @return Paper.
+     */
     public Paper getPaper() {
         return this.paper;
     }
 
+    /**
+     * Get created pages.
+     * @return Pages.
+     */
     public List<PDPage> getPages() {
         return this.pages;
     }
 
+    /**
+     * Get left  margin coordinate.
+     * @return Left  margin coordinate.
+     */
     public int getLeft() {
         return this.paper.getLeft();
     }
 
+    /**
+     * Get right margin coordinate.
+     * @return Right margin coordinate.
+     */
     public int getRight() {
         return this.paper.getRight();
     }
 
+    /**
+     * Get top-left margin coordinate.
+     * @return Top-left coordinate.
+     */
     public Point getTopLeft() {
         return new Point(this.paper.getLeft(), getTop());
     }
 
+    /**
+     * Get width of the content
+     * @return Width.
+     */
     public int getWidth() {
         return this.paper.getDrawableSize().width;
     }
 
+    /**
+     * Get height of the content.
+     * @return Height.
+     */
     public int getHeight() {
         return getTop() - getBottom();
     }
 
+    /**
+     * Draw bookmarks on page.
+     * @param page Page.
+     * @param ois Outline items.
+     * @return Page.
+     * @throws IOException IO exception.
+     */
     public abstract PDPage drawBookmarks(PDPage page, List<PDOutlineItem> ois) throws IOException;
 
     protected int getTop() {

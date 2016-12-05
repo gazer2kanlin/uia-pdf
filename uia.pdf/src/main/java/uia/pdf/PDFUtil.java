@@ -1,12 +1,12 @@
 /*
  * Copyright 2015 uia.pdf
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -87,7 +87,7 @@ public class PDFUtil {
             return getContentHeight("", font, fontSize) + 8;
         }
 
-        for (int c = 0; c <= content.length(); c++) {
+        for (int c = 2; c <= content.length(); c++) {
             if (getContentWidth(content.substring(0, c), font, fontSize) >= maxWidth) {
                 result.add(content.substring(0, c - 1));
                 split(content.substring(c - 1, content.length()), font, fontSize, maxWidth, result);

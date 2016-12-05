@@ -22,12 +22,36 @@ import uia.pdf.grid.layout.ColumnType;
 import uia.pdf.grid.layout.GridType;
 import uia.pdf.papers.Paper;
 
+/**
+ * Grid model factory.
+ *
+ * @author Kan Lin
+ *
+ */
 public abstract class GridModelFactory {
 
+    /**
+     * Create grid model.
+     * @param gridName Grid name.
+     * @param paper Paper.
+     * @return Model.
+     */
     public abstract GridModel create(String gridName, Paper paper);
 
+    /**
+     * Create grid model.
+     * @param gridName Grid name.
+     * @param width Width of grid.
+     * @return Model.
+     */
     public abstract GridModel create(String gridName, int width);
 
+    /**
+     * Create grid model.
+     * @param gt Grid model definition.
+     * @param width Width of grid.
+     * @return Model.
+     */
     protected GridModel create(GridType gt, int width) {
         if (gt == null) {
             return null;
