@@ -28,7 +28,7 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
  *
  */
 public abstract class Paper {
-
+	
     private final PDRectangle rect;
 
     private int leftPadding;

@@ -49,7 +49,7 @@ public class GridView extends ContentView implements AbstractGridView {
 
     private int tableTop;
 
-    private int columnH;
+    private int columnHz;
 
     private boolean columnEachPage;
 
@@ -57,14 +57,14 @@ public class GridView extends ContentView implements AbstractGridView {
 
     private PDPage currPage;
 
-    private boolean drawColumn;
+    private boolean drawHeader;
 
     public GridView(PDFMaker pdf, Paper paper, GridModel model) {
         super(pdf, paper);
         this.model = model;
         this.columnEachPage = true;
         this.fontSize = model.getFontSize();
-        this.drawColumn = model.isHeaderVisible();
+        this.drawHeader = model.isHeaderVisible();
     }
 
     private GridView(PDFMaker pdf, Paper paper, GridModel model, int rowV, int tableTop, int columnH, boolean columnEachPage, PDPage currPage) {
@@ -72,20 +72,20 @@ public class GridView extends ContentView implements AbstractGridView {
         this.model = model;
         this.columnEachPage = columnEachPage;
         this.fontSize = model.getFontSize();
-        this.drawColumn = model.isHeaderVisible();
+        this.drawHeader = model.isHeaderVisible();
 
         this.rowV = rowV;
         this.tableTop = tableTop;
-        this.columnH = columnH;
+        this.columnHz = columnH;
         this.currPage = currPage;
     }
 
-    public boolean isDrawColumn() {
-        return this.drawColumn;
+    public boolean isDrawHeader() {
+        return this.drawHeader;
     }
 
-    public void setDrawColumn(boolean drawColumn) {
-        this.drawColumn = drawColumn;
+    public void setDrawHeader(boolean drawHeader) {
+        this.drawHeader = drawHeader;
     }
 
     public GridView create(GridModel model) {
@@ -95,7 +95,7 @@ public class GridView extends ContentView implements AbstractGridView {
                 model,
                 this.rowV,
                 this.tableTop,
-                this.columnH,
+                this.columnHz,
                 this.columnEachPage,
                 this.currPage);
 
@@ -126,13 +126,13 @@ public class GridView extends ContentView implements AbstractGridView {
         this.currPage = null;
     }
 
-    public void draw(List<Map<String, Object>> data, String bookmark) throws IOException {
+    public void draw(List<Map<String, Object>> data, String bookmark, boolean draw) throws IOException {
         PDPage page = this.currPage;
         if (page == null) {
             page = newPage();
         }
 
-        page = this.pdf.addBookmark(this, page, bookmark);
+        page = this.pdf.addBookmark(this, page, bookmark, draw);
         page = drawColumns(page);
 
         if (data == null) {
@@ -173,7 +173,7 @@ public class GridView extends ContentView implements AbstractGridView {
     private PDPage newPage() {
         this.rowV = getTop();
         this.tableTop = this.rowV;
-        this.columnH = getLeft();
+        this.columnHz = getLeft();
 
         PDPage page = this.paper.createPage();
         this.currPage = page;
@@ -185,7 +185,7 @@ public class GridView extends ContentView implements AbstractGridView {
     }
 
     private PDPage drawColumns(PDPage page) throws IOException {
-        if (!this.drawColumn) {
+        if (!this.drawHeader) {
             return page;
         }
 
@@ -209,20 +209,20 @@ public class GridView extends ContentView implements AbstractGridView {
         DefaultCellRenderer renderer = new DefaultCellRenderer();
         for (int i = 0; i < cms.length; i++) {
             if (i == 0) {
-                this.columnH = getLeft();
+                this.columnHz = getLeft();
             }
             else {
-                this.columnH += cms[i - 1].getWidth();
+                this.columnHz += cms[i - 1].getWidth();
             }
 
             contentStream.setNonStrokingColor(new Color(232, 232, 232));
-            contentStream.addRect(this.columnH, this.rowV - hh, cms[i].getWidth(), hh);
+            contentStream.addRect(this.columnHz, this.rowV - hh, cms[i].getWidth(), hh);
             contentStream.fill();
             contentStream.setNonStrokingColor(new Color(0, 0, 0));
 
             String content = cms[i].getDisplayName();
             int offset = (cms[i].getWidth() - PDFUtil.getContentWidth(content, font, this.fontSize)) / 2;
-            if (this.columnH + offset > getRight()) {
+            if (this.columnHz + offset > getRight()) {
                 break;
             }
 
@@ -230,7 +230,7 @@ public class GridView extends ContentView implements AbstractGridView {
             other.setWrap(true);
             other.setHorizontalAlignment(AlignmentType.CENTER);
             other.setBackground(new Color(232, 232, 232));
-            renderer.paint(contentStream, new Point(this.columnH, this.rowV), this, other, content, -1, i);
+            renderer.paint(contentStream, new Point(this.columnHz, this.rowV), this, other, content, -1, i);
 
             //contentStream.beginText();
             //contentStream.newLineAtOffset(this.columnH + offset, this.rowV - h - 3);
@@ -265,14 +265,14 @@ public class GridView extends ContentView implements AbstractGridView {
         for (int col = 0; col < cms.length; col++) {
             ColumnModel cm = cms[col];
             if (col == 0) {
-                this.columnH = getLeft();
+                this.columnHz = getLeft();
             }
             else {
-                this.columnH += cms[col - 1].getWidth();
+                this.columnHz += cms[col - 1].getWidth();
             }
 
             CellRenderer cr = this.model.getCellRenderer(0, col);
-            h = Math.max(h, cr.paint(contentStream, new Point(this.columnH, this.rowV), this, cm, rowCells.get(cm.getId()), row, col));
+            h = Math.max(h, cr.paint(contentStream, new Point(this.columnHz, this.rowV), this, cm, rowCells.get(cm.getId()), row, col));
         }
         this.rowV -= h;
 

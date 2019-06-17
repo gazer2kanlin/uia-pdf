@@ -30,14 +30,45 @@ import uia.pdf.PDFMaker;
 import uia.pdf.SimpleFooterView;
 import uia.pdf.SimpleHeaderView;
 import uia.pdf.grid.ColumnModel.AlignmentType;
+import uia.pdf.grid.data.MyData;
+import uia.pdf.grid.layout.LayoutTypeTest;
 import uia.pdf.papers.A4Paper;
 
 public class GridViewTest {
 
-    @Test
+    @Test 
     public void testTutorial0() throws Exception {
         // 1. document
-        File font = new File(System.getProperty("user.dir") + "\\fonts\\traditional.ttf");
+        PDFMaker pdf = new PDFMaker(new File("fonts/traditional.ttf"));
+
+        // 2. footer
+        SimpleFooterView docFooterView = new SimpleFooterView("DOC-0001-AAA0-12.32B", "2015-11-06", 12);
+        
+        pdf.beginBookmarkGroup("第一章 A4 橫式測試頁");
+
+        // 3. chapter 1
+        GridView ch1View = new GridView(pdf, new A4Paper(), createModelRenderer());
+        ch1View.setFooterView(docFooterView);
+        ch1View.draw(prepareData1(), "1-1 第一次資料", true);
+        ch1View.draw(prepareData1(), "1-2 第二次資料", true);
+
+        // 4. chapter 2
+        GridView ch2View = new GridView(pdf, new A4Paper(),createModel());
+        ch2View.setFooterView(docFooterView);
+        ch2View.draw(prepareData1(), "2-1 第一次資料", true);
+
+        pdf.endBookmarkGroup();
+
+        // 5. draw footer
+        docFooterView.draw();
+
+        pdf.save(new File("output/grid_test0.pdf"));
+    }
+
+    @Test
+    public void testTutorial4() throws Exception {
+        // 1. document
+        File font = new File("fonts/traditional.ttf");
         PDFMaker pdf = new PDFMaker(font);
 
         // 2. footer
@@ -45,51 +76,21 @@ public class GridViewTest {
 
         // 3. chapter 1
         SimpleHeaderView hv1 = new SimpleHeaderView("第一章 A4 橫式測試頁", 20);
-        GridView view1 = new GridView(pdf, new A4Paper(true), new DefaultGridModel(
-                new ColumnModel[] {
-                        new ColumnModel("Byte", "BYTE", 30, AlignmentType.FAR),
-                        new ColumnModel("Short", "SHORT", 45, AlignmentType.FAR),
-                        new ColumnModel("Integer", "INT", 60, AlignmentType.FAR),
-                        new ColumnModel("Long", "LONG", 110, AlignmentType.FAR),
-                        new ColumnModel("Boolean", "BOOL", 40, AlignmentType.CENTER),
-                        new ColumnModel("Time", "TIME", 120, AlignmentType.CENTER),
-                        new ColumnModel("String", "CONTENT", 200, AlignmentType.NEAR),
-                        new ColumnModel("Value", "VALUE", 100, AlignmentType.NEAR)
-                },
-                new MyCellRenderer()));
-        /**
-        view1.getValueParserFactory().register(MyData.class, new ValueParser() {
-
-            @Override
-            public String read(Object value) {
-                return "Name:" + ((MyData) value).getName();
-            }
-
-        });
-         */
+        GridView view1 = new GridView(pdf, new A4Paper(true), createModelRenderer());
         view1.setHeaderView(hv1);
         view1.setFooterView(fv);
         pdf.beginBookmarkGroup("第一章 A4 橫式測試頁");
-        view1.draw(prepareData1(), "1-1 第一次資料");
-        view1.draw(prepareData1(), "1-2 第二次資料");
+        view1.draw(prepareData1(), "1-1 第一次資料", true);
+        view1.draw(prepareData1(), "1-2 第二次資料", true);
         pdf.endBookmarkGroup();
         hv1.draw();
 
-        // 4. chapter 2
         SimpleHeaderView hv2 = new SimpleHeaderView("第二章 A4 直式測試頁", 20);
-        GridView view2 = new GridView(pdf, new A4Paper(), new DefaultGridModel(
-                new ColumnModel[] {
-                        new ColumnModel("Byte", "BYTE", 30, AlignmentType.NEAR),
-                        new ColumnModel("Short", "SHORT", 40, AlignmentType.NEAR),
-                        new ColumnModel("Integer", "INT", 60, AlignmentType.NEAR),
-                        new ColumnModel("Long", "LONG", 110, AlignmentType.NEAR),
-                        new ColumnModel("Boolean", "BOOL", 30, AlignmentType.NEAR),
-                        new ColumnModel("Value", "VALUE", 150, AlignmentType.NEAR)
-                }, 11));
+        GridView view2 = view1.create(createModel());
         view2.setHeaderView(hv2);
         view2.setFooterView(fv);
         pdf.beginBookmarkGroup("第二章 A4 直式測試頁");
-        view2.draw(prepareData1(), "2-1 第一次資料");
+        view2.draw(prepareData1(), "2-1 第一次資料", true);
         pdf.endBookmarkGroup();
         hv2.draw();
 
@@ -99,59 +100,47 @@ public class GridViewTest {
         // 6. draw footer
         fv.draw();
 
-        pdf.save(new File("C:\\TEMP\\GRID_TUTORIAL0.PDF"));
+        pdf.save(new File("output/grid_test4.pdf"));
     }
 
     @Test
-    public void testTutorial1() throws Exception {
-        File layout = new File(GridTypeHelperTest.class.getResource("sample.xml").toURI());
-        GridXMLModelFactory modelFactory = new GridXMLModelFactory(layout);
-
-        File font = new File(System.getProperty("user.dir") + "\\fonts\\traditional.ttf");
+    public void testTutorial5() throws Exception {
+        // 1. document
+        File font = new File("fonts/traditional.ttf");
         PDFMaker pdf = new PDFMaker(font);
 
-        A4Paper paper = new A4Paper(true);
-        GridView view = new GridView(
-                pdf,
-                paper,
-                modelFactory.create("employee", paper));
-        view.draw(Employee.createSample(), "員工基本資料");
+        // 2. footer
+        // 3. chapter 1
+        HeaderDescriptionView hv1 = new HeaderDescriptionView(pdf, new A4Paper(true), new DefaultGridModel(
+                new ColumnModel[] {
+                        new ColumnModel("C1", "", 100, AlignmentType.NEAR),
+                        new ColumnModel("V1", "", 200, AlignmentType.NEAR),
+                        new ColumnModel("C2", "", 100, AlignmentType.NEAR),
+                        new ColumnModel("V2", "", 200, AlignmentType.NEAR),
+                },
+                9),
+                90);
+        hv1.setData(prepareFvData());
+        GridView view1 = new GridView(pdf, new A4Paper(true), createModelRenderer());
+        view1.setHeaderView(hv1);
+        pdf.beginBookmarkGroup("第一章 A4 橫式測試頁");
+        view1.draw(prepareData1(), "1-1 第一次資料", true);
+        view1.draw(prepareData1(), "1-2 第二次資料", true);
+        pdf.endBookmarkGroup();
 
-        pdf.save(new File("C:\\TEMP\\GRID_TUTORIAL1.PDF"));
+        // 6. draw footer
+        hv1.draw();
+
+        pdf.save(new File("output/grid_test5.pdf"));
     }
 
     @Test
-    public void testTutorial2() throws Exception {
-        File layout = new File(GridTypeHelperTest.class.getResource("sample.xml").toURI());
-        GridXMLModelFactory modelFactory = new GridXMLModelFactory(layout);
-
-        File font = new File(System.getProperty("user.dir") + "\\fonts\\traditional.ttf");
-        PDFMaker pdf = new PDFMaker(font);
-
-        A4Paper paper1 = new A4Paper();
-        GridView view1 = new GridView(
-                pdf,
-                paper1,
-                modelFactory.create("employee", paper1));
-        view1.draw(Employee.createSample(), "員工基本資料");
-
-        A4Paper paper2 = new A4Paper(true);
-        GridView view2 = new GridView(
-                pdf,
-                paper2,
-                modelFactory.create("project", paper2));
-        view2.draw(Project.createSample(), "專案基本資料");
-
-        pdf.save(new File("C:\\TEMP\\GRID_TUTORIAL2.PDF"));
-    }
-
-    @Test
-    public void testToturial3() throws Exception {
-        File layout = new File(GridTypeHelperTest.class.getResource("sample.xml").toURI());
+    public void testToturial6() throws Exception {
+        File layout = new File(LayoutTypeTest.class.getResource("sample.xml").toURI());
         GridXMLModelFactory modelFactory = new GridXMLModelFactory(layout);
 
         // 1. document
-        File font = new File(System.getProperty("user.dir") + "\\fonts\\traditional.ttf");
+        File font = new File("fonts/traditional.ttf");
         PDFMaker pdf = new PDFMaker(font);
 
         // 2. footer
@@ -160,26 +149,76 @@ public class GridViewTest {
         // 3. chapter 1
         SimpleHeaderView hv1 = new SimpleHeaderView("第一章 A4 橫式測試頁", 20);
         A4Paper paper1 = new A4Paper();
-        GridView view1 = new GridView(pdf, paper1, modelFactory.create("employee", paper1));
+        GridView view1 = new GridView(pdf, paper1, modelFactory.create("image", paper1));
         view1.setHeaderView(hv1);
         view1.setFooterView(fv);
-        view1.draw(Employee.createSample(), "員工基本資料");
-        hv1.draw();
 
-        // 4. chapter 2
-        SimpleHeaderView hv2 = new SimpleHeaderView("第二章 A4 直式測試頁", 20);
-        A4Paper paper2 = new A4Paper(true);
-        GridView view2 = new GridView(pdf, paper2, modelFactory.create("project", paper2));
-        view2.setHeaderView(hv2);
-        view2.setFooterView(fv);
-        view2.draw(Project.createSample(), "專案基本資料");
-        hv2.draw();
+        // 圖片資訊，利用  Map 儲存，在 bind 整個會當  value 傳給 paint 操作
+        TreeMap<String, Object> imageInfo = new TreeMap<String, Object>();
+        imageInfo.put("imagePath", "c:/temp/ABC.jpg");  // 圖檔
+        imageInfo.put("imageText", "WTF Funny Job");    // 說明
+
+        // 一筆資料，關鍵字 imageInfo，此值須跟 <column> 中的 bind 匹配。xml 參考 resources/uia/pdf/grid/sample.xml 中的 image grid 定義。
+        // cellRenderer="uia.pdf.grid.ImageDescCellRenderer" 設定，客製化對  row 資料的處理
+        TreeMap<String, Object> row = new TreeMap<String, Object>();
+        row.put("imageInfo", imageInfo);
+
+        // 資料集合
+        ArrayList<Map<String, Object>> rows = new ArrayList<Map<String, Object>>();
+        rows.add(row);
+
+        view1.draw(rows, "測試圖片", true);
+        hv1.draw();
 
         // 5. draw footer
         fv.draw();
 
         // 6. save
-        pdf.save(new File("C:\\TEMP\\GRID_TUTORIAL3.PDF"));
+        pdf.save(new File("output/grid_test6.pdf"));
+    }
+    
+    private DefaultGridModel createModel() {
+    	return new DefaultGridModel(
+                new ColumnModel[] {
+                        new ColumnModel("Byte", "BYTE", 50, AlignmentType.FAR),
+                        new ColumnModel("Short", "SHORT", 55, AlignmentType.FAR),
+                        new ColumnModel("Integer", "INT", 60, AlignmentType.FAR),
+                        new ColumnModel("Long", "LONG", 110, AlignmentType.FAR),
+                        new ColumnModel("Boolean", "BOOL", 40, AlignmentType.CENTER),
+                        new ColumnModel("Time", "TIME", 120, AlignmentType.CENTER),
+                        new ColumnModel("String", "CONTENT", 200, AlignmentType.NEAR),
+                        new ColumnModel("Value", "VALUE", 100, AlignmentType.NEAR)
+                },
+                12);
+    }
+    
+    private DefaultGridModel createModelRenderer() {
+    	return new DefaultGridModel(
+                new ColumnModel[] {
+                        new ColumnModel("Byte", "BYTE", 50, AlignmentType.FAR),
+                        new ColumnModel("Short", "SHORT", 55, AlignmentType.FAR),
+                        new ColumnModel("Integer", "INT", 60, AlignmentType.FAR),
+                        new ColumnModel("Long", "LONG", 110, AlignmentType.FAR),
+                        new ColumnModel("Boolean", "BOOL", 40, AlignmentType.CENTER, new MyBooleanRenderer()),
+                        new ColumnModel("Time", "TIME", 120, AlignmentType.CENTER),
+                        new ColumnModel("String", "CONTENT", 200, AlignmentType.NEAR),
+                        new ColumnModel("Value", "VALUE", 100, AlignmentType.NEAR, new MyDataRenderer())
+                },
+                12);
+    }
+
+    private List<Map<String, Object>> prepareFvData() {
+        ArrayList<Map<String, Object>> table = new ArrayList<Map<String, Object>>();
+        for (int i = 0; i < 3; i++) {
+            LinkedHashMap<String, Object> r = new LinkedHashMap<String, Object>();
+            r.put("C1", "C1 Name");
+            r.put("V1", "C1 value");
+            r.put("C2", "C2 Name");
+            r.put("V2", Long.MAX_VALUE);
+            table.add(r);
+        }
+
+        return table;
     }
 
     private List<Map<String, Object>> prepareData1() {
@@ -207,166 +246,6 @@ public class GridViewTest {
             r2.put("String", "Bad Answer");
             r1.put("Value", new MyData("Kan"));
             table.add(r2);
-        }
-
-        return table;
-    }
-
-    @Test
-    public void testTutorial4() throws Exception {
-        // 1. document
-        File font = new File(System.getProperty("user.dir") + "\\fonts\\traditional.ttf");
-        PDFMaker pdf = new PDFMaker(font);
-
-        // 2. footer
-        SimpleFooterView fv = new SimpleFooterView("DOC-0001-AAA0-12.32B", "2015-11-06", 12);
-
-        // 3. chapter 1
-        SimpleHeaderView hv1 = new SimpleHeaderView("第一章 A4 橫式測試頁", 20);
-        GridView view1 = new GridView(pdf, new A4Paper(true), new DefaultGridModel(
-                new ColumnModel[] {
-                        new ColumnModel("Byte", "BYTE", 30, AlignmentType.FAR),
-                        new ColumnModel("Short", "SHORT", 45, AlignmentType.FAR),
-                        new ColumnModel("Integer", "INT", 60, AlignmentType.FAR),
-                        new ColumnModel("Long", "LONG", 110, AlignmentType.FAR),
-                        new ColumnModel("Boolean", "BOOL", 40, AlignmentType.CENTER),
-                        new ColumnModel("Time", "TIME", 120, AlignmentType.CENTER),
-                        new ColumnModel("String", "CONTENT", 200, AlignmentType.NEAR),
-                        new ColumnModel("Value", "VALUE", 100, AlignmentType.NEAR)
-                },
-                new MyCellRenderer()));
-        view1.setHeaderView(hv1);
-        view1.setFooterView(fv);
-        pdf.beginBookmarkGroup("第一章 A4 橫式測試頁");
-        view1.draw(prepareData1(), "1-1 第一次資料");
-        view1.draw(prepareData1(), "1-2 第二次資料");
-        pdf.endBookmarkGroup();
-        hv1.draw();
-
-        SimpleHeaderView hv2 = new SimpleHeaderView("第二章 A4 直式測試頁", 20);
-        GridView view2 = view1.create(new DefaultGridModel(
-                new ColumnModel[] {
-                        new ColumnModel("Byte", "BYTE", 30, AlignmentType.NEAR),
-                        new ColumnModel("Short", "SHORT", 40, AlignmentType.NEAR),
-                        new ColumnModel("Integer", "INT", 60, AlignmentType.NEAR),
-                        new ColumnModel("Long", "LONG", 110, AlignmentType.NEAR),
-                        new ColumnModel("Boolean", "BOOL", 30, AlignmentType.NEAR),
-                        new ColumnModel("Value", "VALUE", 150, AlignmentType.NEAR)
-                }, 11));
-        view2.setHeaderView(hv2);
-        view2.setFooterView(fv);
-        pdf.beginBookmarkGroup("第二章 A4 直式測試頁");
-        view2.draw(prepareData1(), "2-1 第一次資料");
-        pdf.endBookmarkGroup();
-        hv2.draw();
-
-        // 5. draw footer
-        fv.draw();
-
-        // 6. draw footer
-        fv.draw();
-
-        pdf.save(new File("C:\\TEMP\\GRID_TUTORIAL4.PDF"));
-    }
-
-    @Test
-    public void testTutorial5() throws Exception {
-        // 1. document
-        File font = new File(System.getProperty("user.dir") + "\\fonts\\traditional.ttf");
-        PDFMaker pdf = new PDFMaker(font);
-
-        // 2. footer
-        HeaderDescriptionView fv = new HeaderDescriptionView(pdf, new A4Paper(true), new DefaultGridModel(
-                new ColumnModel[] {
-                        new ColumnModel("C1", "", 100, AlignmentType.NEAR),
-                        new ColumnModel("V1", "", 200, AlignmentType.NEAR),
-                        new ColumnModel("C2", "", 100, AlignmentType.NEAR),
-                        new ColumnModel("V2", "", 200, AlignmentType.NEAR),
-                },
-                new MyCellRenderer()),
-                30);
-        fv.setData(prepareFvData());
-
-        // 3. chapter 1
-        SimpleHeaderView hv1 = new SimpleHeaderView("第一章 A4 橫式測試頁", 20);
-        GridView view1 = new GridView(pdf, new A4Paper(true), new DefaultGridModel(
-                new ColumnModel[] {
-                        new ColumnModel("Byte", "BYTE", 30, AlignmentType.FAR),
-                        new ColumnModel("Short", "SHORT", 45, AlignmentType.FAR),
-                        new ColumnModel("Integer", "INT", 60, AlignmentType.FAR),
-                        new ColumnModel("Long", "LONG", 110, AlignmentType.FAR),
-                        new ColumnModel("Boolean", "BOOL", 40, AlignmentType.CENTER),
-                        new ColumnModel("Time", "TIME", 120, AlignmentType.CENTER),
-                        new ColumnModel("String", "CONTENT", 200, AlignmentType.NEAR),
-                        new ColumnModel("Value", "VALUE", 100, AlignmentType.NEAR)
-                },
-                new MyCellRenderer()));
-        view1.setHeaderView(hv1);
-        view1.setFooterView(fv);
-        pdf.beginBookmarkGroup("第一章 A4 橫式測試頁");
-        view1.draw(prepareData1(), "1-1 第一次資料");
-        view1.draw(prepareData1(), "1-2 第二次資料");
-        pdf.endBookmarkGroup();
-        hv1.draw();
-
-        // 6. draw footer
-        fv.draw();
-
-        pdf.save(new File("C:\\TEMP\\GRID_TUTORIAL5.PDF"));
-    }
-
-    @Test
-    public void testToturial6() throws Exception {
-        File layout = new File(GridTypeHelperTest.class.getResource("sample.xml").toURI());
-        GridXMLModelFactory modelFactory = new GridXMLModelFactory(layout);
-
-        // 1. document
-        File font = new File(System.getProperty("user.dir") + "\\fonts\\traditional.ttf");
-        PDFMaker pdf = new PDFMaker(font);
-
-        // 2. footer
-        SimpleFooterView fv = new SimpleFooterView("DOC-0001-AAA0-12.32B", "2015-11-06", 11);
-
-        // 3. chapter 1
-        SimpleHeaderView hv1 = new SimpleHeaderView("第一章 A4 橫式測試頁", 20);
-        A4Paper paper1 = new A4Paper();
-        GridView view1 = new GridView(pdf, paper1, modelFactory.create("image", paper1));
-        view1.setHeaderView(hv1);
-        view1.setFooterView(fv);
-
-        // 圖片資訊，利用  Map 儲存，在 bind 整個會當  value 傳給 paint 操作
-        TreeMap<String, Object> imageInfo = new TreeMap<String, Object>();
-        imageInfo.put("imagePath", "c:/temp/ABC.jpg");  // 圖檔
-        imageInfo.put("imageText", "WTF Funny Job");    // 說明
-
-        // 一筆資料，關鍵字 imageInfo，此值須跟 <column> 中的 bind 匹配。xml 參考 resources/uia/pdf/grid/sample.xml 中的 image grid 定義。
-        // cellRenderer="uia.pdf.grid.ImageDescCellRenderer" 設定，客製化對  row 資料的處理
-        TreeMap<String, Object> row = new TreeMap<String, Object>();
-        row.put("imageInfo", imageInfo);
-
-        // 資料集合
-        ArrayList<Map<String, Object>> rows = new ArrayList<Map<String, Object>>();
-        rows.add(row);
-
-        view1.draw(rows, "測試圖片");
-        hv1.draw();
-
-        // 5. draw footer
-        fv.draw();
-
-        // 6. save
-        pdf.save(new File("C:\\TEMP\\GRID_TUTORIAL6.PDF"));
-    }
-
-    private List<Map<String, Object>> prepareFvData() {
-        ArrayList<Map<String, Object>> table = new ArrayList<Map<String, Object>>();
-        for (int i = 0; i < 3; i++) {
-            LinkedHashMap<String, Object> r = new LinkedHashMap<String, Object>();
-            r.put("C1", "C1 Name");
-            r.put("V1", "C1 value");
-            r.put("C2", "C2 Name");
-            r.put("V2", Long.MAX_VALUE);
-            table.add(r);
         }
 
         return table;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uia.pdf.grid;
+package uia.pdf.grid.data;
 
 public class MyData {
 

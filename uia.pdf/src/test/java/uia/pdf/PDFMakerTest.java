@@ -49,7 +49,7 @@ public class PDFMakerTest {
             contents.stroke();
             contents.close();
 
-            doc.save("C:\\TEMP\\IMAGE.PDF");
+            doc.save("d:/temp/image.pdf");
         }
         finally {
             doc.close();

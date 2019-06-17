@@ -1,19 +1,23 @@
-# 範例一
+# 範例
+## 範例一
 
+### 需求
 參考：testTutorial1() @ uia.pdf.grid.GridViewTest.java
+1. 職工清單。
+2. 內容包含職工編號、姓名、生日及所屬部門。
+3. 以 Grid 方式呈現。
 
-需求：建立一個職工清單的 PDF 文件，內容包含職工編號、姓名、生日及所屬部門，以 Grid 方式呈現。
 
-## 設計
+### 設計
 
 * id - 職工編號；寬度：100px。
 * name - 姓名；寬度：150px。
 * birthday - 生日；寬度：120px；位置：置中。
 * department - 所屬部門；寬度：到右側邊界。
 
-## 布局配置
+### 布局配置
 
-```
+``` xml
 <?xml version="1.0" encoding="UTF-8"?>
 <layout>
 	<grid name="employee">
@@ -26,25 +30,23 @@
 	</grid>
 </layout>
 ```
-## 顯示資料
+### 顯示資料
 
-參考：createSample() @ uia.pdf.grid.Employee.java
-
-顯示資料結構為 List&lt;Map&lt;String, Object>>，Map 中的 Key 值即為 column bind 的值，例如：
-```
+顯示資料結構為 List&lt;Map&lt;String, Object>>，Map 中的 Key 值即為 column bind 的值。根據上述設計，每一筆資料以下列的方式保存：
+``` java
 TreeMap<String, Object> row = new TreeMap<String, Object>();
-row.put("id", "Employee ID");
-row.put("name", "My Name");
-row.put("birthday", new Date());
-row.put("department", "Department Name");
+row.put("id", "E4981");
+row.put("name", "Kyle");
+row.put("birthday", "1972-09-20");
+row.put("department", "RD");
 ```
-## Java Code
+### Java Code
 
-```
-File layout = new File("sample.xml");
-GridModelFactory modelFactory = new GridModelFactory(layout);
+``` java
+File layout = new File("sample/grid/layout.xml");
+GridXMLModelFactory modelFactory = new GridXMLModelFactory(layout);
 
-File font = new File("traditional.ttf");    // pdfbox 內無中文字型，需額外載入。
+File font = new File("font/traditional.ttf");    // pdfbox 內無中文字型，需額外載入。
 PDFMaker pdf = new PDFMaker(font);
 
 A4Paper paper = new A4Paper(true);
@@ -54,17 +56,18 @@ GridView view = new GridView(
     modelFactory.create("employee", paper);
 view.draw(prepareSample(), "員工基本資料");
 
-pdf.save(new File("C:\\TEMP\\EMPLOYEE_LIST.PDF"));
-
+pdf.save(new File("output/employee_list.pdf"));
 ```
 
-# 範例二
+參考：createSample() @ uia.pdf.grid.Employee.java
+
+## 範例二
 
 參考：testTutorial2() @ uia.pdf.grid.GridViewTest.java
 
 需求：延伸範例一，於職工清單後追加專案清單，專案內容包含專案名稱、開始日期、結束日期、地點、專案經理、品保經理與備註。以 Grid 形式橫向 (landscape) 呈現。
 
-## 設計
+### 設計
 
 * projectName - 專案名稱；寬度：100px。
 * startDate - 開始日期；寬度：120px；位置：置右。
@@ -74,9 +77,9 @@ pdf.save(new File("C:\\TEMP\\EMPLOYEE_LIST.PDF"));
 * qm - 品保經理；寬度：80px。
 * remark - 備註；寬度：到右側邊界。
 
-## 布局配置
+### 布局配置
 
-```
+``` xml
 <?xml version="1.0" encoding="UTF-8"?>
 <layout>
 	<grid name="employee">
@@ -100,13 +103,13 @@ pdf.save(new File("C:\\TEMP\\EMPLOYEE_LIST.PDF"));
 	</grid>
 </layout>
 ```
-## 顯示資料
+### 顯示資料
 
 參考：createSample() @ uia.pdf.grid.Project.java
 
-## Java Code
+### Java Code
 
-```
+``` java
 File layout = new File("sample.xml");
 GridModelFactory modelFactory = new GridModelFactory(layout);
 

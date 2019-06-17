@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uia.pdf.gridbag;
+package uia.pdf; 
 
 import java.io.File;
 import java.util.Map;
@@ -23,39 +23,41 @@ import java.util.TreeMap;
 import org.junit.Test;
 
 import uia.pdf.PDFMaker;
-import uia.pdf.papers.A4Paper;
+import uia.pdf.gridbag.GridBagDescriptionView;
+import uia.pdf.gridbag.GridBagView;
+import uia.pdf.papers.PaperType;
 
-public class GridBagViewTest {
+public class SampleGridBagTest {
 
     @Test
     public void testTutorial3() throws Exception {
-        File hfFile = new File(GridBagViewTest.class.getResource("sample_headerFooter.xml").toURI());
+        File hfLayout = new File("sample/gridbag/sample_headerFooter.xml");
 
         // 1. new document
-        PDFMaker pdf = new PDFMaker(new File(System.getProperty("user.dir") + "\\fonts\\simplified.ttf"));
+        File font = new File("fonts/simplified.ttf");
+        PDFMaker pdf = new PDFMaker(font);
 
         // 2. new headers
-        GridBagDescriptionView hv = new GridBagDescriptionView(hfFile, "header");
+        GridBagDescriptionView hv = new GridBagDescriptionView(hfLayout, "header");
 
         // 3. new footer
-        GridBagDescriptionView fv = new GridBagDescriptionView(hfFile, "footer");
+        GridBagDescriptionView fv = new GridBagDescriptionView(hfLayout, "footer");
 
         // 4. new layout content view
-        GridBagView cv = new GridBagView(pdf, new A4Paper(), new File(GridBagTypeHelperTest.class.getResource("sample3.xml").toURI()));
+        GridBagView cv = pdf.createGridBag(PaperType.A4, new File("sample/gridbag/layout3.xml"));
         // 4.1 set header to content
         cv.setHeaderView(hv);
         // 4.2 set footer to content
         cv.setFooterView(fv);
         // 4.3 draw
-        cv.addPage(prepareData1(), "Inspection Report 1");
+        cv.addPage(prepareData1(), "Inspection Report 1", false);
         cv.addPage(prepareData2());
-        cv.addPage(prepareData3(), "Inspection Report 2");
-
+        cv.addPage(prepareData3(), "Inspection Report 2", false);
         // 5. draw header & footer
         hv.draw();
         fv.draw();
 
-        pdf.save(new File("C:\\TEMP\\GRIDBAG_TUTORIAL3.PDF"));
+        pdf.save(new File("output/gridbag_layout3.pdf"));
     }
 
     private Map<String, Object> prepareData1() {

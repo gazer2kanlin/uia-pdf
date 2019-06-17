@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<layout>
+<layout xmlns="http://grid.pdf.uia/layout">
 	<grid name="image">
 		<columns height="20" visible="false">
 			<column width="100%" bind="imageInfo" cellRenderer="uia.pdf.grid.ImageDescCellRenderer" alignment="CENTER"><text></text></column>
 		</columns>
 	</grid>
 	<grid name="employee">
-		<columns height="20">
-			<column width="100" bind="id" wrap="true"><text>編號編號編號編號編號編號編號編號編號</text></column>
-			<column width="150" bind="name" wrap="true"><text>姓名姓名姓名姓名姓名姓名姓名姓名</text></column>
-			<column width="120" bind="birthday" alignment="center" wrap="true"><text>生日生日生日生日生日生日生日生日生日</text></column>
-			<column width="+100%" bind="department" wrap="true"><text>所屬部門所屬部門所屬部門所屬部門所屬部門所屬部門</text></column>
+		<columns visible="true" height="20">
+			<column width="100" bind="id" wrap="true"><text>編號</text></column>
+			<column width="150" bind="name" wrap="true"><text>姓名</text></column>
+			<column width="120" bind="birthday" alignment="center" wrap="true"><text>生日</text></column>
+			<column width="+100%" bind="department" wrap="true"><text>所屬部門</text></column>
 		</columns>
 	</grid>
     <grid name="project">
-		<columns background="200,255,255" visible="false">
+		<columns visible="true" height="20" background="200,255,255">
 			<column width="100" bind="projectName" wrap="true"><text>專案名稱</text></column>
 			<column width="120" bind="startDate" alignment="FAR"><text>開始日期</text></column>
 			<column width="120" bind="endDate" alignment="FAR"><text>結束日期</text></column>

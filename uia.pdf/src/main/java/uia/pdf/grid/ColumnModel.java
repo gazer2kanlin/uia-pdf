@@ -63,12 +63,25 @@ public class ColumnModel {
      * @param horizontalAlignment Alignment.
      */
     public ColumnModel(String id, String displayName, int width, AlignmentType horizontalAlignment) {
+    	this(id, displayName, width, horizontalAlignment, null);
+    }
+
+
+    /**
+     * Constructor.
+     * @param id Id.
+     * @param displayName Name displayed at column header.
+     * @param width Width.
+     * @param horizontalAlignment Alignment.
+     */
+    public ColumnModel(String id, String displayName, int width, AlignmentType horizontalAlignment, CellRenderer cellRenderer) {
         this.id = id;
         this.displayName = displayName;
         this.width = width;
         this.horizontalAlignment = horizontalAlignment;
         this.wrap = false;
         this.fontStyle = "PLAIN";
+        this.cellRenderer = cellRenderer;
     }
 
     public String getId() {

@@ -68,11 +68,11 @@ public class GridBagView extends ContentView {
      * @return
      * @throws IOException
      */
-    public PDPage addPageEx(Map<String, Map<String, Object>> gridsData, String bookmark) throws IOException {
+    public PDPage addPageEx(Map<String, Map<String, Object>> gridsData, String bookmark, boolean draw) throws IOException {
         PDPage page = this.paper.createPage();
         this.pdf.getDocument().addPage(page);
         this.pages.add(page);
-        this.pdf.addBookmark(this, page, bookmark);
+        this.pdf.addBookmark(this, page, bookmark, draw);
         return addPageEx(page, gridsData);
     }
 
@@ -96,11 +96,11 @@ public class GridBagView extends ContentView {
      * @return
      * @throws IOException
      */
-    public PDPage addPage(Map<String, Object> data, String bookmark) throws IOException {
+    public PDPage addPage(Map<String, Object> data, String bookmark, boolean draw) throws IOException {
         PDPage page = this.paper.createPage();
         this.pdf.getDocument().addPage(page);
         this.pages.add(page);
-        this.pdf.addBookmark(this, page, bookmark);
+        this.pdf.addBookmark(this, page, bookmark, draw);
         return addPage(page, data);
     }
 

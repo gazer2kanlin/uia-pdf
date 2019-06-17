@@ -31,7 +31,14 @@ import org.apache.pdfbox.pdmodel.interactive.documentnavigation.destination.PDPa
 import org.apache.pdfbox.pdmodel.interactive.documentnavigation.outline.PDDocumentOutline;
 import org.apache.pdfbox.pdmodel.interactive.documentnavigation.outline.PDOutlineItem;
 
+import uia.pdf.grid.GridModel;
+import uia.pdf.grid.GridView;
+import uia.pdf.grid.GridXMLModelFactory;
+import uia.pdf.gridbag.GridBagView;
+import uia.pdf.papers.A3Paper;
 import uia.pdf.papers.A4Paper;
+import uia.pdf.papers.Paper;
+import uia.pdf.papers.PaperType;
 import uia.pdf.parsers.ValueParserFactory;
 
 /**
@@ -41,7 +48,7 @@ import uia.pdf.parsers.ValueParserFactory;
  *
  */
 public class PDFMaker {
-
+	
     private final PDDocument doc;
 
     private final ValueParserFactory factory;
@@ -57,6 +64,12 @@ public class PDFMaker {
     private PDOutlineItem lastOI;
 
     private ArrayList<PDOutlineItem> temp;
+    
+    static {
+    	// https://pdfbox.apache.org/2.0/getting-started.html
+    	System.setProperty("sun.java2d.cmm", "sun.java2d.cmm.kcms.KcmsServiceProvider");
+    	System.setProperty("org.apache.pdfbox.rendering.UsePureJavaCMYKConversion", "true");
+    }
 
     /**
      * Constructor.
@@ -148,7 +161,7 @@ public class PDFMaker {
      * @param text bookmark text.
      * @throws IOException
      */
-    public PDPage addBookmark(ContentView view, PDPage page, String text) throws IOException {
+    public PDPage addBookmark(ContentView view, PDPage page, String text, boolean draw) throws IOException {
         text = text == null ? "" : text.trim();
         PDPageFitDestination dest = new PDPageFitDestination();
         dest.setPage(page);
@@ -167,7 +180,9 @@ public class PDFMaker {
             this.temp.add(this.lastOI);
         }
 
-        page = view.drawBookmarks(page, this.temp);
+        if(draw) {
+            page = view.drawBookmarks(page, this.temp);
+        }
         this.temp.clear();
 
         return page;
@@ -265,6 +280,42 @@ public class PDFMaker {
         }
 
         contentStream.close();
+    }
+    
+    public GridView createGrid(PaperType paperType, GridXMLModelFactory factory, String gridName) {
+    	Paper paper;
+    	switch(paperType) {
+    		case A4_LANDSCAPE:
+    			paper = new A4Paper(true);
+    			break;
+    		case A3:
+    			paper = new A3Paper();
+    			break;
+    		case A3_LANDSCAPE:
+    			paper = new A3Paper(true);
+    			break;
+    		default:
+    			paper = new A4Paper();
+    	}
+    	return new GridView(this, paper, factory.create(gridName, paper));
+	}
+    
+    public GridBagView createGridBag(PaperType paperType, File layoutFile) throws PDFException {
+    	Paper paper;
+    	switch(paperType) {
+    		case A4_LANDSCAPE:
+    			paper = new A4Paper(true);
+    			break;
+    		case A3:
+    			paper = new A3Paper();
+    			break;
+    		case A3_LANDSCAPE:
+    			paper = new A3Paper(true);
+    			break;
+    		default:
+    			paper = new A4Paper();
+    	}
+        return new GridBagView(this, paper, layoutFile);
     }
 
     class BookmarkPage {

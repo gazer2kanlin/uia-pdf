@@ -14,21 +14,23 @@
  * limitations under the License.
  */
 
-package uia.pdf.grid;
+package uia.pdf.grid.layout;
 
 import java.io.File;
 
 import org.junit.Test;
 
+import uia.pdf.Layout;
 import uia.pdf.grid.layout.ColumnType;
 import uia.pdf.grid.layout.GridType;
 import uia.pdf.grid.layout.LayoutType;
 
-public class GridTypeHelperTest {
+public class LayoutTypeTest {
 
     @Test
     public void testSample() throws Exception {
-        LayoutType layout = GridTypeHelper.load(new File(GridTypeHelperTest.class.getResource("sample.xml").toURI()));
+    	LayoutType layout = Layout.GRID_TYPE.fromXml(new File("sample/grid/layout.xml"));
+        //  GridTypeHelper.load(new File("sample/grid/sample.xml"));
         for (GridType table : layout.getGrid()) {
             System.out.println(table.getName());
             System.out.println("    fontSize: " + table.getFontSize());

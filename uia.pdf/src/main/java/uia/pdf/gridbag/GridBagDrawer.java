@@ -30,6 +30,7 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream.AppendMode;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 
 import uia.pdf.ContentView;
+import uia.pdf.Layout;
 import uia.pdf.PDFException;
 import uia.pdf.gridbag.model.Cell;
 import uia.pdf.gridbag.model.GridBag;
@@ -51,7 +52,7 @@ public class GridBagDrawer {
 
     public GridBagDrawer(File layoutFile) throws PDFException {
         try {
-            this.gbLayout = new GridBagLayout(GridBagTypeHelper.load(layoutFile));
+            this.gbLayout = new GridBagLayout(Layout.GRIDBAG_TYPE.fromXml(layoutFile));
             this.bindRenderer0 = new DefaultBindCellRenderer();
             this.bindIdRenderers = new HashMap<String, GridBagCellRenderer>();
             this.bindClassRenderers = new HashMap<Class<?>, GridBagCellRenderer>();

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<layout>
+<layout xmlns="http://gridbag.pdf.uia/layout">
 	<gridbag name="grid1" x="0" y="0" width="100%" height="50%">
 		<columns>
 			<column width="100"></column>

@@ -14,41 +14,42 @@
  * limitations under the License.
  */
 
-package uia.pdf.gridbag;
+package uia.pdf.gridbag.layout;
 
 import java.io.File;
 
 import org.junit.Test;
 
+import uia.pdf.Layout;
 import uia.pdf.gridbag.layout.CellType;
 import uia.pdf.gridbag.layout.ColumnType;
 import uia.pdf.gridbag.layout.GridBagType;
 import uia.pdf.gridbag.layout.LayoutType;
 import uia.pdf.gridbag.layout.RowType;
 
-public class GridBagTypeHelperTest {
+public class LayoutTypeTest {
 
     @Test
-    public void testSample0() throws Exception {
-        LayoutType layout = GridBagTypeHelper.load(new File(GridBagTypeHelperTest.class.getResource("sample0.xml").toURI()));
+    public void testLayout0() throws Exception {
+        LayoutType layout = Layout.GRIDBAG_TYPE.fromXml(new File("sample/gridbag/layout0.xml"));
         print(layout);
     }
 
     @Test
-    public void testSample1() throws Exception {
-        LayoutType layout = GridBagTypeHelper.load(new File(GridBagTypeHelperTest.class.getResource("sample1.xml").toURI()));
+    public void testLayout1() throws Exception {
+        LayoutType layout = Layout.GRIDBAG_TYPE.fromXml(new File("sample/gridbag/layout1.xml"));
         print(layout);
     }
 
     @Test
-    public void testSample2() throws Exception {
-        LayoutType layout = GridBagTypeHelper.load(new File(GridBagTypeHelperTest.class.getResource("sample2.xml").toURI()));
+    public void testLayout2() throws Exception {
+        LayoutType layout = Layout.GRIDBAG_TYPE.fromXml(new File("sample/gridbag/layout2.xml"));
         print(layout);
     }
 
     @Test
-    public void testSample3() throws Exception {
-        LayoutType layout = GridBagTypeHelper.load(new File(GridBagTypeHelperTest.class.getResource("sample3.xml").toURI()));
+    public void testLayout3() throws Exception {
+        LayoutType layout = Layout.GRIDBAG_TYPE.fromXml(new File("sample/gridbag/layout3.xml"));
         print(layout);
     }
 

@@ -20,6 +20,7 @@ import uia.pdf.PDFUtil;
 import uia.pdf.grid.ColumnModel.AlignmentType;
 import uia.pdf.grid.layout.ColumnType;
 import uia.pdf.grid.layout.GridType;
+import uia.pdf.grid.layout.GridType.Columns;
 import uia.pdf.papers.Paper;
 
 /**
@@ -60,7 +61,8 @@ public abstract class GridModelFactory {
         int x0 = 0;
         ColumnModel[] cms = new ColumnModel[gt.getColumns().getColumn().size()];
         int c = 0;
-        for (ColumnType ct : gt.getColumns().getColumn()) {
+        Columns columns = gt.getColumns();
+        for (ColumnType ct : columns.getColumn()) {
             int w = PDFUtil.calculateWidth(ct.getWidth(), width, x0);
             AlignmentType at = AlignmentType.CENTER;
             if ("NEAR".equalsIgnoreCase(ct.getAlignment())) {
@@ -86,7 +88,7 @@ public abstract class GridModelFactory {
         }
 
         DefaultGridModel model = new DefaultGridModel(cms, gt.getFontSize());
-        model.setHeaderVisible(gt.getColumns().isVisible());
+        model.setHeaderVisible(columns.isVisible());
 
         return model;
     }

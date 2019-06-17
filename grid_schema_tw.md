@@ -1,7 +1,7 @@
 #
 
 下面是範例 XML，完整定義參考 schema\grid.xsd
-```
+``` xml
 <layout>
 	<grid name="employee" fontSize="12">
 		<columns>

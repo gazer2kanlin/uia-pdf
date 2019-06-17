@@ -20,20 +20,15 @@ import java.awt.Point;
 
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 
-public class MyCellRenderer extends DefaultCellRenderer {
+public class MyBooleanRenderer extends DefaultCellRenderer {
 
     @Override
     public int paint(PDPageContentStream contentStream, Point topLeft, AbstractGridView view, ColumnModel cm, Object value, int row, int col) {
-        if (col == 4) {
-            if (((Boolean) value).booleanValue()) {
-                return super.paint(contentStream, topLeft, view, cm, "正確", row, col);
-            }
-            else {
-                return super.paint(contentStream, topLeft, view, cm, "錯誤", row, col);
-            }
+        if (((Boolean) value).booleanValue()) {
+            return super.paint(contentStream, topLeft, view, cm, "正確", row, col);
         }
         else {
-            return super.paint(contentStream, topLeft, view, cm, value, row, col);
+            return super.paint(contentStream, topLeft, view, cm, "錯誤", row, col);
         }
     }
 

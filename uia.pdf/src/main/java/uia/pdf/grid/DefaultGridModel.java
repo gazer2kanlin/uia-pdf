@@ -23,7 +23,7 @@ package uia.pdf.grid;
  *
  */
 public class DefaultGridModel implements GridModel {
-
+	
     private int fontSize;
 
     private final ColumnModel[] columnModels;
@@ -37,10 +37,7 @@ public class DefaultGridModel implements GridModel {
      * @param columnModels Column models.
      */
     public DefaultGridModel(ColumnModel[] columnModels, int fontSize) {
-        this.fontSize = fontSize;
-        this.columnModels = columnModels;
-        this.renderer = new DefaultCellRenderer();
-        this.headerVisible = true;
+    	this(columnModels, fontSize, new DefaultCellRenderer());
     }
 
     /**
@@ -48,8 +45,8 @@ public class DefaultGridModel implements GridModel {
      * @param columnModels Column models.
      * @param renderer Cell renderer.
      */
-    public DefaultGridModel(ColumnModel[] columnModels, CellRenderer renderer) {
-        this.fontSize = 9;
+    public DefaultGridModel(ColumnModel[] columnModels, int fontSize, CellRenderer renderer) {
+        this.fontSize = fontSize;
         this.columnModels = columnModels;
         this.renderer = renderer;
         this.headerVisible = true;
@@ -79,5 +76,4 @@ public class DefaultGridModel implements GridModel {
     public void setHeaderVisible(boolean headerVisible) {
         this.headerVisible = headerVisible;
     }
-
 }

@@ -104,8 +104,8 @@ public class PDFUtil {
 
     /**
      *
-     * Value has 4 format: fix value, % value, % value with + prefix, % value with * prefix.<br>
-     * fix value: actual width.
+     * Value has 4 format: fixed value, % value, % value with + prefix, % value with * prefix.<br>
+     * fixed value: actual width.<br>
      * % value: calculate based on full size.<br>
      * % value with + prefix: calculate based on (full size - offset).<br>
      * % value with * prefix: calculate based on full size then reduce offset.<br>

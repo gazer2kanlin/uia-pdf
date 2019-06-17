@@ -19,6 +19,7 @@ package uia.pdf.grid;
 import java.io.File;
 import java.util.TreeMap;
 
+import uia.pdf.Layout;
 import uia.pdf.grid.layout.GridType;
 import uia.pdf.grid.layout.LayoutType;
 import uia.pdf.papers.Paper;
@@ -26,9 +27,13 @@ import uia.pdf.papers.Paper;
 public class GridXMLModelFactory extends GridModelFactory {
 
     private TreeMap<String, GridType> grids;
+    
+    public GridXMLModelFactory() {
+    	
+    }
 
     public GridXMLModelFactory(File file) throws Exception {
-        this(GridTypeHelper.load(file));
+        this(Layout.GRID_TYPE.fromXml(file));
     }
 
     public GridXMLModelFactory(LayoutType layoutType) {
