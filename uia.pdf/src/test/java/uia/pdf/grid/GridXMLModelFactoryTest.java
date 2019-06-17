@@ -8,10 +8,12 @@ public class GridXMLModelFactoryTest {
 
     @Test
     public void test() throws Exception {
-        GridModel model1 = new GridXMLModelFactory(new File(System.getProperty("user.dir") + System.getProperty("file.separator") + "doc_panels.xml")).create("image", 500);
+    	GridXMLModelFactory f = new GridXMLModelFactory(new File("sample/grid/layout.xml"));
+    	
+        GridModel model1 = f.create("image", 500);
         System.out.println(model1.getCellRenderer(0, 0).getClass().getName());
 
-        GridModel model2 = new GridXMLModelFactory(new File(System.getProperty("user.dir") + System.getProperty("file.separator") + "doc_panels.xml")).create("panel", 500);
+        GridModel model2 = f.create("employee", 500);
         System.out.println(model2.getCellRenderer(0, 0).getClass().getName());
         System.out.println(model2.getCellRenderer(0, 1).getClass().getName());
         System.out.println(model2.getCellRenderer(0, 2).getClass().getName());

@@ -35,13 +35,10 @@ public class LayoutTypeTest {
             System.out.println(table.getName());
             System.out.println("    fontSize: " + table.getFontSize());
             for (ColumnType column : table.getColumns().getColumn()) {
-                System.out.println(String.format("  [%-10s] width:%s, cr:%s",
+                System.out.println(String.format("  [%s] width:%s, cr:%s",
                         column.getText(),
                         column.getWidth(),
                         column.getCellRenderer()));
-                if (column.getCellRenderer() != null) {
-                    System.out.println(Class.forName(column.getCellRenderer()).newInstance());
-                }
             }
         }
     }

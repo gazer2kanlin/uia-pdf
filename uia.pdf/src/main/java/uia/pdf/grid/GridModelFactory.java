@@ -16,6 +16,7 @@
 
 package uia.pdf.grid;
 
+import uia.pdf.PDFMaker;
 import uia.pdf.PDFUtil;
 import uia.pdf.grid.ColumnModel.AlignmentType;
 import uia.pdf.grid.layout.ColumnType;
@@ -46,6 +47,10 @@ public abstract class GridModelFactory {
      * @return Model.
      */
     public abstract GridModel create(String gridName, int width);
+    
+    public GridView createView(PDFMaker pdf, Paper paper, String gridName) {
+    	return new GridView(pdf, paper, create(gridName, paper));
+    }
 
     /**
      * Create grid model.

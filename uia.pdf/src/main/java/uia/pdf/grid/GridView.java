@@ -79,13 +79,23 @@ public class GridView extends ContentView implements AbstractGridView {
         this.columnHz = columnH;
         this.currPage = currPage;
     }
-
+ 
     public boolean isDrawHeader() {
         return this.drawHeader;
     }
 
     public void setDrawHeader(boolean drawHeader) {
         this.drawHeader = drawHeader;
+    }
+    
+    public GridView beginBookmarkGroup(String text) {
+    	this.pdf.beginBookmarkGroup(text);
+    	return this;
+    }
+
+    public GridView endBookmarkGroup() {
+    	this.pdf.endBookmarkGroup();
+    	return this;
     }
 
     public GridView create(GridModel model) {
@@ -126,23 +136,25 @@ public class GridView extends ContentView implements AbstractGridView {
         this.currPage = null;
     }
 
-    public void draw(List<Map<String, Object>> data, String bookmark, boolean draw) throws IOException {
+    public GridView draw(List<Map<String, Object>> data, String bookmark, boolean bookmarkAsContent) throws IOException {
         PDPage page = this.currPage;
         if (page == null) {
             page = newPage();
         }
 
-        page = this.pdf.addBookmark(this, page, bookmark, draw);
+        page = this.pdf.addBookmark(this, page, bookmark, bookmarkAsContent);
         page = drawColumns(page);
 
         if (data == null) {
-            return;
+            return this;
         }
         int row = 0;
         for (Map<String, Object> rowCells : data) {
             page = drawRow(page, rowCells, row, false);
         }
         drawGridLine(page);
+        
+        return this;
     }
 
     @Override

@@ -31,6 +31,14 @@ public class A3Paper extends Paper {
 
     public static final int HEIGTH = (int) PDRectangle.A3.getHeight();
 
+    public static A3Paper landscape() {
+        return new A3Paper(true);
+    }
+    
+    public static A3Paper portrait() {
+        return new A3Paper(false);
+    }
+
     /**
      * Constructor.
      */

@@ -39,8 +39,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLFilterImpl;
 
-import uia.pdf.grid.layout.GridType;
-
 /**
  *
  * @author Q. Foison Tech

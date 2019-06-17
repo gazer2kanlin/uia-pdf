@@ -30,11 +30,12 @@ public class A4Paper extends Paper {
 
     public static final int HEIGTH = (int) PDRectangle.A4.getHeight();
 
-    /**
-     * Constructor.
-     */
-    public A4Paper() {
-        this(false);
+    public static A4Paper landscape() {
+        return new A4Paper(true);
+    }
+    
+    public static A4Paper portrait() {
+        return new A4Paper(false);
     }
 
     /**
