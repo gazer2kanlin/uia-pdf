@@ -26,34 +26,35 @@ import java.util.TreeMap;
 
 import org.junit.Test;
 
+import uia.pdf.FontUtils;
 import uia.pdf.PDFMaker;
 import uia.pdf.SimpleFooterView;
 import uia.pdf.SimpleHeaderView;
 import uia.pdf.grid.ColumnModel.AlignmentType;
 import uia.pdf.grid.data.MyData;
-import uia.pdf.papers.A4Paper;
+import uia.pdf.papers.Paper;
 
 public class GridViewTest {
 
     @Test 
-    public void testTutorial0() throws Exception {
+    public void test1() throws Exception {
         // 1. document
-        PDFMaker pdf = new PDFMaker(new File("fonts/traditional.ttf"));
+        PDFMaker pdf = new PDFMaker(FontUtils.traditional());
 
         // 2. footer
         SimpleFooterView fv = new SimpleFooterView("DOC-0001-AAA0-12.32B", "2015-11-06", 12);
         
         // 3. chapter 1
-        GridView gv01 = new GridView(pdf, A4Paper.portrait(), createModelRenderer());
+        GridView gv01 = new GridView(pdf, Paper.A4, sampleGridModel2());
         gv01.setFooterView(fv);
         gv01.beginBookmarkGroup("第一章 A4 橫式測試頁")
-        	.draw(prepareData1(), "1-1 第一次資料", true)
-        	.draw(prepareData1(), "1-2 第二次資料", true);
+        	.draw(mainData(), "1-1 第一次資料", true)
+        	.draw(mainData(), "1-2 第二次資料", true);
 
         // 4. chapter 2
-        GridView gv02 = new GridView(pdf, A4Paper.portrait(), createModel());
+        GridView gv02 = new GridView(pdf, Paper.A4, sampleGridModel1());
         gv02.setFooterView(fv);
-        gv02.draw(prepareData1(), "2-1 第一次資料", true)
+        gv02.draw(mainData(), "2-1 第一次資料", true)
         	.endBookmarkGroup();
 
         // 5. draw footer
@@ -63,32 +64,31 @@ public class GridViewTest {
     }
 
     @Test
-    public void testTutorial4() throws Exception {
+    public void test2() throws Exception {
         // 1. document
-        File font = new File("fonts/traditional.ttf");
-        PDFMaker pdf = new PDFMaker(font);
+        PDFMaker pdf = new PDFMaker(FontUtils.traditional());
 
         // 2. footer
         SimpleFooterView fv = new SimpleFooterView("DOC-0001-AAA0-12.32B", "2015-11-06", 12);
 
         // 3. chapter 1
-        GridView gv01 = new GridView(pdf, A4Paper.landscape(), createModelRenderer());
+        GridView gv01 = new GridView(pdf, Paper.A4L, sampleGridModel2());
         SimpleHeaderView gv01Header = new SimpleHeaderView("第一章 A4 橫式測試頁", 20);
         gv01.setFooterView(fv);
         gv01.setHeaderView(gv01Header);
         gv01.beginBookmarkGroup("第一章 A4 橫式測試頁")
-        	.draw(prepareData1(), "1-1 第一次資料", true)
-        	.draw(prepareData1(), "1-2 第二次資料", true)
+        	.draw(mainData(), "1-1 第一次資料", true)
+        	.draw(mainData(), "1-2 第二次資料", true)
         	.endBookmarkGroup();
         gv01Header.draw();
 
         // 4. chapter 2
-        GridView gv02 = gv01.create(createModel());	// TODO: why?
+        GridView gv02 = gv01.create(sampleGridModel1());	// TODO: why?
         SimpleHeaderView gv02Header = new SimpleHeaderView("第二章 A4 直式測試頁", 20);
         gv02.setHeaderView(gv02Header);
         gv02.setFooterView(fv);
         gv02.beginBookmarkGroup("第二章 A4 直式測試頁")
-        	.draw(prepareData1(), "2-1 第一次資料", true)
+        	.draw(mainData(), "2-1 第一次資料", true)
         	.endBookmarkGroup();
         gv02Header.draw();
 
@@ -99,13 +99,12 @@ public class GridViewTest {
     }
 
     @Test
-    public void testTutorial5() throws Exception {
+    public void test3() throws Exception {
         // 1. document
-        File font = new File("fonts/traditional.ttf");
-        PDFMaker pdf = new PDFMaker(font);
+        PDFMaker pdf = new PDFMaker(FontUtils.traditional());
 
         // 2. header
-        HeaderDescriptionView hv = new HeaderDescriptionView(pdf, new A4Paper(true), new DefaultGridModel(
+        HeaderDescriptionView hv = new HeaderDescriptionView(pdf, Paper.A4L, new DefaultGridModel(
                 new ColumnModel[] {
                         new ColumnModel("C1", "", 100, AlignmentType.NEAR),
                         new ColumnModel("V1", "", 200, AlignmentType.NEAR),
@@ -114,14 +113,14 @@ public class GridViewTest {
                 },
                 9),
                 90);
-        hv.setData(prepareFvData());
+        hv.setData(headerViewData());
 
         // 3. main
-        GridView view = new GridView(pdf, A4Paper.landscape(), createModelRenderer());
+        GridView view = new GridView(pdf, Paper.A4L, sampleGridModel2());
         view.setHeaderView(hv);
         view.beginBookmarkGroup("第一章 A4 橫式測試頁")
-        	.draw(prepareData1(), "1-1 第一次資料", true)
-        	.draw(prepareData1(), "1-2 第二次資料", true)
+        	.draw(mainData(), "1-1 第一次資料", true)
+        	.draw(mainData(), "1-2 第二次資料", true)
         	.endBookmarkGroup();
 
         // 4. draw footer
@@ -131,34 +130,22 @@ public class GridViewTest {
     }
 
     @Test
-    public void testToturial6() throws Exception {
-        TreeMap<String, Object> imageInfo = new TreeMap<String, Object>();
-        imageInfo.put("imagePath", "sample/image1.png");  	// 圖檔
-        imageInfo.put("imageText", "Judy Gong");    		// 說明
-
-        TreeMap<String, Object> row = new TreeMap<String, Object>();
-        row.put("imageInfo", imageInfo);
-
-        // data for gv01
-        ArrayList<Map<String, Object>> rows = new ArrayList<Map<String, Object>>();
-        rows.add(row);
-
-
-    	GridXMLModelFactory models = new GridXMLModelFactory(new File("sample/grid/layout.xml"));
-
+    public void test4() throws Exception {
         // 1. document
-        File font = new File("fonts/traditional.ttf");
-        PDFMaker pdf = new PDFMaker(font);
+        PDFMaker pdf = new PDFMaker(FontUtils.traditional());
 
         // 2. footer
         SimpleFooterView fv = new SimpleFooterView("DOC-0001-AAA0-12.32B", "2015-11-06", 11);
 
-        // 3. chapter 1
-        GridView gv01 = models.createView(pdf, A4Paper.portrait(), "image");
+    	// 3. models
+    	GridViewFactory viewFactory = GridViewFactory.fromXml("sample/grid/layout.xml");
+
+    	// 4. chapter 1
+        GridView gv01 = viewFactory.mainView(pdf, Paper.A4, "image");
         SimpleHeaderView gv01Header = new SimpleHeaderView("第一章 A4 橫式測試頁", 20);
         gv01.setHeaderView(gv01Header);
         gv01.setFooterView(fv);
-        gv01.draw(rows, "測試圖片", true);
+        gv01.draw(mainDataTest4(), "測試圖片", true);
         gv01Header.draw();
 
         // 5. draw footer
@@ -168,7 +155,7 @@ public class GridViewTest {
         pdf.save(new File("output/grid_test6.pdf"));
     }
     
-    private DefaultGridModel createModel() {
+    private DefaultGridModel sampleGridModel1() {
     	return new DefaultGridModel(
                 new ColumnModel[] {
                         new ColumnModel("Byte", "BYTE", 50, AlignmentType.FAR),
@@ -183,7 +170,7 @@ public class GridViewTest {
                 12);
     }
     
-    private DefaultGridModel createModelRenderer() {
+    private DefaultGridModel sampleGridModel2() {
     	return new DefaultGridModel(
                 new ColumnModel[] {
                         new ColumnModel("Byte", "BYTE", 50, AlignmentType.FAR),
@@ -198,7 +185,7 @@ public class GridViewTest {
                 12);
     }
 
-    private List<Map<String, Object>> prepareFvData() {
+    private List<Map<String, Object>> headerViewData() {
         ArrayList<Map<String, Object>> table = new ArrayList<Map<String, Object>>();
         for (int i = 0; i < 3; i++) {
             LinkedHashMap<String, Object> r = new LinkedHashMap<String, Object>();
@@ -212,7 +199,7 @@ public class GridViewTest {
         return table;
     }
 
-    private List<Map<String, Object>> prepareData1() {
+    private List<Map<String, Object>> mainData() {
         ArrayList<Map<String, Object>> table = new ArrayList<Map<String, Object>>();
 
         LinkedHashMap<String, Object> r1 = new LinkedHashMap<String, Object>();
@@ -239,6 +226,21 @@ public class GridViewTest {
             table.add(r2);
         }
 
+        return table;
+    }
+    
+    private List<Map<String, Object>> mainDataTest4() {
+        TreeMap<String, Object> imageInfo = new TreeMap<String, Object>();
+        imageInfo.put("imagePath", "sample/image1.png");  	// 圖檔
+        imageInfo.put("imageText", "Judy Gong");    		// 說明
+
+        TreeMap<String, Object> row = new TreeMap<String, Object>();
+        row.put("imageInfo", imageInfo);
+
+        // data for gv01
+        ArrayList<Map<String, Object>> table = new ArrayList<Map<String, Object>>();
+        table.add(row);
+        
         return table;
     }
 }

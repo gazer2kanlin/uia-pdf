@@ -19,7 +19,7 @@ package uia.pdf.gridbag.model;
 import java.awt.Color;
 
 import uia.pdf.PDFUtil;
-import uia.pdf.gridbag.GridBagLayout;
+import uia.pdf.gridbag.GridBagModel;
 import uia.pdf.gridbag.layout.RowType;
 
 /**
@@ -30,7 +30,9 @@ import uia.pdf.gridbag.layout.RowType;
  */
 public class Row {
 
-    public final GridBag grid;
+    private final RowType rt;
+
+    public final GridBagModel grid;
 
     public final int index;
 
@@ -40,18 +42,14 @@ public class Row {
 
     public final Color borderColor;
 
-    private final int y;
+    private int y;
 
-    private final int height;
+    private int height;
 
-    private final RowType rt;
-
-    public Row(RowType rt, GridBag grid, int rowIndex) {
-        this.grid = grid;
+    public Row(RowType rt, GridBagModel grid, int rowIndex) {
         this.rt = rt;
+        this.grid = grid;
         this.index = rowIndex;
-        this.y = this.index == 0 ? grid.y : grid.rows[this.index - 1].y + grid.rows[this.index - 1].height;
-        this.height = GridBagLayout.calculate(rt.getHeight(), grid.height, this.y - grid.y);
         this.background = PDFUtil.toColor(rt.getBackground());
         this.borderSize = rt.getBorderSize();
         this.borderColor = PDFUtil.toColor(rt.getBorderColor());
@@ -69,10 +67,23 @@ public class Row {
 	public int getHeigth(){
 		return this.height;
 	}
+	
+	public void arrange(int y) {
+        this.y = y;
+        this.height = PDFUtil.sizing(
+        		rt.getHeight(), 
+        		grid.getHeight(), 
+        		this.y - grid.getY());
+	}
 
     @Override
     public String toString() {
-        return String.format("row[%2s](x=%3s,y=%3s,w=%3s,h=%3s)", this.index, this.grid.x, this.y, this.grid.width, this.height);
+        return String.format("row[%2s](x=%3s,y=%3s,w=%3s,h=%3s)", 
+        		this.index, 
+        		this.grid.getX(), 
+        		this.y, 
+        		this.grid.getWidth(), 
+        		this.height);
     }
 
     public int getFontSize() {

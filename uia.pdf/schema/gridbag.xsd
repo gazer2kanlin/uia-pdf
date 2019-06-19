@@ -51,9 +51,9 @@
     <complexType name="RowType">
         <sequence>
             <choice maxOccurs="unbounded">
-    		<element name="textCell" type="uia:TextCellType"></element>
-    		<element name="bindCell" type="uia:BindCellType"></element>
-    		<element name="imageCell" type="uia:ImageCellType"></element>
+	    		<element name="textCell" type="uia:TextCellType"></element>
+	    		<element name="bindCell" type="uia:BindCellType"></element>
+	    		<element name="imageCell" type="uia:ImageCellType"></element>
             </choice>
     	</sequence>
     	<attribute name="height" type="string" use="required"></attribute>

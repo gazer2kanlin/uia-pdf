@@ -1,19 +1,3 @@
-/*
- * Copyright 2015 uia.pdf
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package uia.pdf.grid;
 
 import java.awt.Color;
@@ -34,6 +18,7 @@ import uia.pdf.PDFMaker;
 import uia.pdf.PDFUtil;
 import uia.pdf.grid.ColumnModel.AlignmentType;
 import uia.pdf.papers.Paper;
+import uia.utils.PropertyBeanUtils;
 
 /**
  * Present content with grid.
@@ -136,7 +121,7 @@ public class GridView extends ContentView implements AbstractGridView {
         this.currPage = null;
     }
 
-    public GridView draw(List<Map<String, Object>> data, String bookmark, boolean bookmarkAsContent) throws IOException {
+    public GridView draw(List<Map<String, Object>> data, String bookmark, boolean bookmarkAsContent) throws Exception {
         PDPage page = this.currPage;
         if (page == null) {
             page = newPage();
@@ -157,13 +142,34 @@ public class GridView extends ContentView implements AbstractGridView {
         return this;
     }
 
+    public <T> GridView draw2(List<T> data, String bookmark, boolean bookmarkAsContent) throws Exception {
+        PDPage page = this.currPage;
+        if (page == null) {
+            page = newPage();
+        }
+
+        page = this.pdf.addBookmark(this, page, bookmark, bookmarkAsContent);
+        page = drawColumns(page);
+
+        if (data == null) {
+            return this;
+        }
+        int row = 0;
+        for (Object rowData : data) {
+            page = draw2Row(page, rowData, row, false);
+        }
+        drawGridLine(page);
+        
+        return this;
+    }
+
     @Override
     public PDPage drawBookmarks(PDPage page, List<PDOutlineItem> ois) throws IOException {
         PDFont font = this.pdf.getFont();
         PDPageContentStream contentStream = new PDPageContentStream(this.pdf.getDocument(), page, AppendMode.APPEND, false, false);
         contentStream.setFont(font, 14);
         for (PDOutlineItem oi : ois) {
-            if (this.rowV - 16 < getBottom()) {
+            if (this.rowV - 16 < getDrawingBottom()) {
                 contentStream.close();
                 page = newPage();
                 contentStream = new PDPageContentStream(this.pdf.getDocument(), page, AppendMode.APPEND, false, false);
@@ -183,7 +189,7 @@ public class GridView extends ContentView implements AbstractGridView {
     }
 
     private PDPage newPage() {
-        this.rowV = getTop();
+        this.rowV = getDrawingTop();
         this.tableTop = this.rowV;
         this.columnHz = getLeft();
 
@@ -196,7 +202,7 @@ public class GridView extends ContentView implements AbstractGridView {
 
     }
 
-    private PDPage drawColumns(PDPage page) throws IOException {
+    private PDPage drawColumns(PDPage page) throws Exception {
         if (!this.drawHeader) {
             return page;
         }
@@ -207,11 +213,11 @@ public class GridView extends ContentView implements AbstractGridView {
         int hh = 0;
         for (int i0 = 0; i0 < cms.length; i0++) {
             ArrayList<String> cs = new ArrayList<String>();
-            int h0 = PDFUtil.split(cms[i0].getDisplayName(), font, getFontSize(), cms[i0].getWidth() - 4, cs);
+            int h0 = PDFUtil.splitContent(cms[i0].getDisplayName(), font, getFontSize(), cms[i0].getWidth() - 4, cs);
             hh = Math.max(hh, h0);
         }
 
-        if (this.rowV - (4 * hh) < getBottom()) {
+        if (this.rowV - (4 * hh) < getDrawingBottom()) {
             page = newPage();
         }
 
@@ -258,9 +264,9 @@ public class GridView extends ContentView implements AbstractGridView {
         return page;
     }
 
-    private PDPage drawRow(PDPage page, Map<String, Object> rowCells, int row, boolean forceNewPage) throws IOException {
+    private PDPage drawRow(PDPage page, Map<String, Object> rowCells, int row, boolean forceNewPage) throws Exception {
         PDPage currPage = page;
-        if (forceNewPage || (this.rowV - 12) < getBottom()) {
+        if (forceNewPage || (this.rowV - 12) < getDrawingBottom()) {
             drawGridLine(page);
             currPage = newPage();
             if (this.columnEachPage) {
@@ -289,18 +295,77 @@ public class GridView extends ContentView implements AbstractGridView {
         this.rowV -= h;
 
         // handle overlap at footer area
-        if (!forceNewPage && this.rowV < getBottom()) {
+        if (!forceNewPage && this.rowV < getDrawingBottom()) {
             contentStream.setNonStrokingColor(Color.white);
             contentStream.addRect(
                     getLeft(),
                     this.rowV,
-                    (float) this.getPaper().getDrawableSize().getWidth(),
+                    (float) this.getPaper().getContentSize().getWidth(),
                     h);
             contentStream.fill();
             contentStream.setNonStrokingColor(Color.black);
             contentStream.close();
             this.rowV += h;
             return drawRow(page, rowCells, row, true);
+        }
+        else {
+
+            contentStream.setLineWidth(0.1f);
+            contentStream.moveTo(getLeft(), this.rowV);
+            contentStream.lineTo(getRight(), this.rowV);
+            contentStream.stroke();
+
+            contentStream.close();
+        }
+
+        return currPage;
+    }
+
+
+    private PDPage draw2Row(PDPage page, Object data, int row, boolean forceNewPage) throws Exception {
+        PDPage currPage = page;
+        if (forceNewPage || (this.rowV - 12) < getDrawingBottom()) {
+            drawGridLine(page);
+            currPage = newPage();
+            if (this.columnEachPage) {
+                currPage = drawColumns(currPage);
+            }
+        }
+
+        PDFont font = this.pdf.getFont();
+        PDPageContentStream contentStream = new PDPageContentStream(this.pdf.getDocument(), currPage, AppendMode.APPEND, false, false);
+        contentStream.setFont(font, this.fontSize);
+
+        ColumnModel[] cms = this.model.getColumnModels();
+        int h = Short.MIN_VALUE;
+        for (int col = 0; col < cms.length; col++) {
+            ColumnModel cm = cms[col];
+            if (col == 0) {
+                this.columnHz = getLeft();
+            }
+            else {
+                this.columnHz += cms[col - 1].getWidth();
+            }
+            
+            Object value = PropertyBeanUtils.read(data, cm.getId());
+            CellRenderer cr = this.model.getCellRenderer(0, col);
+            h = Math.max(h, cr.paint(contentStream, new Point(this.columnHz, this.rowV), this, cm, value, row, col));
+        }
+        this.rowV -= h;
+
+        // handle overlap at footer area
+        if (!forceNewPage && this.rowV < getDrawingBottom()) {
+            contentStream.setNonStrokingColor(Color.white);
+            contentStream.addRect(
+                    getLeft(),
+                    this.rowV,
+                    (float) this.getPaper().getContentSize().getWidth(),
+                    h);
+            contentStream.fill();
+            contentStream.setNonStrokingColor(Color.black);
+            contentStream.close();
+            this.rowV += h;
+            return draw2Row(page, data, row, true);
         }
         else {
 
@@ -331,7 +396,7 @@ public class GridView extends ContentView implements AbstractGridView {
         contentStream.addRect(
                 getLeft(),
                 this.rowV,
-                (float) this.getPaper().getDrawableSize().getWidth(),
+                (float) this.getPaper().getContentSize().getWidth(),
                 this.tableTop - this.rowV);
         contentStream.stroke();
 

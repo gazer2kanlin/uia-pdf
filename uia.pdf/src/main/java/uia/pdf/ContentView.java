@@ -54,7 +54,7 @@ public abstract class ContentView {
      * @param pdf PDF maker.
      * @param paper paper.
      */
-    public ContentView(PDFMaker pdf, Paper paper) {
+    protected ContentView(PDFMaker pdf, Paper paper) {
         this.pdf = pdf;
         this.paper = paper;
         this.pages = new ArrayList<PDPage>();
@@ -109,6 +109,7 @@ public abstract class ContentView {
         this.headerView = hv;
         if (this.headerView != null) {
             this.headerView.add(this);
+            this.headerView.arrange(this.paper);
         }
     }
 
@@ -128,6 +129,7 @@ public abstract class ContentView {
         this.footerView = fv;
         if (this.footerView != null) {
             this.footerView.add(this);
+            this.footerView.arrange(this.paper);
         }
     }
 
@@ -175,8 +177,8 @@ public abstract class ContentView {
      * Get top-left margin coordinate.
      * @return Top-left coordinate.
      */
-    public Point getTopLeft() {
-        return new Point(this.paper.getLeft(), getTop());
+    public Point getDrawingTopLeft() {
+        return new Point(this.paper.getLeft(), getDrawingTop());
     }
 
     /**
@@ -184,31 +186,54 @@ public abstract class ContentView {
      * @return Width.
      */
     public int getWidth() {
-        return this.paper.getDrawableSize().width;
+        return this.paper.getContentSize().width;
+    }
+    
+    @Override
+    public String toString() {
+    	return String.format("content:(%s,%s)", getWidth(), getContentHeight());
     }
 
     /**
-     * Get height of the content.
-     * @return Height.
-     */
-    public int getHeight() {
-        return getTop() - getBottom();
-    }
-
-    /**
-     * Draw bookmarks on page.
-     * @param page Page.
+     * Draw bookmarks on the page.
+     * 
+     * @param page A page.
      * @param ois Outline items.
      * @return Page.
      * @throws IOException IO exception.
      */
     public abstract PDPage drawBookmarks(PDPage page, List<PDOutlineItem> ois) throws IOException;
 
-    protected int getTop() {
-        return this.headerView == null ? this.paper.getTop() : this.paper.getTop() - this.headerView.getHeight();
+    protected int getContentTop() {
+    	if(this.headerView == null) {
+    		return 0;
+    	}
+    	else {
+    		int offset = this.headerView.getY() + this.headerView.getHeight();
+    		return offset < 0 ? 0 : offset;
+    	}
     }
 
-    protected int getBottom() {
-        return this.footerView == null ? this.paper.getBottom() : this.paper.getBottom() + this.footerView.getHeight();
+    protected int getContentBottom() {
+    	int h = this.paper.getContentSize().height;
+    	if(this.footerView == null) {
+    		return h;
+    	}
+    	else {
+    		int offset = h - this.footerView.getY();
+    		return offset < 0 ? h : this.footerView.getY();
+    	}
+    }
+
+    public int getContentHeight() {
+        return getContentBottom() - getContentTop();
+    }
+
+    protected int getDrawingTop() {
+		return this.paper.getDrawingTop();
+    }
+
+    protected int getDrawingBottom() {
+		return this.paper.getDrawingBottom();
     }
 }

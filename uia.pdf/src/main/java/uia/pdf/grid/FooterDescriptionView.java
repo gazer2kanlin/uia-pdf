@@ -58,6 +58,20 @@ public class FooterDescriptionView extends DescriptionView implements AbstractGr
         this.model = model;
         this.height = height;
     }
+    
+    @Override
+    public int getY() {
+    	return paper.getContentSize().height - this.height;
+    }
+
+    @Override
+    public int getHeight() {
+        return this.height;
+    }
+    
+    @Override
+    public void arrange(Paper paper) {
+    }
 
     @Override
     public Paper getPaper() {
@@ -75,11 +89,6 @@ public class FooterDescriptionView extends DescriptionView implements AbstractGr
     }
 
     @Override
-    public int getHeight() {
-        return this.height;
-    }
-
-    @Override
     public PDFMaker getDoc() {
         return this.pdf;
     }
@@ -91,7 +100,7 @@ public class FooterDescriptionView extends DescriptionView implements AbstractGr
 
     @Override
     protected void draw(ContentView cv, PDPage page) throws IOException {
-        this.rowV = this.paper.getBottom() + this.height;
+        this.rowV = this.paper.getDrawingBottom() + this.height;
         int row = 0;
         for (Map<String, Object> rowCells : this.data) {
             drawRow(page, rowCells, row++);

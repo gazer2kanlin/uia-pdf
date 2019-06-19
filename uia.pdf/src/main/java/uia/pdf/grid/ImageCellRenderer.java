@@ -18,8 +18,8 @@ public class ImageCellRenderer implements CellRenderer {
                     view.getDoc().getDocument());
 
             Paper paper = view.getPaper();
-            double wp = (double) Math.max(img.getWidth(), cm.getWidth()) / paper.getDrawableSize().width;
-            double hp = (double) img.getHeight() / paper.getDrawableSize().height;
+            double wp = (double) Math.max(img.getWidth(), cm.getWidth()) / paper.getContentSize().width;
+            double hp = (double) img.getHeight() / paper.getContentSize().height;
             double pct = 1.0 / Math.max(wp, hp);
             int w = (int) (img.getWidth() * pct);
             int h = (int) (img.getHeight() * pct);

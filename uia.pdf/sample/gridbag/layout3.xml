@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <layout xmlns="http://gridbag.pdf.uia/layout">
-	<gridbag name="title" x="0" y="0" width="100%" height="50" borderEnabled="false">
+	<gridbag name="title" x="0" y="0" width="100%" height="30" borderEnabled="false">
 		<columns>
 			<column width="100%"></column>
 		</columns>
@@ -12,7 +12,7 @@
 			</row>
 		</rows>
 	</gridbag>
-	<gridbag name="header" x="0" y="50" width="100%" height="150">
+	<gridbag name="header" x="0" y="30" width="100%" height="170">
 		<columns>
 			<column width="15%"></column>
 			<column width="*40%"></column>
@@ -77,7 +77,7 @@
 			</row>
 		</rows>
 	</gridbag>
-	<gridbag name="inspection" x="0" y="200" width="100%" height="350">
+	<gridbag name="inspection" x="0" y="200" width="100%" height="250">
 		<columns>
 			<column width="15%"></column>
 			<column width="*40%"></column>
@@ -184,7 +184,7 @@
 			</row>
 		</rows>
 	</gridbag>
-	<gridbag name="result" x="0" y="550" width="100%" height="+100%" background="210,210,210">
+	<gridbag name="result" x="0" y="450" width="100%" height="+100%" background="210,210,210">
 		<columns>
 			<column width="15%"></column>
 			<column width="*40%"></column>

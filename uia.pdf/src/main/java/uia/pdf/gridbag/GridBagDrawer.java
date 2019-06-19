@@ -18,10 +18,10 @@ package uia.pdf.gridbag;
 
 import java.awt.Color;
 import java.awt.Point;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -30,10 +30,8 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream.AppendMode;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 
 import uia.pdf.ContentView;
-import uia.pdf.Layout;
 import uia.pdf.PDFException;
 import uia.pdf.gridbag.model.Cell;
-import uia.pdf.gridbag.model.GridBag;
 
 /**
  *
@@ -42,7 +40,7 @@ import uia.pdf.gridbag.model.GridBag;
  */
 public class GridBagDrawer {
 
-    public final GridBagLayout gbLayout;
+    private final List<GridBagModel> models;
 
     private DefaultBindCellRenderer bindRenderer0;
 
@@ -50,19 +48,18 @@ public class GridBagDrawer {
 
     private HashMap<Class<?>, GridBagCellRenderer> bindClassRenderers;
 
-    public GridBagDrawer(File layoutFile) throws PDFException {
-        try {
-            this.gbLayout = new GridBagLayout(Layout.GRIDBAG_TYPE.fromXml(layoutFile));
-            this.bindRenderer0 = new DefaultBindCellRenderer();
-            this.bindIdRenderers = new HashMap<String, GridBagCellRenderer>();
-            this.bindClassRenderers = new HashMap<Class<?>, GridBagCellRenderer>();
-        }
-        catch (Exception ex) {
-            throw new PDFException(layoutFile + " failure", ex);
-        }
+    public GridBagDrawer(List<GridBagModel> models) throws PDFException {
+        this.models = models;
+        this.bindRenderer0 = new DefaultBindCellRenderer();
+        this.bindIdRenderers = new HashMap<String, GridBagCellRenderer>();
+        this.bindClassRenderers = new HashMap<Class<?>, GridBagCellRenderer>();
     }
 
-    public void registerBindIdCellRenderer(String id, GridBagCellRenderer renderer) {
+    public List<GridBagModel> getModels() {
+		return models;
+	}
+
+	public void registerBindIdCellRenderer(String id, GridBagCellRenderer renderer) {
         this.bindIdRenderers.put(id, renderer);
     }
 
@@ -70,29 +67,27 @@ public class GridBagDrawer {
         this.bindClassRenderers.put(cls, renderer);
     }
 
-    public void drawEx(ContentView cv, PDPage page, Map<String, Map<String, Object>> gridsData) throws IOException {
-        this.gbLayout.load(cv.getWidth(), cv.getHeight());
-
+    public void drawEx(ContentView cv, PDPage page, Map<String, Map<String, Object>> data) throws IOException {
         PDPageContentStream contentStream = new PDPageContentStream(cv.getDoc().getDocument(), page, AppendMode.APPEND, false, false);
         PDFont font = cv.getDoc().getFont();
         contentStream.setFont(font, 9);
 
-        Point topLeft = cv.getTopLeft();
-        for (GridBag grid : this.gbLayout.getGrids()) {
+        Point topLeft = cv.getDrawingTopLeft();
+        for (GridBagModel model : this.models) {
             contentStream.setLineWidth(0.5f);
-
-            Map<String, Object> data = gridsData.get(grid.name);
-
-            if (grid.background != null) {
-                contentStream.setNonStrokingColor(grid.background);
-                contentStream.addRect(topLeft.x + grid.x, topLeft.y - grid.height - grid.y, grid.width, grid.height);
+            if (model.background != null) {
+                contentStream.setNonStrokingColor(model.background);
+                contentStream.addRect(
+                		topLeft.x + model.getX(), 
+                		topLeft.y - model.getHeight() - model.getY(), 
+                		model.getWidth(), 
+                		model.getHeight());
                 contentStream.fill();
             }
 
             ArrayList<Cell> colorBorder = new ArrayList<Cell>();
-            // draw grid
-            if (grid.borderEnabled) {
-                for (Cell[] cells : grid.cells) {
+            if (model.borderEnabled) {
+                for (Cell[] cells : model.cells) {
                     for (Cell cell : cells) {
                         contentStream.setLineWidth(cell.borderSize);
 
@@ -123,28 +118,32 @@ public class GridBagDrawer {
                 }
             }
 
-            if (data == null) {
+            Map<String, Object> modelData = data.get(model.name);
+            if (modelData == null) {
                 continue;
             }
 
-            // draw data
             int r = 0;
-            for (Cell[] cells : grid.cells) {
+            for (Cell[] cells : model.cells) {
                 int c = 0;
                 for (Cell cell : cells) {
                     if (cell.col != c && cell.row != r) {
                         continue;
                     }
-                    cell.accept(cv, this, contentStream, cell.bottomLeft(topLeft), data);
+                    cell.accept(cv, this, contentStream, cell.bottomLeft(topLeft), modelData);
                     c++;
                 }
                 r++;
             }
 
-            if (grid.borderEnabled) {
-                contentStream.setStrokingColor(grid.borderColor);
+            if (model.borderEnabled) {
+                contentStream.setStrokingColor(model.borderColor);
                 contentStream.setLineWidth(1.0f);
-                contentStream.addRect(topLeft.x + grid.x, topLeft.y - grid.height - grid.y, grid.width, grid.height);
+                contentStream.addRect(
+                		topLeft.x + model.getX(), 
+                		topLeft.y - model.getHeight() - model.getY(), 
+                		model.getWidth(), 
+                		model.getHeight());
                 contentStream.stroke();
             }
 
@@ -154,26 +153,28 @@ public class GridBagDrawer {
     }
 
     public void draw(ContentView cv, PDPage page, Map<String, Object> data) throws IOException {
-        this.gbLayout.load(cv.getWidth(), cv.getHeight());
-
         PDPageContentStream contentStream = new PDPageContentStream(cv.getDoc().getDocument(), page, AppendMode.APPEND, false, false);
         PDFont font = cv.getDoc().getFont();
         contentStream.setFont(font, 9);
 
-        Point topLeft = cv.getTopLeft();
-        for (GridBag grid : this.gbLayout.getGrids()) {
+        Point topLeft = cv.getDrawingTopLeft();
+        for (GridBagModel model : this.models) {
             contentStream.setLineWidth(0.5f);
 
-            if (grid.background != null) {
-                contentStream.setNonStrokingColor(grid.background);
-                contentStream.addRect(topLeft.x + grid.x, topLeft.y - grid.height - grid.y, grid.width, grid.height);
+            if (model.background != null) {
+                contentStream.setNonStrokingColor(model.background);
+                contentStream.addRect(
+                		topLeft.x + model.getX(), 
+                		topLeft.y - model.getHeight() - model.getY(), 
+                		model.getWidth(), 
+                		model.getHeight());
                 contentStream.fill();
             }
 
             ArrayList<Cell> colorBorder = new ArrayList<Cell>();
             // draw grid
-            if (grid.borderEnabled) {
-                for (Cell[] cells : grid.cells) {
+            if (model.borderEnabled) {
+                for (Cell[] cells : model.cells) {
                     for (Cell cell : cells) {
                         contentStream.setLineWidth(cell.borderSize);
 
@@ -206,7 +207,7 @@ public class GridBagDrawer {
 
             // draw data
             int r = 0;
-            for (Cell[] cells : grid.cells) {
+            for (Cell[] cells : model.cells) {
                 int c = 0;
                 for (Cell cell : cells) {
                     if (cell.col != c && cell.row != r) {
@@ -218,10 +219,14 @@ public class GridBagDrawer {
                 r++;
             }
 
-            if (grid.borderEnabled) {
-                contentStream.setStrokingColor(grid.borderColor);
+            if (model.borderEnabled) {
+                contentStream.setStrokingColor(model.borderColor);
                 contentStream.setLineWidth(1.0f);
-                contentStream.addRect(topLeft.x + grid.x, topLeft.y - grid.height - grid.y, grid.width, grid.height);
+                contentStream.addRect(
+                		topLeft.x + model.getX(), 
+                		topLeft.y - model.getHeight() - model.getY(), 
+                		model.getWidth(), 
+                		model.getHeight());
                 contentStream.stroke();
             }
 

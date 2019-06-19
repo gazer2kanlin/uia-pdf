@@ -16,8 +16,9 @@
 
 package uia.pdf.gridbag;
 
-import java.io.File;
+import java.awt.Dimension;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -26,24 +27,25 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import uia.pdf.ContentView;
 import uia.pdf.DescriptionView;
 import uia.pdf.PDFException;
+import uia.pdf.papers.Paper;
 
 public class GridBagDescriptionView extends DescriptionView {
+	
+	private final GridBagModel model;
 
-    private GridBagDrawer gbView;
+    private GridBagDrawer bagDrawer;
 
     private Map<String, Object> data;
 
-    private int height;
-
-    public GridBagDescriptionView(File file, String name) throws PDFException {
-        this(file, name, new TreeMap<String, Object>());
+    public GridBagDescriptionView(GridBagModel model) throws PDFException {
+        this(model, new TreeMap<String, Object>());
     }
 
-    public GridBagDescriptionView(File file, String name, Map<String, Object> data) throws PDFException {
+    public GridBagDescriptionView(GridBagModel model, Map<String, Object> data) throws PDFException {
         try {
-            this.gbView = new GridBagDrawer(file);
+        	this.model = model;
+            this.bagDrawer = new GridBagDrawer(Arrays.asList(model));
             this.data = data;
-            this.height = Integer.parseInt(this.gbView.gbLayout.getGridBagType(name).getHeight());  // TODO: bug!!
         }
         catch (PDFException ex1) {
             throw ex1;
@@ -60,15 +62,25 @@ public class GridBagDescriptionView extends DescriptionView {
     public void setData(Map<String, Object> data) {
         this.data = data;
     }
+    
+    @Override
+    public int getY() {
+    	return this.model.getY();
+    }
 
     @Override
     public int getHeight() {
-        return this.height + 3;
+        return this.model.getHeight();
+    }
+    
+    @Override
+    public void arrange(Paper paper) {
+    	Dimension dim = paper.getContentSize();
+    	this.model.arrange(0, 0, dim.width, dim.height);
     }
 
     @Override
     protected void draw(ContentView cv, PDPage page) throws IOException {
-        this.gbView.draw(cv, page, this.data);
+        this.bagDrawer.draw(cv, page, this.data);
     }
-
 }

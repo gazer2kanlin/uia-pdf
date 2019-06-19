@@ -58,6 +58,16 @@ public class HeaderDescriptionView extends DescriptionView implements AbstractGr
         this.model = model;
         this.height = height;
     }
+    
+    @Override
+    public int getY() {
+    	return 0;
+    }
+
+    @Override
+    public int getHeight() {
+        return this.height;
+    }
 
     @Override
     public Paper getPaper() {
@@ -73,10 +83,9 @@ public class HeaderDescriptionView extends DescriptionView implements AbstractGr
         int h = PDFUtil.getContentHeight("A", this.pdf.getFont(), this.model.getFontSize());
         this.height = this.data.size() * (h + 8) + h;
     }
-
+    
     @Override
-    public int getHeight() {
-        return this.height;
+    public void arrange(Paper paper) {
     }
 
     @Override
@@ -91,7 +100,7 @@ public class HeaderDescriptionView extends DescriptionView implements AbstractGr
 
     @Override
     protected void draw(ContentView cv, PDPage page) throws IOException {
-        this.rowV = this.paper.getTop();
+        this.rowV = this.paper.getDrawingTop();
         int row = 0;
         for (Map<String, Object> rowCells : this.data) {
             drawRow(page, rowCells, row++);

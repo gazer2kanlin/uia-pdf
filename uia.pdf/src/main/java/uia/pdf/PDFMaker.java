@@ -18,6 +18,7 @@ package uia.pdf;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 
@@ -31,11 +32,7 @@ import org.apache.pdfbox.pdmodel.interactive.documentnavigation.destination.PDPa
 import org.apache.pdfbox.pdmodel.interactive.documentnavigation.outline.PDDocumentOutline;
 import org.apache.pdfbox.pdmodel.interactive.documentnavigation.outline.PDOutlineItem;
 
-import uia.pdf.gridbag.GridBagView;
-import uia.pdf.papers.A3Paper;
-import uia.pdf.papers.A4Paper;
 import uia.pdf.papers.Paper;
-import uia.pdf.papers.PaperType;
 import uia.pdf.parsers.ValueParserFactory;
 
 /**
@@ -91,6 +88,25 @@ public class PDFMaker {
 
         this.bookmarkPages = new ArrayList<BookmarkPage>();
     }
+    
+    public PDFMaker(InputStream fontStream) throws IOException {
+        this.temp = new ArrayList<PDOutlineItem>();
+        this.doc = new PDDocument();
+        this.font = PDType0Font.load(this.doc, fontStream);
+        this.factory = new ValueParserFactory();
+
+        this.docOutline = new PDDocumentOutline();
+        this.doc.getDocumentCatalog().setDocumentOutline(this.docOutline);
+
+        PDOutlineItem rootOI = new PDOutlineItem();
+        rootOI.setTitle("All");
+        this.docOutline.addLast(rootOI);
+
+        this.hierarchyOI = new ArrayDeque<PDOutlineItem>();
+        this.hierarchyOI.push(rootOI);
+
+        this.bookmarkPages = new ArrayList<BookmarkPage>();
+    }
 
     /**
      * Constructor.
@@ -129,7 +145,7 @@ public class PDFMaker {
      * @param file PDF file.
      * @throws IOException
      */
-    public void save(File file) throws IOException {
+    public void save(File file) throws Exception {
         createIndex();
         this.docOutline.openNode();
         this.doc.save(file);
@@ -219,10 +235,10 @@ public class PDFMaker {
         }
     }
 
-    private void createIndex() throws IOException {
-        A4Paper a4 = new A4Paper(false);
+    private void createIndex() throws Exception {
+        Paper paper = Paper.A4;
 
-        PDPage page = a4.createPage();
+        PDPage page = paper.createPage();
         if (this.doc.getPages().getCount() > 0) {
             this.doc.getPages().insertBefore(page, this.doc.getPage(0));
         }
@@ -235,42 +251,42 @@ public class PDFMaker {
         contentStream.setFont(this.font, 16);
         int cw = PDFUtil.getContentWidth("INDEX", this.font, 11);
         contentStream.beginText();
-        contentStream.newLineAtOffset(a4.getLeft() + (a4.getDrawableSize().width - cw) / 2, a4.getTop() - 12);
+        contentStream.newLineAtOffset(paper.getLeft() + (paper.getContentSize().width - cw) / 2, paper.getDrawingTop() - 12);
         contentStream.showText("INDEX");
         contentStream.endText();
 
         contentStream.setFont(this.font, 11);
         contentStream.setLineWidth(0.5f);
-        int top = a4.getTop() - 20;
+        int top = paper.getDrawingTop() - 20;
         for (BookmarkPage bp : this.bookmarkPages) {
-            if (top <= a4.getBottom()) {
+            if (top <= paper.getDrawingBottom()) {
                 contentStream.close();
 
-                PDPage nextPage = a4.createPage();
+                PDPage nextPage = paper.createPage();
                 this.doc.getPages().insertAfter(nextPage, page);
                 contentStream = new PDPageContentStream(this.doc, nextPage, AppendMode.APPEND, false, false);
                 contentStream.setFont(this.font, 11);
 
-                top = a4.getTop() - 20;
+                top = paper.getDrawingTop() - 20;
             }
 
             int cw1 = PDFUtil.getContentWidth(bp.text, this.font, 11);
             int cw2 = PDFUtil.getContentWidth(bp.pageNo, this.font, 11);
 
-            int right = a4.getRight() - 18;
-            int w = 4 * (int) Math.ceil((right - (a4.getLeft() + cw1 + 10)) / 4);
+            int right = paper.getRight() - 18;
+            int w = 4 * (int) Math.ceil((right - (paper.getLeft() + cw1 + 10)) / 4);
             contentStream.setLineDashPattern(new float[] { 1, 3 }, 0);
             contentStream.moveTo(right - w - 1, top - 10);
             contentStream.lineTo(right, top - 10);
             contentStream.stroke();
 
             contentStream.beginText();
-            contentStream.newLineAtOffset(a4.getLeft(), top - 10);
+            contentStream.newLineAtOffset(paper.getLeft(), top - 10);
             contentStream.showText(bp.text);
             contentStream.endText();
 
             contentStream.beginText();
-            contentStream.newLineAtOffset(a4.getRight() - cw2, top - 10);
+            contentStream.newLineAtOffset(paper.getRight() - cw2, top - 10);
             contentStream.showText(bp.pageNo);
             contentStream.endText();
 
@@ -278,24 +294,6 @@ public class PDFMaker {
         }
 
         contentStream.close();
-    }
-    
-    public GridBagView createGridBag(PaperType paperType, File layoutFile) throws PDFException {
-    	Paper paper;
-    	switch(paperType) {
-    		case A4_LANDSCAPE:
-    			paper = new A4Paper(true);
-    			break;
-    		case A3:
-    			paper = new A3Paper();
-    			break;
-    		case A3_LANDSCAPE:
-    			paper = new A3Paper(true);
-    			break;
-    		default:
-    			paper = new A4Paper(false);
-    	}
-        return new GridBagView(this, paper, layoutFile);
     }
 
     class BookmarkPage {

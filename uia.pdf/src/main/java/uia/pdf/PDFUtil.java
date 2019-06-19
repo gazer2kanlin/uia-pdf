@@ -35,14 +35,20 @@ public class PDFUtil {
         return content == null ? 0 : (int) (font.getFontDescriptor().getAscent() / 1000 * fontSize);
     }
 
-    public static int getContentWidth(String content, PDFont font, int fontSize) throws IOException {
+    public static int getContentWidth(String content, PDFont font, int fontSize) throws Exception {
         if (content == null) {
             return 0;
         }
-        return (int) (font.getStringWidth(content) / 1000 * fontSize);
+        try {
+        	return (int) (font.getStringWidth(content) / 1000 * fontSize);
+        }
+        catch(Exception ex) {
+        	System.out.println(content + " font failed");
+        	throw ex;
+        }
     }
 
-    public static int[] getContentWdidths(String[] content, PDFont font, int fontSize) throws IOException {
+    public static int[] getContentWidths(String[] content, PDFont font, int fontSize) throws Exception {
         int[] widths = new int[content.length];
         for (int i = 0; i < content.length; i++) {
             widths[i] = getContentWidth(content[i], font, fontSize);
@@ -50,9 +56,9 @@ public class PDFUtil {
         return widths;
     }
 
-    public static int fixFontSzie(String content, PDFont font, int fontSize, int maxWidth) throws IOException {
+    public static int fixFontSize(String content, PDFont font, int fontSize, int maxWidth) throws Exception {
         int w = getContentWidth(content, font, fontSize);
-        return w < maxWidth ? fontSize : fixFontSzie(content, font, fontSize - 1, maxWidth);
+        return w < maxWidth || fontSize < 0 ? fontSize : fixFontSize(content, font, fontSize - 1, maxWidth);
     }
 
     /**
@@ -64,7 +70,7 @@ public class PDFUtil {
      * @return Cut content.
      * @throws IOException
      */
-    public static String cutContent(String content, PDFont font, int fontSize, int maxWidth) throws IOException {
+    public static String cutContent(String content, PDFont font, int fontSize, int maxWidth) throws Exception {
         if (getContentWidth(content, font, fontSize) < maxWidth) {
             return content;
         }
@@ -82,7 +88,7 @@ public class PDFUtil {
      * @param result Split result.
      * @throws IOException
      */
-    public static int split(String content, PDFont font, int fontSize, int maxWidth, List<String> result) throws IOException {
+    public static int splitContent(String content, PDFont font, int fontSize, int maxWidth, List<String> result) throws Exception {
         if (content == null) {
             return getContentHeight("", font, fontSize) + 8;
         }
@@ -90,7 +96,7 @@ public class PDFUtil {
         for (int c = 2; c <= content.length(); c++) {
             if (getContentWidth(content.substring(0, c), font, fontSize) >= maxWidth) {
                 result.add(content.substring(0, c - 1));
-                split(content.substring(c - 1, content.length()), font, fontSize, maxWidth, result);
+                splitContent(content.substring(c - 1, content.length()), font, fontSize, maxWidth, result);
 
                 int h = getContentHeight("", font, fontSize);
                 return result.size() * (h + 8);
@@ -110,33 +116,32 @@ public class PDFUtil {
      * % value with + prefix: calculate based on (full size - offset).<br>
      * % value with * prefix: calculate based on full size then reduce offset.<br>
      *
-     * @param value
+     * @param sizeStr
      * @param fullSize
      * @param offset
      * @return
      */
-    public static int calculateWidth(String value, int fullSize, int offset) {
-        if (value.endsWith("%")) {
-            if (value.startsWith("+")) {
-                int p = Integer.parseInt(value.substring(1, value.length() - 1));
+    public static int sizing(String sizeStr, int fullSize, int offset) {
+        if (sizeStr.endsWith("%")) {
+            if (sizeStr.startsWith("+")) {
+            	// +20%, 100, 15 = (100 - 15) * 0.2
+                int p = Integer.parseInt(sizeStr.substring(1, sizeStr.length() - 1));
                 return (fullSize - offset) * p / 100;
             }
-            else if (value.startsWith("*")) {
-                int p = Integer.parseInt(value.substring(1, value.length() - 1));
+            else if (sizeStr.startsWith("*")) {
+            	// *20%, 100, 15 = 100 * 0.2 - 15
+                int p = Integer.parseInt(sizeStr.substring(1, sizeStr.length() - 1));
                 return fullSize * p / 100 - offset;
             }
             else {
-                int p = Integer.parseInt(value.substring(0, value.length() - 1));
+            	// 20%, 100, 15 = 100 * 0.2
+                int p = Integer.parseInt(sizeStr.substring(0, sizeStr.length() - 1));
                 return fullSize * p / 100;
             }
         }
         else {
-            if (value.startsWith("-")) {
-                return fullSize + Integer.parseInt(value) - offset;
-            }
-            else {
-                return Integer.parseInt(value);
-            }
+        	// 20, 100, 15 = 20
+            return Integer.parseInt(sizeStr);
         }
     }
 

@@ -16,13 +16,14 @@
 
 package uia.pdf;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import org.apache.pdfbox.pdmodel.PDPage;
 
+import uia.pdf.papers.Paper;
+
 /**
- * Description view. Use to present header & footer.
+ * Description view is used to present header & footer.
  *
  * @author Kan Lin
  *
@@ -31,18 +32,11 @@ public abstract class DescriptionView {
 
     private final ArrayList<ContentView> cvs;
 
-    /**
-     * Constructor.
-     */
     public DescriptionView() {
         this.cvs = new ArrayList<ContentView>();
     }
 
-    /**
-     * Draw this view.
-     * @throws IOException
-     */
-    public void draw() throws IOException {
+    public void draw() throws Exception {
         for (ContentView view : this.cvs) {
             for (PDPage page : view.getPages()) {
                 draw(view, page);
@@ -52,6 +46,7 @@ public abstract class DescriptionView {
 
     /**
      * Get index of specific page.
+     * 
      * @param page The page.
      * @return Index.
      */
@@ -70,14 +65,15 @@ public abstract class DescriptionView {
         return 0;
     }
 
-    /**
-     * Get height of this view.
-     * @return Height.
-     */
+    public abstract int getY();
+
     public abstract int getHeight();
+    
+    public abstract void arrange(Paper paper);
 
     /**
      * Get page count this view handles.
+     * 
      * @return Count.
      */
     protected int getPageCount() {
@@ -88,7 +84,7 @@ public abstract class DescriptionView {
         return pc;
     }
 
-    protected abstract void draw(ContentView cv, PDPage page) throws IOException;
+    protected abstract void draw(ContentView cv, PDPage page) throws Exception;
 
     void add(ContentView view) {
         if (!this.cvs.contains(view)) {

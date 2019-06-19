@@ -16,12 +16,12 @@
 
 package uia.pdf;
 
-import java.io.IOException;
-
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.PDPageContentStream.AppendMode;
 import org.apache.pdfbox.pdmodel.font.PDFont;
+
+import uia.pdf.papers.Paper;
 
 /**
  * Footer view.
@@ -36,9 +36,12 @@ public class SimpleFooterView extends DescriptionView {
     private final String rightText;
 
     private final int fontSize;
+    
+    private int y;
 
     /**
-     *
+     * Constructor.
+     * 
      * @param leftText
      * @param rightText
      * @param fontSize
@@ -50,36 +53,48 @@ public class SimpleFooterView extends DescriptionView {
     }
 
     @Override
-    public int getHeight() {
-        return 30;
+    public int getY() {
+        return this.y;
     }
 
     @Override
-    protected void draw(ContentView cv, PDPage page) throws IOException {
+    public int getHeight() {
+        return 30;
+    }
+    
+    @Override
+    public void arrange(Paper paper) {
+    	this.y = paper.getContentSize().height;
+    }
+
+    @Override
+    protected void draw(ContentView cv, PDPage page) throws Exception {
         PDFont font = cv.getDoc().getFont();
 
+        int fontH = PDFUtil.getContentHeight("A", font, this.fontSize) + 15;
+        
         PDPageContentStream contentStream = new PDPageContentStream(cv.getDoc().getDocument(), page, AppendMode.APPEND, false, false);
         contentStream.setFont(font, this.fontSize);
 
-        contentStream.moveTo(cv.getPaper().getLeft(), cv.getBottom() - 10);
-        contentStream.lineTo(cv.getPaper().getRight(), cv.getBottom() - 10);
+        contentStream.moveTo(cv.getPaper().getLeft(), cv.getDrawingBottom() - 10);
+        contentStream.lineTo(cv.getPaper().getRight(), cv.getDrawingBottom() - 10);
         contentStream.stroke();
 
         contentStream.beginText();
-        contentStream.newLineAtOffset(cv.getPaper().getLeft(), cv.getPaper().getBottom());
+        contentStream.newLineAtOffset(cv.getPaper().getLeft(), cv.getPaper().getDrawingBottom() - fontH);
         contentStream.showText(this.leftText);
         contentStream.endText();
 
         String pageIndex = getPageIndex(page) + " / " + getPageCount();
         int cx = PDFUtil.getContentWidth(pageIndex, font, this.fontSize);
         contentStream.beginText();
-        contentStream.newLineAtOffset(cv.getPaper().getCenterX() - cx / 2, cv.getPaper().getBottom());
+        contentStream.newLineAtOffset(cv.getPaper().getCenterX() - cx / 2, cv.getPaper().getDrawingBottom() - fontH);
         contentStream.showText(pageIndex);
         contentStream.endText();
 
         int rx = PDFUtil.getContentWidth(this.rightText, font, this.fontSize);
         contentStream.beginText();
-        contentStream.newLineAtOffset(cv.getPaper().getRight() - rx, cv.getPaper().getBottom());
+        contentStream.newLineAtOffset(cv.getPaper().getRight() - rx, cv.getPaper().getDrawingBottom() - fontH);
         contentStream.showText(this.rightText);
         contentStream.endText();
 

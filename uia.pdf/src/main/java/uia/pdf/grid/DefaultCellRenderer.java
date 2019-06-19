@@ -101,7 +101,7 @@ public class DefaultCellRenderer implements CellRenderer {
             String content = view.getDoc().getValueParserFactory().parse(value);
 
             ArrayList<String> cs = new ArrayList<String>();
-            PDFUtil.split(content, font, view.getFontSize(), cm.getWidth() - 4, cs);
+            PDFUtil.splitContent(content, font, view.getFontSize(), cm.getWidth() - 4, cs);
 
             int ht = 0;
             for (int i = 0; i < cs.size(); i++) {

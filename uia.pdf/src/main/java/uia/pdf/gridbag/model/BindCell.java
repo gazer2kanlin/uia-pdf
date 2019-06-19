@@ -23,6 +23,7 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 
 import uia.pdf.ContentView;
 import uia.pdf.gridbag.GridBagDrawer;
+import uia.pdf.gridbag.GridBagModel;
 import uia.pdf.gridbag.layout.BindCellType;
 
 /**
@@ -35,7 +36,7 @@ public class BindCell extends Cell {
 
     public final String id;
 
-    public BindCell(BindCellType bct, GridBag grid, int rowIndex, int columnIndex) {
+    public BindCell(BindCellType bct, GridBagModel grid, int rowIndex, int columnIndex) {
         super(bct, grid, rowIndex, columnIndex);
         this.id = bct.getId();
     }

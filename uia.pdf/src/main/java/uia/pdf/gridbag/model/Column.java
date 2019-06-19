@@ -19,7 +19,7 @@ package uia.pdf.gridbag.model;
 import java.awt.Color;
 
 import uia.pdf.PDFUtil;
-import uia.pdf.gridbag.GridBagLayout;
+import uia.pdf.gridbag.GridBagModel;
 import uia.pdf.gridbag.layout.ColumnType;
 
 /**
@@ -29,43 +29,49 @@ import uia.pdf.gridbag.layout.ColumnType;
  *
  */
 public class Column {
+	
+	public final ColumnType ct;
 
-    /**
-     * Grid.
-     */
-    public final GridBag grid;
+    public final GridBagModel grid;
 
-    /**
-     * Index.
-     */
     public final int index;
 
-    /**
-     * x
-     */
-    public final int x;
-
-    /**
-     * Width.
-     */
-    public final int width;
-
-    /**
-     * Background color.
-     */
     public final Color background;
 
-    public Column(ColumnType ct, GridBag grid, int columnIndex) {
+    private int x;
+
+    private int width;
+
+    public Column(ColumnType ct, GridBagModel grid, int columnIndex) {
+    	this.ct = ct;
         this.grid = grid;
         this.index = columnIndex;
-        this.x = this.index == 0 ? grid.x : grid.columns[this.index - 1].x + grid.columns[this.index - 1].width;
-        this.width = GridBagLayout.calculate(ct.getWidth(), grid.width, this.x - grid.x);
         this.background = PDFUtil.toColor(ct.getBackground());
+    }
+    
+    public int getX() {
+		return x;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public void arrange(int x) {
+        this.x = x;
+        this.width = PDFUtil.sizing(
+        		this.ct.getWidth(), 
+        		this.grid.getWidth(), 
+        		this.x - grid.getX());
     }
 
     @Override
     public String toString() {
-        return String.format("col[%2s](x=%3s,y=%3s,w=%3s)", this.index, this.x, this.grid.y, this.width);
+        return String.format("col[%2s](x=%3s,y=%3s,w=%3s)", 
+        		this.index, 
+        		this.x, 
+        		this.grid.getY(), 
+        		this.width);
     }
 
 }

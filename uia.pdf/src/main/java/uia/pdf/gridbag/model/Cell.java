@@ -25,6 +25,7 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import uia.pdf.ContentView;
 import uia.pdf.PDFUtil;
 import uia.pdf.gridbag.GridBagDrawer;
+import uia.pdf.gridbag.GridBagModel;
 import uia.pdf.gridbag.layout.CellType;
 
 /**
@@ -35,44 +36,23 @@ import uia.pdf.gridbag.layout.CellType;
  */
 public class Cell {
 
-    /**
-     * Grid.
-     */
-    public final GridBag grid;
+    public final GridBagModel grid;
 
-    /**
-     * Row index.
-     */
     public final int row;
 
-    /**
-     * Column index.
-     */
     public final int col;
 
-    /**
-     * Row span.
-     */
     public final int rowspan;
 
-    /**
-     * Column span.
-     */
     public final int colspan;
 
-    /**
-     * Border size.
-     */
     public final float borderSize;
 
-    /**
-     * Border color.
-     */
     public final Color borderColor;
 
     protected CellType ct;
 
-    public Cell(CellType ct, GridBag grid, int rowIndex, int columnIndex) {
+    public Cell(CellType ct, GridBagModel grid, int rowIndex, int columnIndex) {
         this.grid = grid;
         this.ct = ct;
         this.row = rowIndex;
@@ -93,7 +73,7 @@ public class Cell {
     }
 
     public int getX() {
-        return this.grid.columns[this.col].x;
+        return this.grid.columns[this.col].getX();
     }
 
     public int getY() {
@@ -103,7 +83,7 @@ public class Cell {
     public int getWidth() {
         int w = 0;
         for (int i = 0; i < this.colspan; i++) {
-            w += this.grid.columns[this.col + i].width;
+            w += this.grid.columns[this.col + i].getWidth();
         }
         return w;
     }

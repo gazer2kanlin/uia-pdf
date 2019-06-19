@@ -16,7 +16,6 @@
 
 package uia.pdf.gridbag;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +27,7 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.interactive.documentnavigation.outline.PDOutlineItem;
 
 import uia.pdf.ContentView;
+import uia.pdf.DescriptionView;
 import uia.pdf.PDFException;
 import uia.pdf.PDFMaker;
 import uia.pdf.papers.Paper;
@@ -41,16 +41,10 @@ public class GridBagView extends ContentView {
 
     private GridBagDrawer drawer;
 
-    /**
-     *
-     * @param pdf
-     * @param paper
-     * @param layoutFile
-     * @throws Exception
-     */
-    public GridBagView(PDFMaker pdf, Paper paper, File layoutFile) throws PDFException {
+    public GridBagView(PDFMaker pdf, Paper paper, List<GridBagModel> models) throws PDFException {
         super(pdf, paper);
-        this.drawer = new GridBagDrawer(layoutFile);
+        this.drawer = new GridBagDrawer(models);
+        arrange();
     }
 
     public void registerBindIdCellRenderer(String id, GridBagCellRenderer renderer) {
@@ -61,13 +55,18 @@ public class GridBagView extends ContentView {
         this.drawer.registerBindClassCellRenderer(cls, renderer);
     }
 
-    /**
-     *
-     * @param gridsData
-     * @param bookmark
-     * @return
-     * @throws IOException
-     */
+    @Override
+    public void setHeaderView(DescriptionView fv) {
+    	super.setHeaderView(fv);
+        arrange();
+    }
+
+    @Override
+    public void setFooterView(DescriptionView fv) {
+    	super.setFooterView(fv);
+        arrange();
+    }
+
     public PDPage addPageEx(Map<String, Map<String, Object>> gridsData, String bookmark, boolean draw) throws IOException {
         PDPage page = this.paper.createPage();
         this.pdf.getDocument().addPage(page);
@@ -76,12 +75,6 @@ public class GridBagView extends ContentView {
         return addPageEx(page, gridsData);
     }
 
-    /**
-     *
-     * @param gridsData
-     * @return
-     * @throws IOException
-     */
     public PDPage addPageEx(Map<String, Map<String, Object>> gridsData) throws IOException {
         PDPage page = this.paper.createPage();
         this.pdf.getDocument().addPage(page);
@@ -89,13 +82,6 @@ public class GridBagView extends ContentView {
         return addPageEx(page, gridsData);
     }
 
-    /**
-     *
-     * @param data
-     * @param bookmark
-     * @return
-     * @throws IOException
-     */
     public PDPage addPage(Map<String, Object> data, String bookmark, boolean draw) throws IOException {
         PDPage page = this.paper.createPage();
         this.pdf.getDocument().addPage(page);
@@ -104,12 +90,6 @@ public class GridBagView extends ContentView {
         return addPage(page, data);
     }
 
-    /**
-     *
-     * @param data
-     * @return
-     * @throws IOException
-     */
     public PDPage addPage(Map<String, Object> data) throws IOException {
         PDPage page = this.paper.createPage();
         this.pdf.getDocument().addPage(page);
@@ -124,7 +104,7 @@ public class GridBagView extends ContentView {
         PDPageContentStream contentStream = new PDPageContentStream(this.pdf.getDocument(), page, AppendMode.APPEND, false, false);
         contentStream.setFont(font, 14);
 
-        int rowV = getTop();
+        int rowV = getDrawingTop();
         for (PDOutlineItem oi : ois) {
             contentStream.beginText();
             contentStream.newLineAtOffset(getLeft(), rowV - 16);
@@ -135,6 +115,18 @@ public class GridBagView extends ContentView {
         contentStream.close();
 
         return page;
+    }
+    
+    private void arrange() {
+    	int w = getWidth();
+    	int h = getContentHeight();
+    	List<GridBagModel> models = this.drawer.getModels();
+    	int _y0 = getContentTop();
+    	int _y = 0;
+    	for(GridBagModel model : models) {
+    		model.arrange(_y0, _y, w, h);
+    		_y += model.getHeight();
+    	}
     }
 
     private PDPage addPageEx(PDPage page, Map<String, Map<String, Object>> gridsData) throws IOException {

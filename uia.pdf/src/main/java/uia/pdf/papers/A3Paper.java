@@ -31,26 +31,19 @@ public class A3Paper extends Paper {
 
     public static final int HEIGTH = (int) PDRectangle.A3.getHeight();
 
-    public static A3Paper landscape() {
+    static A3Paper landscape() {
         return new A3Paper(true);
     }
     
-    public static A3Paper portrait() {
+    static A3Paper portrait() {
         return new A3Paper(false);
-    }
-
-    /**
-     * Constructor.
-     */
-    public A3Paper() {
-        this(false);
     }
 
     /**
      * Constructor.
      * @param landscape Landscape or not.
      */
-    public A3Paper(boolean landscape) {
+    A3Paper(boolean landscape) {
         super(landscape ? new PDRectangle(PDRectangle.A3.getHeight(), PDRectangle.A3.getWidth()) : PDRectangle.A3);
     }
 }

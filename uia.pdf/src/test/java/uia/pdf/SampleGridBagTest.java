@@ -24,27 +24,32 @@ import org.junit.Test;
 
 import uia.pdf.PDFMaker;
 import uia.pdf.gridbag.GridBagDescriptionView;
+import uia.pdf.gridbag.GridBagFactory;
 import uia.pdf.gridbag.GridBagView;
-import uia.pdf.papers.PaperType;
+import uia.pdf.papers.Paper;
 
 public class SampleGridBagTest {
 
     @Test
-    public void testTutorial3() throws Exception {
-        File hfLayout = new File("sample/gridbag/sample_headerFooter.xml");
+    public void test1() throws Exception {
+        System.out.println(Paper.A4);
 
         // 1. new document
-        File font = new File("fonts/simplified.ttf");
-        PDFMaker pdf = new PDFMaker(font);
+        PDFMaker pdf = new PDFMaker(FontUtils.simplified());
+        
+        GridBagFactory factory1 = GridBagFactory.fromXml("sample/gridbag/sample_headerFooter.xml");
 
         // 2. new headers
-        GridBagDescriptionView hv = new GridBagDescriptionView(hfLayout, "header");
+        GridBagDescriptionView hv = factory1.descView(pdf, "header");
 
         // 3. new footer
-        GridBagDescriptionView fv = new GridBagDescriptionView(hfLayout, "footer");
+        GridBagDescriptionView fv = factory1.descView(pdf, "footer");
 
         // 4. new layout content view
-        GridBagView cv = pdf.createGridBag(PaperType.A4, new File("sample/gridbag/layout3.xml"));
+        GridBagFactory factory2 = GridBagFactory.fromXml("sample/gridbag/layout3.xml");
+        GridBagView cv = factory2.mainView(pdf, Paper.A4);
+        cv.getPaper().setBottomPadding(100);
+        
         // 4.1 set header to content
         cv.setHeaderView(hv);
         // 4.2 set footer to content
@@ -53,10 +58,12 @@ public class SampleGridBagTest {
         cv.addPage(prepareData1(), "Inspection Report 1", false);
         cv.addPage(prepareData2());
         cv.addPage(prepareData3(), "Inspection Report 2", false);
+
         // 5. draw header & footer
         hv.draw();
         fv.draw();
 
+        System.out.println(cv);
         pdf.save(new File("output/gridbag_layout3.pdf"));
     }
 

@@ -27,7 +27,7 @@ public class PDFUtilTest {
     @Test
     public void testSplit() throws Exception {
         ArrayList<String> result = new ArrayList<String>();
-        PDFUtil.split("1234567890ABCDEFG", PDType1Font.COURIER, 12, 50, result);
+        PDFUtil.splitContent("1234567890ABCDEFG", PDType1Font.COURIER, 12, 50, result);
         for (String text : result) {
             System.out.println(text);
         }
@@ -35,11 +35,11 @@ public class PDFUtilTest {
 
     @Test
     public void testCalculatePt() {
-        Assert.assertEquals(PDFUtil.calculateWidth("0", 1000, 0), 0);
-        Assert.assertEquals(PDFUtil.calculateWidth("-200", 1000, 200), 600);
-        Assert.assertEquals(PDFUtil.calculateWidth("10", 1000, 0), 10);
-        Assert.assertEquals(PDFUtil.calculateWidth("20%", 1000, 10), 200);
-        Assert.assertEquals(PDFUtil.calculateWidth("+50%", 1000, 500), 250);
+        Assert.assertEquals(PDFUtil.sizing("0", 1000, 0), 0);
+        Assert.assertEquals(PDFUtil.sizing("-200", 1000, 200), 600);
+        Assert.assertEquals(PDFUtil.sizing("10", 1000, 0), 10);
+        Assert.assertEquals(PDFUtil.sizing("20%", 1000, 10), 200);
+        Assert.assertEquals(PDFUtil.sizing("+50%", 1000, 500), 250);
 
         /*
          *        20%       40%                 80%      100%
@@ -51,9 +51,9 @@ public class PDFUtilTest {
          *                                         .........x
          *                                         0     100%
          */
-        Assert.assertEquals(PDFUtil.calculateWidth("*20%", 1000, 0), 200);
-        Assert.assertEquals(PDFUtil.calculateWidth("+25%", 1000, 200), 200);
-        Assert.assertEquals(PDFUtil.calculateWidth("*80%", 1000, 400), 400);
-        Assert.assertEquals(PDFUtil.calculateWidth("+100%", 1000, 800), 200);
+        Assert.assertEquals(PDFUtil.sizing("*20%", 1000, 0), 200);
+        Assert.assertEquals(PDFUtil.sizing("+25%", 1000, 200), 200);
+        Assert.assertEquals(PDFUtil.sizing("*80%", 1000, 400), 400);
+        Assert.assertEquals(PDFUtil.sizing("+100%", 1000, 800), 200);
     }
 }

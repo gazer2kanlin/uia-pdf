@@ -40,5 +40,5 @@ public interface GridBagCellRenderer {
      * @param value
      * @throws IOException
      */
-    public void paint(PDPageContentStream contentStream, Point bottomLeft, ContentView view, Cell cell, Object value) throws IOException;
+    public void paint(PDPageContentStream contentStream, Point bottomLeft, ContentView view, Cell cell, Object value) throws Exception;
 }

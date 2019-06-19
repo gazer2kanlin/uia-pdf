@@ -24,6 +24,7 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 import uia.pdf.ContentView;
 import uia.pdf.gridbag.GridBagDrawer;
+import uia.pdf.gridbag.GridBagModel;
 import uia.pdf.gridbag.layout.ImageCellType;
 
 /**
@@ -36,7 +37,7 @@ public class ImageCell extends Cell {
 
     private String fileName;
 
-    public ImageCell(ImageCellType ict, GridBag grid, int rowIndex, int columnIndex) {
+    public ImageCell(ImageCellType ict, GridBagModel grid, int rowIndex, int columnIndex) {
         super(ict, grid, rowIndex, columnIndex);
         this.fileName = ict.getUrl();
     }

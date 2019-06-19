@@ -25,6 +25,7 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
 import uia.pdf.ContentView;
 import uia.pdf.PDFUtil;
 import uia.pdf.gridbag.GridBagDrawer;
+import uia.pdf.gridbag.GridBagModel;
 import uia.pdf.gridbag.layout.TextCellType;
 
 /**
@@ -39,7 +40,7 @@ public class TextCell extends Cell {
 
     public final Text subText;
 
-    public TextCell(TextCellType tct, GridBag grid, int rowIndex, int columnIndex) {
+    public TextCell(TextCellType tct, GridBagModel grid, int rowIndex, int columnIndex) {
         super(tct, grid, rowIndex, columnIndex);
         this.text = new Text(tct.getText(), this);
         this.subText = new Text(tct.getSubtext(), this);
@@ -54,11 +55,11 @@ public class TextCell extends Cell {
         try {
             PDFont font = cv.getDoc().getFont();
 
-            int fontSize1 = PDFUtil.fixFontSzie(this.text.value, font, this.text.getFontSize(), getWidth());
+            int fontSize1 = PDFUtil.fixFontSize(this.text.value, font, this.text.getFontSize(), getWidth());
             int cw1 = PDFUtil.getContentWidth(this.text.value, font, fontSize1);
             int ch1 = PDFUtil.getContentHeight(this.text.value, font, fontSize1);
 
-            int fontSize2 = PDFUtil.fixFontSzie(this.subText.value, font, this.subText.getFontSize(), getWidth());
+            int fontSize2 = PDFUtil.fixFontSize(this.subText.value, font, this.subText.getFontSize(), getWidth());
             int cw2 = PDFUtil.getContentWidth(this.subText.value, font, fontSize2);
             int ch2 = PDFUtil.getContentHeight(this.subText.value, font, fontSize2);
 

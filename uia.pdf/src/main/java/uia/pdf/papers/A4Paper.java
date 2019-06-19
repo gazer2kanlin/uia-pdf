@@ -30,18 +30,18 @@ public class A4Paper extends Paper {
 
     public static final int HEIGTH = (int) PDRectangle.A4.getHeight();
 
-    public static A4Paper landscape() {
+    static A4Paper landscape() {
         return new A4Paper(true);
     }
     
-    public static A4Paper portrait() {
+    static A4Paper portrait() {
         return new A4Paper(false);
     }
 
     /**
      * Constructor.
      */
-    public A4Paper(boolean landscape) {
+    A4Paper(boolean landscape) {
         super(landscape ? new PDRectangle(PDRectangle.A4.getHeight(), PDRectangle.A4.getWidth()) : PDRectangle.A4);
     }
 }

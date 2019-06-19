@@ -41,4 +41,25 @@
         <attribute name="wrap" type="boolean" default="false" />
         <attribute name="cellRenderer" type="string" />
     </complexType>
+
+    <complexType name="CellType" abstract="true">
+        <simpleContent>
+            <extension base="string">
+            </extension>
+        </simpleContent>
+    </complexType>
+
+    <complexType name="TextCellType">
+        <complexContent>
+            <extension base="uia:CellType">
+            </extension>
+	    </complexContent>
+    </complexType>
+    <complexType name="DateCellType">
+        <complexContent>
+            <extension base="uia:CellType">
+		    	<attribute name="format" type="string" default="yyyy-MM-dd"></attribute>
+		    </extension>
+	    </complexContent>
+    </complexType>
 </schema>

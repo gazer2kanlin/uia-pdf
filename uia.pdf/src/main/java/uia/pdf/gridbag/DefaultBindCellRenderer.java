@@ -18,7 +18,6 @@ package uia.pdf.gridbag;
 
 import java.awt.Color;
 import java.awt.Point;
-import java.io.IOException;
 
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDFont;
@@ -35,7 +34,7 @@ import uia.pdf.gridbag.model.Cell;
 public class DefaultBindCellRenderer implements GridBagCellRenderer {
 
     @Override
-    public void paint(PDPageContentStream contentStream, Point bottomLeft, ContentView view, Cell cell, Object value) throws IOException {
+    public void paint(PDPageContentStream contentStream, Point bottomLeft, ContentView view, Cell cell, Object value) throws Exception {
         PDFont font = view.getDoc().getFont();
         int fontSize = cell.getFontSize();
         contentStream.setFont(font, fontSize);

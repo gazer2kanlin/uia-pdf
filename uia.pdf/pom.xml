@@ -3,10 +3,10 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.uia.solution</groupId>
 	<artifactId>uia-pdf</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<name>uia.pdf</name>
-	<url>http://maven.apache.org</url>
+	<name>uia-pdf</name>
+	<url>https://github.com/uia4j/uia-pdf</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.6</maven.compiler.source>
@@ -20,24 +20,23 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.uia.solution</groupId>
+			<artifactId>uia-utils</artifactId>
+			<version>0.3.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.pdfbox</groupId>
 			<artifactId>pdfbox</artifactId>
 			<version>2.0.15</version>
 		</dependency>
 	</dependencies>
 	<repositories>
-		<!-- 
 		<repository>
-			<id>repo-mirror</id>
-			<url>http://maven.oschina.net/content/groups/public</url>
-		</repository>
-		 -->
-		<repository>
-			<id>ApacheSnapshot</id>
-			<name>Apache Repository</name>
-			<url>https://repository.apache.org/content/groups/snapshots/</url>
+			<id>uia4j</id>
+			<name>bintray-uia4j</name>
+			<url>https://dl.bintray.com/uia4j/maven</url>
 			<snapshots>
-				<enabled>true</enabled>
+				<enabled>false</enabled>
 			</snapshots>
 		</repository>
 	</repositories>
@@ -59,4 +58,11 @@
 			</plugin>
 		</plugins>
 	</build>
+	<issueManagement>
+		<url>https://github.com/uia4j/uia-pdf/issues</url>
+	</issueManagement>
+	<organization>
+		<url>https://github.com/uia4j</url>
+		<name>uia4j</name>
+	</organization>
 </project>
