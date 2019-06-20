@@ -29,7 +29,7 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
 import uia.pdf.ContentView;
 import uia.pdf.DescriptionView;
 import uia.pdf.PDFMaker;
-import uia.pdf.PDFUtil;
+import uia.pdf.DrawingUtils;
 import uia.pdf.papers.Paper;
 
 /**
@@ -80,7 +80,7 @@ public class HeaderDescriptionView extends DescriptionView implements AbstractGr
 
     public void setData(List<Map<String, Object>> data) {
         this.data = data;
-        int h = PDFUtil.getContentHeight("A", this.pdf.getFont(), this.model.getFontSize());
+        int h = DrawingUtils.getContentHeight("A", this.pdf.getFont(), this.model.getFontSize());
         this.height = this.data.size() * (h + 8) + h;
     }
     

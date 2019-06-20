@@ -18,7 +18,8 @@ package uia.pdf.gridbag;
 
 import java.awt.Color;
 
-import uia.pdf.PDFUtil;
+import uia.pdf.CoordUtils;
+import uia.pdf.DrawingUtils;
 import uia.pdf.gridbag.layout.GridBagType;
 import uia.pdf.gridbag.model.Cell;
 import uia.pdf.gridbag.model.Column;
@@ -65,9 +66,9 @@ public class GridBagModel {
         this.name = gt.getName();
         this.borderEnabled = gt.isBorderEnabled();
         this.borderSize = gt.getBorderSize();
-        this.borderColor = PDFUtil.toColor(gt.getBorderColor());
+        this.borderColor = DrawingUtils.toColor(gt.getBorderColor());
         this.fontSize = gt.getFontSize();
-        this.background = PDFUtil.toColor(gt.getBackground());
+        this.background = DrawingUtils.toColor(gt.getBackground());
         int rc = gt.getRows().getRow().size();
         int cc = gt.getColumns().getColumn().size();
         this.columns = new Column[gt.getColumns().getColumn().size()];
@@ -95,10 +96,10 @@ public class GridBagModel {
 	}
 
 	public void arrange(int y0, int y, int viewWidth, int viewHeight) {
-        this.x = PDFUtil.sizing(this.gt.getX(), viewWidth, 0);
-        this.y = y0 + PDFUtil.sizing(this.gt.getY(), viewHeight, y);
-        this.width = PDFUtil.sizing(this.gt.getWidth(), viewWidth, 0);
-        this.height = PDFUtil.sizing(this.gt.getHeight(), viewHeight, y);
+        this.x = CoordUtils.point(this.gt.getX(), viewWidth, 0);
+        this.y = y0 + CoordUtils.point(this.gt.getY(), viewHeight, y);
+        this.width = CoordUtils.size(this.gt.getWidth(), viewWidth, 0);
+        this.height = CoordUtils.size(this.gt.getHeight(), viewHeight, y);
         
         int _x = getX();
         for(Column column : this.columns) {

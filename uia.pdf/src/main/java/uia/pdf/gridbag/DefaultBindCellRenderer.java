@@ -23,7 +23,7 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 
 import uia.pdf.ContentView;
-import uia.pdf.PDFUtil;
+import uia.pdf.DrawingUtils;
 import uia.pdf.gridbag.model.Cell;
 
 /**
@@ -43,8 +43,8 @@ public class DefaultBindCellRenderer implements GridBagCellRenderer {
             return;
         }
 
-        int cw = PDFUtil.getContentWidth(content, font, fontSize);
-        int ch = PDFUtil.getContentHeight(content, font, fontSize);
+        int cw = DrawingUtils.getContentWidth(content, font, fontSize);
+        int ch = DrawingUtils.getContentHeight(content, font, fontSize);
         int textLine = bottomLeft.y + (cell.getHeight() - ch) / 2;
 
         contentStream.setNonStrokingColor(Color.black);

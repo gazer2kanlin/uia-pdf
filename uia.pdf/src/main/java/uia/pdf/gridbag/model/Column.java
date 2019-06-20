@@ -18,7 +18,8 @@ package uia.pdf.gridbag.model;
 
 import java.awt.Color;
 
-import uia.pdf.PDFUtil;
+import uia.pdf.CoordUtils;
+import uia.pdf.DrawingUtils;
 import uia.pdf.gridbag.GridBagModel;
 import uia.pdf.gridbag.layout.ColumnType;
 
@@ -46,7 +47,7 @@ public class Column {
     	this.ct = ct;
         this.grid = grid;
         this.index = columnIndex;
-        this.background = PDFUtil.toColor(ct.getBackground());
+        this.background = DrawingUtils.toColor(ct.getBackground());
     }
     
     public int getX() {
@@ -59,7 +60,7 @@ public class Column {
 
 	public void arrange(int x) {
         this.x = x;
-        this.width = PDFUtil.sizing(
+        this.width = CoordUtils.size(
         		this.ct.getWidth(), 
         		this.grid.getWidth(), 
         		this.x - grid.getX());

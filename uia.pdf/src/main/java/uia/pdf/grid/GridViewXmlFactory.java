@@ -18,7 +18,8 @@ package uia.pdf.grid;
 
 import java.util.TreeMap;
 
-import uia.pdf.PDFUtil;
+import uia.pdf.CoordUtils;
+import uia.pdf.DrawingUtils;
 import uia.pdf.grid.ColumnModel.AlignmentType;
 import uia.pdf.grid.layout.ColumnType;
 import uia.pdf.grid.layout.GridType;
@@ -57,7 +58,7 @@ public class GridViewXmlFactory extends GridViewFactory {
         int c = 0;
         Columns columns = gt.getColumns();
         for (ColumnType ct : columns.getColumn()) {
-            int w = PDFUtil.sizing(ct.getWidth(), width, x0);
+            int w = CoordUtils.size(ct.getWidth(), width, x0);
             AlignmentType at = AlignmentType.CENTER;
             if ("NEAR".equalsIgnoreCase(ct.getAlignment())) {
                 at = AlignmentType.NEAR;
@@ -67,7 +68,7 @@ public class GridViewXmlFactory extends GridViewFactory {
             }
             ColumnModel cm = new ColumnModel(ct.getBind(), ct.getText(), w, at);
             cm.setWrap(ct.isWrap());
-            cm.setBackground(PDFUtil.toColor(ct.getBackground()));
+            cm.setBackground(DrawingUtils.toColor(ct.getBackground()));
             cm.setFontStyle(ct.getFontStyle().toUpperCase());
             if (ct.getCellRenderer() != null) {
                 try {

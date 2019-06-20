@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 
-import uia.pdf.PDFUtil;
+import uia.pdf.DrawingUtils;
 import uia.pdf.grid.ColumnModel.AlignmentType;
 
 /**
@@ -53,7 +53,7 @@ public class DefaultCellRenderer implements CellRenderer {
 
         try {
             PDFont font = view.getDoc().getFont();
-            h = PDFUtil.getContentHeight("", font, view.getFontSize());
+            h = DrawingUtils.getContentHeight("", font, view.getFontSize());
 
             if (cm.getBackground() != null) {
                 contentStream.setNonStrokingColor(cm.getBackground());
@@ -63,10 +63,10 @@ public class DefaultCellRenderer implements CellRenderer {
             }
 
             String content = view.getDoc().getValueParserFactory().parse(value);
-            int contentWidth = PDFUtil.getContentWidth(content, font, view.getFontSize());
+            int contentWidth = DrawingUtils.getContentWidth(content, font, view.getFontSize());
             if (cm.getWidth() - contentWidth < 4) {
-                content = PDFUtil.cutContent(content, font, view.getFontSize(), cm.getWidth() - 4);
-                contentWidth = PDFUtil.getContentWidth(content, font, view.getFontSize());
+                content = DrawingUtils.trimContent(content, font, view.getFontSize(), cm.getWidth() - 4);
+                contentWidth = DrawingUtils.getContentWidth(content, font, view.getFontSize());
             }
             contentWidth = Math.min(cm.getWidth() - 4, contentWidth);
 
@@ -96,16 +96,16 @@ public class DefaultCellRenderer implements CellRenderer {
 
         try {
             PDFont font = view.getDoc().getFont();
-            h = PDFUtil.getContentHeight("", font, view.getFontSize());
+            h = DrawingUtils.getContentHeight("", font, view.getFontSize());
 
             String content = view.getDoc().getValueParserFactory().parse(value);
 
             ArrayList<String> cs = new ArrayList<String>();
-            PDFUtil.splitContent(content, font, view.getFontSize(), cm.getWidth() - 4, cs);
+            DrawingUtils.getContentWrapHeight(content, font, view.getFontSize(), cm.getWidth() - 4, cs);
 
             int ht = 0;
             for (int i = 0; i < cs.size(); i++) {
-                int contentWidth = PDFUtil.getContentWidth(cs.get(i), font, view.getFontSize());
+                int contentWidth = DrawingUtils.getContentWidth(cs.get(i), font, view.getFontSize());
                 contentWidth = Math.min(cm.getWidth() - 4, contentWidth);
 
                 int offset = 3;

@@ -71,7 +71,7 @@ public class SimpleFooterView extends DescriptionView {
     protected void draw(ContentView cv, PDPage page) throws Exception {
         PDFont font = cv.getDoc().getFont();
 
-        int fontH = PDFUtil.getContentHeight("A", font, this.fontSize) + 15;
+        int fontH = DrawingUtils.getContentHeight("A", font, this.fontSize) + 15;
         
         PDPageContentStream contentStream = new PDPageContentStream(cv.getDoc().getDocument(), page, AppendMode.APPEND, false, false);
         contentStream.setFont(font, this.fontSize);
@@ -86,13 +86,13 @@ public class SimpleFooterView extends DescriptionView {
         contentStream.endText();
 
         String pageIndex = getPageIndex(page) + " / " + getPageCount();
-        int cx = PDFUtil.getContentWidth(pageIndex, font, this.fontSize);
+        int cx = DrawingUtils.getContentWidth(pageIndex, font, this.fontSize);
         contentStream.beginText();
         contentStream.newLineAtOffset(cv.getPaper().getCenterX() - cx / 2, cv.getPaper().getDrawingBottom() - fontH);
         contentStream.showText(pageIndex);
         contentStream.endText();
 
-        int rx = PDFUtil.getContentWidth(this.rightText, font, this.fontSize);
+        int rx = DrawingUtils.getContentWidth(this.rightText, font, this.fontSize);
         contentStream.beginText();
         contentStream.newLineAtOffset(cv.getPaper().getRight() - rx, cv.getPaper().getDrawingBottom() - fontH);
         contentStream.showText(this.rightText);

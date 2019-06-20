@@ -12,11 +12,11 @@
 			</row>
 		</rows>
 	</gridbag>
-	<gridbag name="header" x="0" y="30" width="100%" height="170">
+	<gridbag name="header" x="0" y="+" width="100%" height="170">
 		<columns>
 			<column width="15%"></column>
-			<column width="*40%"></column>
-			<column width="*70%"></column>
+			<column width="@40%"></column>
+			<column width="@70%"></column>
 			<column width="+100%"></column>
 		</columns>
 		<rows>
@@ -68,7 +68,7 @@
 				</textCell>
 				<textCell></textCell>
 			</row>
-			<row height="30">
+			<row height="+100%">
 				<textCell>
 					<text>檢驗依據</text>
 					<subtext>Based On</subtext>
@@ -77,13 +77,13 @@
 			</row>
 		</rows>
 	</gridbag>
-	<gridbag name="inspection" x="0" y="200" width="100%" height="250">
+	<gridbag name="inspection" x="0" y="+" width="100%" height="250">
 		<columns>
 			<column width="15%"></column>
-			<column width="*40%"></column>
-			<column width="*55%"></column>
-			<column width="*70%"></column>
-			<column width="*90%"></column>
+			<column width="@40%"></column>
+			<column width="@55%"></column>
+			<column width="@70%"></column>
+			<column width="@90%"></column>
 			<column width="+100%"></column>
 		</columns>
 		<rows>
@@ -184,12 +184,12 @@
 			</row>
 		</rows>
 	</gridbag>
-	<gridbag name="result" x="0" y="450" width="100%" height="+100%" background="210,210,210">
+	<gridbag name="result" x="0" y="+" width="100%" height="+100%" background="210,210,210">
 		<columns>
 			<column width="15%"></column>
-			<column width="*40%"></column>
-			<column width="*55%"></column>
-			<column width="*70%"></column>
+			<column width="@40%"></column>
+			<column width="@55%"></column>
+			<column width="@70%"></column>
 			<column width="+50%"></column>
 			<column width="+100%"></column>
 		</columns>

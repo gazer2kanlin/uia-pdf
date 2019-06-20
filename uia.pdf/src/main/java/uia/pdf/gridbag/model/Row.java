@@ -18,7 +18,8 @@ package uia.pdf.gridbag.model;
 
 import java.awt.Color;
 
-import uia.pdf.PDFUtil;
+import uia.pdf.CoordUtils;
+import uia.pdf.DrawingUtils;
 import uia.pdf.gridbag.GridBagModel;
 import uia.pdf.gridbag.layout.RowType;
 
@@ -50,9 +51,9 @@ public class Row {
         this.rt = rt;
         this.grid = grid;
         this.index = rowIndex;
-        this.background = PDFUtil.toColor(rt.getBackground());
+        this.background = DrawingUtils.toColor(rt.getBackground());
         this.borderSize = rt.getBorderSize();
-        this.borderColor = PDFUtil.toColor(rt.getBorderColor());
+        this.borderColor = DrawingUtils.toColor(rt.getBorderColor());
     }
 
 	public int getY() {
@@ -70,7 +71,7 @@ public class Row {
 	
 	public void arrange(int y) {
         this.y = y;
-        this.height = PDFUtil.sizing(
+        this.height = CoordUtils.size(
         		rt.getHeight(), 
         		grid.getHeight(), 
         		this.y - grid.getY());

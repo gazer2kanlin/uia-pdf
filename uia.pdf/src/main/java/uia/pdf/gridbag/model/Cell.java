@@ -23,7 +23,7 @@ import java.util.Map;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 
 import uia.pdf.ContentView;
-import uia.pdf.PDFUtil;
+import uia.pdf.DrawingUtils;
 import uia.pdf.gridbag.GridBagDrawer;
 import uia.pdf.gridbag.GridBagModel;
 import uia.pdf.gridbag.layout.CellType;
@@ -60,7 +60,7 @@ public class Cell {
         this.rowspan = ct.getRowspan();
         this.colspan = ct.getColspan();
         this.borderSize = ct.getBorderSize();
-        this.borderColor = PDFUtil.toColor(ct.getBorderColor());
+        this.borderColor = DrawingUtils.toColor(ct.getBorderColor());
     }
 
     /**
@@ -107,7 +107,7 @@ public class Cell {
 
     public Color getBackground() {
         if (this.ct.getBackground() != null) {
-            return PDFUtil.toColor(this.ct.getBackground());
+            return DrawingUtils.toColor(this.ct.getBackground());
         }
         else if (this.grid.rows[this.row].background != null) {
             return this.grid.rows[this.row].background;

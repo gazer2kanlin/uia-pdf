@@ -249,7 +249,7 @@ public class PDFMaker {
         PDPageContentStream contentStream = new PDPageContentStream(this.doc, page, AppendMode.APPEND, false, false);
 
         contentStream.setFont(this.font, 16);
-        int cw = PDFUtil.getContentWidth("INDEX", this.font, 11);
+        int cw = DrawingUtils.getContentWidth("INDEX", this.font, 11);
         contentStream.beginText();
         contentStream.newLineAtOffset(paper.getLeft() + (paper.getContentSize().width - cw) / 2, paper.getDrawingTop() - 12);
         contentStream.showText("INDEX");
@@ -270,8 +270,8 @@ public class PDFMaker {
                 top = paper.getDrawingTop() - 20;
             }
 
-            int cw1 = PDFUtil.getContentWidth(bp.text, this.font, 11);
-            int cw2 = PDFUtil.getContentWidth(bp.pageNo, this.font, 11);
+            int cw1 = DrawingUtils.getContentWidth(bp.text, this.font, 11);
+            int cw2 = DrawingUtils.getContentWidth(bp.pageNo, this.font, 11);
 
             int right = paper.getRight() - 18;
             int w = 4 * (int) Math.ceil((right - (paper.getLeft() + cw1 + 10)) / 4);

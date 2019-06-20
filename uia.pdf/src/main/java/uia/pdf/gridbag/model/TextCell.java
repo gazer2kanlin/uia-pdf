@@ -23,7 +23,7 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 
 import uia.pdf.ContentView;
-import uia.pdf.PDFUtil;
+import uia.pdf.DrawingUtils;
 import uia.pdf.gridbag.GridBagDrawer;
 import uia.pdf.gridbag.GridBagModel;
 import uia.pdf.gridbag.layout.TextCellType;
@@ -55,13 +55,13 @@ public class TextCell extends Cell {
         try {
             PDFont font = cv.getDoc().getFont();
 
-            int fontSize1 = PDFUtil.fixFontSize(this.text.value, font, this.text.getFontSize(), getWidth());
-            int cw1 = PDFUtil.getContentWidth(this.text.value, font, fontSize1);
-            int ch1 = PDFUtil.getContentHeight(this.text.value, font, fontSize1);
+            int fontSize1 = DrawingUtils.fixFontSize(this.text.value, font, this.text.getFontSize(), getWidth());
+            int cw1 = DrawingUtils.getContentWidth(this.text.value, font, fontSize1);
+            int ch1 = DrawingUtils.getContentHeight(this.text.value, font, fontSize1);
 
-            int fontSize2 = PDFUtil.fixFontSize(this.subText.value, font, this.subText.getFontSize(), getWidth());
-            int cw2 = PDFUtil.getContentWidth(this.subText.value, font, fontSize2);
-            int ch2 = PDFUtil.getContentHeight(this.subText.value, font, fontSize2);
+            int fontSize2 = DrawingUtils.fixFontSize(this.subText.value, font, this.subText.getFontSize(), getWidth());
+            int cw2 = DrawingUtils.getContentWidth(this.subText.value, font, fontSize2);
+            int ch2 = DrawingUtils.getContentHeight(this.subText.value, font, fontSize2);
 
             int textLine = bottomLeft.y + getHeight() / 2 - 3;
             if ("NEAR".equals(getVAlignment())) {

@@ -15,7 +15,7 @@ import org.apache.pdfbox.pdmodel.interactive.documentnavigation.outline.PDOutlin
 
 import uia.pdf.ContentView;
 import uia.pdf.PDFMaker;
-import uia.pdf.PDFUtil;
+import uia.pdf.DrawingUtils;
 import uia.pdf.grid.ColumnModel.AlignmentType;
 import uia.pdf.papers.Paper;
 import uia.utils.PropertyBeanUtils;
@@ -213,7 +213,7 @@ public class GridView extends ContentView implements AbstractGridView {
         int hh = 0;
         for (int i0 = 0; i0 < cms.length; i0++) {
             ArrayList<String> cs = new ArrayList<String>();
-            int h0 = PDFUtil.splitContent(cms[i0].getDisplayName(), font, getFontSize(), cms[i0].getWidth() - 4, cs);
+            int h0 = DrawingUtils.getContentWrapHeight(cms[i0].getDisplayName(), font, getFontSize(), cms[i0].getWidth() - 4, cs);
             hh = Math.max(hh, h0);
         }
 
@@ -239,7 +239,7 @@ public class GridView extends ContentView implements AbstractGridView {
             contentStream.setNonStrokingColor(new Color(0, 0, 0));
 
             String content = cms[i].getDisplayName();
-            int offset = (cms[i].getWidth() - PDFUtil.getContentWidth(content, font, this.fontSize)) / 2;
+            int offset = (cms[i].getWidth() - DrawingUtils.getContentWidth(content, font, this.fontSize)) / 2;
             if (this.columnHz + offset > getRight()) {
                 break;
             }

@@ -18,7 +18,7 @@ package uia.pdf.gridbag.model;
 
 import java.awt.Color;
 
-import uia.pdf.PDFUtil;
+import uia.pdf.DrawingUtils;
 import uia.pdf.gridbag.layout.TextType;
 
 /**
@@ -42,7 +42,7 @@ public class Text {
         this.cell = cell;
         if (tt != null) {
             this.value = tt.getValue();
-            this.foreground = PDFUtil.toColor(tt.getForeground());
+            this.foreground = DrawingUtils.toColor(tt.getForeground());
         }
         else {
             this.value = null;
