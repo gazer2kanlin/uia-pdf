@@ -23,10 +23,10 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream.AppendMode;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.junit.Test;
 
-public class PDFMakerTest {
+public class PDFBoxTest {
 
     @Test
-    public void justTest() throws Exception {
+    public void justImage() throws Exception {
         PDDocument doc = new PDDocument();
         try {
             PDPage page = new PDPage();
@@ -38,7 +38,7 @@ public class PDFMakerTest {
             contents.stroke();
             contents.close();
 
-            PDImageXObject pdImage = PDImageXObject.createFromFile(PDFMakerTest.class.getResource("sample.jpg").getFile(), doc);
+            PDImageXObject pdImage = PDImageXObject.createFromFile(PDFBoxTest.class.getResource("sample.jpg").getFile(), doc);
             contents = new PDPageContentStream(doc, page, AppendMode.APPEND, false, false);
             contents.drawImage(pdImage, 20, 700);
             contents.close();

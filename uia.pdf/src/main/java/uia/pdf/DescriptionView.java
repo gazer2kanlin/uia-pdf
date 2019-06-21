@@ -20,8 +20,6 @@ import java.util.ArrayList;
 
 import org.apache.pdfbox.pdmodel.PDPage;
 
-import uia.pdf.papers.Paper;
-
 /**
  * Description view is used to present header & footer.
  *
@@ -64,12 +62,6 @@ public abstract class DescriptionView {
         }
         return 0;
     }
-
-    public abstract int getY();
-
-    public abstract int getHeight();
-    
-    public abstract void arrange(Paper paper);
 
     /**
      * Get page count this view handles.

@@ -16,7 +16,6 @@
 
 package uia.pdf.gridbag;
 
-import java.awt.Dimension;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
@@ -27,7 +26,6 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import uia.pdf.ContentView;
 import uia.pdf.DescriptionView;
 import uia.pdf.PDFException;
-import uia.pdf.papers.Paper;
 
 public class GridBagDescriptionView extends DescriptionView {
 	
@@ -62,25 +60,10 @@ public class GridBagDescriptionView extends DescriptionView {
     public void setData(Map<String, Object> data) {
         this.data = data;
     }
-    
-    @Override
-    public int getY() {
-    	return this.model.getY();
-    }
-
-    @Override
-    public int getHeight() {
-        return this.model.getHeight();
-    }
-    
-    @Override
-    public void arrange(Paper paper) {
-    	Dimension dim = paper.getContentSize();
-    	this.model.arrange(0, 0, dim.width, dim.height);
-    }
 
     @Override
     protected void draw(ContentView cv, PDPage page) throws IOException {
+    	this.model.arrange(0, cv.getWidth(), cv.getHeight());
         this.bagDrawer.draw(cv, page, this.data);
     }
 }

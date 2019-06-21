@@ -55,10 +55,12 @@ public class TextCell extends Cell {
         try {
             PDFont font = cv.getDoc().getFont();
 
+            // text
             int fontSize1 = DrawingUtils.fixFontSize(this.text.value, font, this.text.getFontSize(), getWidth());
             int cw1 = DrawingUtils.getContentWidth(this.text.value, font, fontSize1);
             int ch1 = DrawingUtils.getContentHeight(this.text.value, font, fontSize1);
 
+            // subText
             int fontSize2 = DrawingUtils.fixFontSize(this.subText.value, font, this.subText.getFontSize(), getWidth());
             int cw2 = DrawingUtils.getContentWidth(this.subText.value, font, fontSize2);
             int ch2 = DrawingUtils.getContentHeight(this.subText.value, font, fontSize2);
@@ -90,7 +92,7 @@ public class TextCell extends Cell {
             contentStream.endText();
 
             if (this.subText.value != null) {
-                textLine -= ch2;
+                textLine -= (ch2 + 2);
                 contentStream.setFont(font, fontSize2);
                 contentStream.setNonStrokingColor(this.subText.foreground);
                 contentStream.beginText();

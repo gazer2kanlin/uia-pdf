@@ -21,8 +21,6 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.PDPageContentStream.AppendMode;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 
-import uia.pdf.papers.Paper;
-
 /**
  * Footer view.
  *
@@ -36,8 +34,6 @@ public class SimpleFooterView extends DescriptionView {
     private final String rightText;
 
     private final int fontSize;
-    
-    private int y;
 
     /**
      * Constructor.
@@ -50,21 +46,6 @@ public class SimpleFooterView extends DescriptionView {
         this.leftText = leftText;
         this.rightText = rightText;
         this.fontSize = fontSize;
-    }
-
-    @Override
-    public int getY() {
-        return this.y;
-    }
-
-    @Override
-    public int getHeight() {
-        return 30;
-    }
-    
-    @Override
-    public void arrange(Paper paper) {
-    	this.y = paper.getContentSize().height;
     }
 
     @Override

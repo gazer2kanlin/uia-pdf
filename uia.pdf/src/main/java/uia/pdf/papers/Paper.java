@@ -72,7 +72,7 @@ public class Paper {
         this.rect = rect;
         this.leftPadding = 30;
         this.rightPadding = 30;
-        this.topPadding = 30;
+        this.topPadding = 60;
         this.bottomPadding = 60;
     }
     

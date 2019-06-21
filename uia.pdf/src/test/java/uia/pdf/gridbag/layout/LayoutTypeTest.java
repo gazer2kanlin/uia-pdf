@@ -30,59 +30,40 @@ import uia.pdf.gridbag.layout.RowType;
 public class LayoutTypeTest {
 
     @Test
-    public void testLayout0() throws Exception {
-        LayoutType layout = Layout.GRIDBAG_TYPE.fromXml(new File("sample/gridbag/layout0.xml"));
-        print(layout);
-    }
-
-    @Test
-    public void testLayout1() throws Exception {
-        LayoutType layout = Layout.GRIDBAG_TYPE.fromXml(new File("sample/gridbag/layout1.xml"));
-        print(layout);
-    }
-
-    @Test
-    public void testLayout2() throws Exception {
-        LayoutType layout = Layout.GRIDBAG_TYPE.fromXml(new File("sample/gridbag/layout2.xml"));
-        print(layout);
-    }
-
-    @Test
-    public void testLayout3() throws Exception {
-        LayoutType layout = Layout.GRIDBAG_TYPE.fromXml(new File("sample/gridbag/layout3.xml"));
+    public void testLayout() throws Exception {
+        LayoutType layout = Layout.GRIDBAG_TYPE.fromXml(new File("sample/gridbag/layout.xml"));
         print(layout);
     }
 
     private void print(LayoutType layout) {
         for (GridBagType grid : layout.getGridbag()) {
-            System.out.println(String.format("grid: width:%s height:%s bSize:%s",
+            System.out.println(String.format("gridbg: width:%s, height:%s, border:%s",
                     grid.getWidth(),
                     grid.getHeight(),
                     grid.getBorderSize()));
 
-            int cl = 1;
-            System.out.println("  cols");
+            int c = 1;
+            System.out.println("  columns");
             for (ColumnType column : grid.getColumns().getColumn()) {
-                System.out.println(String.format("    col[%s]: width:%s",
-                        cl,
+                System.out.println(String.format("    - %s: width:%5s",
+                        c++,
                         column.getWidth()));
-                cl++;
             }
 
             int r = 1;
             for (RowType row : grid.getRows().getRow()) {
-                System.out.println(String.format("  row[%s]: height:%s bSize:%s",
+                System.out.println(String.format("  rows[%s]: height:%s, border:%s",
                         r,
                         row.getHeight(),
                         row.getBorderSize()));
                 int ce = 1;
                 for (CellType cell : row.getTextCellOrBindCellOrImageCell()) {
-                    System.out.println(String.format("    cell[%s] cSpan:%s rSpan:%s bSize:%s",
-                            ce,
+                    System.out.println(String.format("    %s: %-15s, colSpan:%s, rowSpan:%s, border:%s",
+                            ce++,
+                    		cell.getClass().getSimpleName(),
                             cell.getColspan(),
                             cell.getRowspan(),
                             cell.getBorderSize()));
-                    ce++;
                 }
                 r++;
             }

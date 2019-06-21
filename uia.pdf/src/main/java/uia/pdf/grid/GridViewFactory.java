@@ -21,14 +21,6 @@ public abstract class GridViewFactory {
     public GridView mainView(PDFMaker pdf, Paper paper, String gridName) {
     	return new GridView(pdf, paper.clone(), createModel(gridName, paper));
     }
-    
-    public HeaderDescriptionView headerView(PDFMaker pdf, Paper paper, String gridName, int height) {
-    	return new HeaderDescriptionView(pdf, paper.clone(), createModel(gridName, paper), height);
-    }
-    
-    public FooterDescriptionView footerView(PDFMaker pdf, Paper paper, String gridName, int height) {
-    	return new FooterDescriptionView(pdf, paper.clone(), createModel(gridName, paper), height);
-    }
 
     /**
      * Create a grid model.

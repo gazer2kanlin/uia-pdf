@@ -10,14 +10,15 @@
 			<column width="100" bind="id" wrap="true"><text>編號</text></column>
 			<column width="150" bind="name" wrap="true"><text>姓名</text></column>
 			<column width="120" bind="birthday" alignment="center" wrap="true"><text>生日</text></column>
-			<column width="+100%" bind="department" wrap="true"><text>所屬部門</text></column>
+			<column width="@90%" bind="department" wrap="true"><text>所屬部門</text></column>
+			<column width="+100%" bind="retired" cellRenderer="uia.pdf.grid.MyBooleanRenderer" alignment="FAR"><text>退休</text></column>
 		</columns>
 	</grid>
     <grid name="project">
 		<columns visible="true" height="20" background="200,255,255">
 			<column width="100" bind="projectName" wrap="true"><text>專案名稱</text></column>
-			<column width="120" bind="startDate" alignment="FAR"><text>開始日期</text></column>
-			<column width="120" bind="endDate" alignment="FAR"><text>結束日期</text></column>
+			<column width="120" bind="startDate" alignment="CENTER"><text>開始日期</text></column>
+			<column width="120" bind="endDate" alignment="CENTER"><text>結束日期</text></column>
 			<column width="70" bind="location"><text>地點</text></column>
 			<column width="80" bind="pm"><text>專案經理</text></column>
 			<column width="80" bind="qm"><text>品保經理</text></column>

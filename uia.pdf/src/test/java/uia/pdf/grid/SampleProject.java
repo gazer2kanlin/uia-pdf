@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uia.pdf.grid.data;
+package uia.pdf.grid;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,9 +22,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class Project {
+public class SampleProject {
 
-    public static List<Map<String, Object>> createSample() {
+    public static List<Map<String, Object>> create() {
         ArrayList<Map<String, Object>> all = new ArrayList<Map<String, Object>>();
         for (int i = 0; i < 100; i++) {
             all.add(createOne(i));

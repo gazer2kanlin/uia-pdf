@@ -9,12 +9,22 @@ public class GridViewFactoryTest {
     	GridViewFactory f = GridViewFactory.fromXml("sample/grid/layout.xml");
     	
         GridModel model1 = f.createModel("image", 500);
-        System.out.println(model1.getCellRenderer(0, 0).getClass().getName());
+        System.out.println("image> fontSize:" + model1.getFontSize());
+        for(ColumnModel col : model1.getColumnModels()) {
+        	System.out.println(String.format(" %s> width:%s, %s",
+        			col.getId(),
+        			col.getWidth(),
+        			col.getCellRenderer().getClass().getName()));
+        }
+    	System.out.println();
 
         GridModel model2 = f.createModel("employee", 500);
-        System.out.println(model2.getCellRenderer(0, 0).getClass().getName());
-        System.out.println(model2.getCellRenderer(0, 1).getClass().getName());
-        System.out.println(model2.getCellRenderer(0, 2).getClass().getName());
-        System.out.println(model2.getCellRenderer(0, 3).getClass().getName());
+        System.out.println("employee> fontSize:" + model2.getFontSize());
+        for(ColumnModel col : model2.getColumnModels()) {
+        	System.out.println(String.format(" %s> width:%s, %s",
+        			col.getId(),
+        			col.getWidth(),
+        			col.getCellRenderer()));
+        }
     }
 }

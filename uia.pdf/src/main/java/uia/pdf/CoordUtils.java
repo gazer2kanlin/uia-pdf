@@ -42,11 +42,18 @@ public class CoordUtils {
     }
 
     public static int point(String ptStr, int fullSize, int startPoint) {
-    	if(ptStr.startsWith("+")) {
+    	if(ptStr.equals("+")) {
+    		return startPoint;
+    	}
+    	else if(ptStr.startsWith("+")) {
     		return startPoint + Integer.parseInt(ptStr.substring(1));
     	}
+    	else if(ptStr.endsWith("%")) {
+            int p = Integer.parseInt(ptStr.substring(0, ptStr.length() - 1));
+            return fullSize * p / 100;
+    	}
     	else {
-    		return Integer.parseInt(ptStr);
+    		return startPoint + Integer.parseInt(ptStr);
     	}
     }
 }

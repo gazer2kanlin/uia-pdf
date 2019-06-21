@@ -18,11 +18,13 @@ package uia.pdf.grid.layout;
 
 import java.io.File;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import uia.pdf.Layout;
 import uia.pdf.grid.layout.ColumnType;
 import uia.pdf.grid.layout.GridType;
+import uia.pdf.grid.layout.GridType.Columns;
 import uia.pdf.grid.layout.LayoutType;
 
 public class LayoutTypeTest {
@@ -30,16 +32,25 @@ public class LayoutTypeTest {
     @Test
     public void testSample() throws Exception {
     	LayoutType layout = Layout.GRID_TYPE.fromXml(new File("sample/grid/layout.xml"));
-        //  GridTypeHelper.load(new File("sample/grid/sample.xml"));
         for (GridType table : layout.getGrid()) {
             System.out.println(table.getName());
-            System.out.println("    fontSize: " + table.getFontSize());
+            System.out.println("  - fontSize: " + table.getFontSize());
+            Columns cols = table.getColumns();
+            System.out.println(String.format("  columns height:%s, background:%s",
+                    cols.getHeight(),
+                    cols.getBackground()));
             for (ColumnType column : table.getColumns().getColumn()) {
-                System.out.println(String.format("  [%s] width:%s, cr:%s",
-                        column.getText(),
+                System.out.println(String.format("    - %s, width:%s, %s",
+                        column.getBind(),
                         column.getWidth(),
                         column.getCellRenderer()));
             }
+            System.out.println();
         }
+        
+        Assert.assertEquals(3, layout.getGrid().size());
+        Assert.assertEquals(20, layout.getGrid().get(0).getColumns().getHeight());
+        Assert.assertEquals("212,212,212", layout.getGrid().get(0).getColumns().getBackground());
+        Assert.assertEquals(1, layout.getGrid().get(0).getColumns().getColumn().size());
     }
 }

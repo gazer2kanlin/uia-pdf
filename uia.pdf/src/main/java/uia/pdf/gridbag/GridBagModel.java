@@ -95,30 +95,32 @@ public class GridBagModel {
 		return this.height;
 	}
 
-	public void arrange(int y0, int y, int viewWidth, int viewHeight) {
+	public void arrange(int startY, int viewWidth, int viewHeight) {
         this.x = CoordUtils.point(this.gt.getX(), viewWidth, 0);
-        this.y = y0 + CoordUtils.point(this.gt.getY(), viewHeight, y);
+        this.y = CoordUtils.point(this.gt.getY(), viewHeight, startY);
         this.width = CoordUtils.size(this.gt.getWidth(), viewWidth, 0);
-        this.height = CoordUtils.size(this.gt.getHeight(), viewHeight, y);
-        
-        int _x = getX();
-        for(Column column : this.columns) {
-        	column.arrange(_x);
-        	System.out.println(column);
-        	_x = column.getX() + column.getWidth();
-        }
-        
-        int _y = getY();
-        for(Row row : this.rows) {
-        	row.arrange(_y);
-        	System.out.println(row);
-        	_y = row.getY() + row.getHeigth();
-        }
-        System.out.println(this);
-        System.out.println();
-    }
+        this.height = CoordUtils.size(this.gt.getHeight(), viewHeight, startY);
 
-    @Override
+        System.out.println(this);
+        
+        int colX = getX();
+        for(Column column : this.columns) {
+        	column.arrange(colX);
+        	System.out.println(column);
+        	colX = column.getX() + column.getWidth();
+        }
+        
+        int rowY = getY();
+        for(Row row : this.rows) {
+        	row.arrange(rowY);
+        	System.out.println(row);
+        	rowY = row.getY() + row.getHeigth();
+        }
+
+        System.out.println();
+	}
+
+	@Override
     public String toString() {
         return String.format("%-10s:(x=%-3s, y=%-3s, w=%-4s, h=%-4s)",  this.name, this.x, this.y, this.width, this.height);
     }

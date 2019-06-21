@@ -23,8 +23,6 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.PDPageContentStream.AppendMode;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 
-import uia.pdf.papers.Paper;
-
 /**
  * Header view.
  *
@@ -49,20 +47,6 @@ public class SimpleHeaderView extends DescriptionView {
     }
 
     @Override
-    public int getY() {
-        return 0;
-    }
-
-    @Override
-    public int getHeight() {
-        return this.fontSize + 12;
-    }
-    
-    @Override
-    public void arrange(Paper paper) {
-    }
-
-    @Override
     protected void draw(ContentView cv, PDPage page) throws IOException {
         PDFont font = cv.getDoc().getFont();
 
@@ -70,7 +54,7 @@ public class SimpleHeaderView extends DescriptionView {
         contentStream.setFont(font, this.fontSize);
 
         contentStream.beginText();
-        contentStream.newLineAtOffset(cv.getPaper().getLeft(), cv.getPaper().getDrawingTop() - this.fontSize);
+        contentStream.newLineAtOffset(cv.getPaper().getLeft(), cv.getPaper().getDrawingTop() + 9);
         contentStream.showText(this.title);
         contentStream.endText();
 

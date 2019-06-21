@@ -28,43 +28,43 @@ import uia.pdf.gridbag.GridBagFactory;
 import uia.pdf.gridbag.GridBagView;
 import uia.pdf.papers.Paper;
 
-public class SampleGridBagTest {
+public class GridBagViewTest {
 
     @Test
     public void test1() throws Exception {
-        System.out.println(Paper.A4);
+        GridBagFactory factory1 = GridBagFactory.fromXml("sample/gridbag/layout_header_footer.xml");
+        GridBagFactory factory2 = GridBagFactory.fromXml("sample/gridbag/layout.xml");
 
         // 1. new document
         PDFMaker pdf = new PDFMaker(FontUtils.simplified());
+
+        // 2. header & footer
+        GridBagDescriptionView header = factory1.descView(pdf, "header");
+        GridBagDescriptionView footer = factory1.descView(pdf, "footer");
+
+        // 3 A4
+        GridBagView cv1 = factory2.mainView(pdf, Paper.A4);
+        cv1.arrange();
+        cv1.setHeaderView(header);
+        cv1.setFooterView(footer);
+        cv1.addPage(prepareData1(), "Inspection Report 1", false);
+        cv1.addPage(prepareData2());
+        cv1.addPage(prepareData3(), "Inspection Report 2", false);
+
+        // 4 A4L
+        GridBagView cv2 = factory2.mainView(pdf, Paper.A4L);
+        cv1.arrange();
+        cv2.setHeaderView(header);
+        cv2.setFooterView(footer);
+        cv2.addPage(prepareData1(), "Inspection Report 3", false);
+        cv2.addPage(prepareData2());
+        cv2.addPage(prepareData3(), "Inspection Report 4", false);
         
-        GridBagFactory factory1 = GridBagFactory.fromXml("sample/gridbag/sample_headerFooter.xml");
-
-        // 2. new headers
-        GridBagDescriptionView hv = factory1.descView(pdf, "header");
-
-        // 3. new footer
-        GridBagDescriptionView fv = factory1.descView(pdf, "footer");
-
-        // 4. new layout content view
-        GridBagFactory factory2 = GridBagFactory.fromXml("sample/gridbag/layout3.xml");
-        GridBagView cv = factory2.mainView(pdf, Paper.A4);
-        cv.getPaper().setBottomPadding(100);
-        
-        // 4.1 set header to content
-        cv.setHeaderView(hv);
-        // 4.2 set footer to content
-        cv.setFooterView(fv);
-        // 4.3 draw
-        cv.addPage(prepareData1(), "Inspection Report 1", false);
-        cv.addPage(prepareData2());
-        cv.addPage(prepareData3(), "Inspection Report 2", false);
-
         // 5. draw header & footer
-        hv.draw();
-        fv.draw();
+        header.draw();
+        footer.draw();
 
-        System.out.println(cv);
-        pdf.save(new File("output/gridbag_layout3.pdf"));
+        pdf.save(new File("output/gridbag_case1.pdf"));
     }
 
     private Map<String, Object> prepareData1() {

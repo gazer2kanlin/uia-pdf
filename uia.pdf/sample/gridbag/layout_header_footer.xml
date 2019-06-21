@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <layout xmlns="http://gridbag.pdf.uia/layout">
-	<gridbag name="header" x="0" y="0" width="100%" height="50" borderEnabled="false">
+	<gridbag name="header" x="0" y="-50" width="100%" height="50" borderEnabled="false">
 		<columns>
 			<column width="30%"></column>
 			<column width="40%"></column>
@@ -12,7 +12,7 @@
 					<text>MA ORDER</text>
 				</textCell>
 				<textCell fontSize="18">
-					<text>保密等级：机密</text>
+					<text>保密</text>
 				</textCell>
 				<textCell alignment="FAR" valignment="FAR" fontSize="12">
 					<text>Z-0041-105-SJ-1.0</text>

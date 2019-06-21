@@ -109,7 +109,6 @@ public abstract class ContentView {
         this.headerView = hv;
         if (this.headerView != null) {
             this.headerView.add(this);
-            this.headerView.arrange(this.paper);
         }
     }
 
@@ -129,7 +128,6 @@ public abstract class ContentView {
         this.footerView = fv;
         if (this.footerView != null) {
             this.footerView.add(this);
-            this.footerView.arrange(this.paper);
         }
     }
 
@@ -158,8 +156,8 @@ public abstract class ContentView {
     }
 
     /**
-     * Get left  margin coordinate.
-     * @return Left  margin coordinate.
+     * Get left margin coordinate.
+     * @return Left margin coordinate.
      */
     public int getLeft() {
         return this.paper.getLeft();
@@ -191,7 +189,7 @@ public abstract class ContentView {
     
     @Override
     public String toString() {
-    	return String.format("content:(%s,%s)", getWidth(), getContentHeight());
+    	return String.format("content:(%s,%s)", getWidth(), getHeight());
     }
 
     /**
@@ -204,29 +202,8 @@ public abstract class ContentView {
      */
     public abstract PDPage drawBookmarks(PDPage page, List<PDOutlineItem> ois) throws IOException;
 
-    protected int getContentTop() {
-    	if(this.headerView == null) {
-    		return 0;
-    	}
-    	else {
-    		int offset = this.headerView.getY() + this.headerView.getHeight();
-    		return offset < 0 ? 0 : offset;
-    	}
-    }
-
-    protected int getContentBottom() {
-    	int h = this.paper.getContentSize().height;
-    	if(this.footerView == null) {
-    		return h;
-    	}
-    	else {
-    		int offset = h - this.footerView.getY();
-    		return offset < 0 ? h : this.footerView.getY();
-    	}
-    }
-
-    public int getContentHeight() {
-        return getContentBottom() - getContentTop();
+    public int getHeight() {
+        return this.paper.getDrawingTop() - this.paper.getDrawingBottom();
     }
 
     protected int getDrawingTop() {
