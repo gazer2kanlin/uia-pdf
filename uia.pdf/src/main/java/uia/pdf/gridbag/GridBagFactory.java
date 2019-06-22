@@ -62,7 +62,7 @@ public class GridBagFactory {
     	return new GridBagView(pdf, paper.clone(), createModels());
     }
     
-    public GridBagDescriptionView descView(PDFMaker pdf, String name) throws PDFException {
+    public GridBagDescriptionView descView(String name) throws PDFException {
     	return new GridBagDescriptionView(
     			createModel(name));
     }

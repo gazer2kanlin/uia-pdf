@@ -3,11 +3,12 @@ PDF Report API
 
 [Chinese](readme_tw.md)
 
-This API provides methods to create grid-based & gridbag-based PDF document.
+The API uses model data to build PDF files that are rendered in a Grid or GridBag.
+The API uses [Apache PDFBox](https://pdfbox.apache.org/) to create PDF files.
 
 ## Description
-The basic concept of a document layout includes
-* Direction
+The basic elements of a document layout includes
+* Page Orientation
     * Portarit
     * Landscape
 * Conent Veiw
@@ -22,13 +23,16 @@ The basic concept of a document layout includes
     * Left
     * Right
 
-Take a look quickly:
+Schematic diagrams as follow:
 
 ![portrait](paper_portrait.png)
 
 ![landscape](paper_landscape.png)
 
-### Grid Style
+## Examples
+### Grid Case 1
+Source code: __uia.pdf.GridViewTest__
+
 ```java
 // 1. load layouts for a document
 GridViewFactory factory1 = GridViewFactory.fromXml("sample/grid/layout.xml");
@@ -42,7 +46,7 @@ PDFMaker pdf = new PDFMaker(FontUtils.traditional());
 
 // 4. add data
 GridView view = factory1.mainView(pdf, Paper.A4L, "employee");
-view.setHeaderView(header1);
+view.setHeaderView(header);
 view.setFooterView(footer);
 view.draw(SampleEmployee.create(), "Employee List", true);
 
@@ -53,16 +57,20 @@ footer.draw();
 // 6.save
 pdf.save(new File("output/grid_case1.pdf"));
 ```
+Output:
 
-### Gridbag Style
+![Grid Case 1](grid_case1.png)
+
+### GridBag Case 1
+Source code: __uia.pdf.GridBagViewTest__
 ```java
 // 1. load layouts for a document
 GridBagFactory factory1 = GridBagFactory.fromXml("sample/gridbag/layout_header_footer.xml");
 GridBagFactory factory2 = GridBagFactory.fromXml("sample/gridbag/layout.xml");
 
 // 2. header & footer
-GridBagDescriptionView header = factory1.descView(pdf, "header");
-GridBagDescriptionView footer = factory1.descView(pdf, "footer");
+GridBagDescriptionView header = factory1.descView("header");
+GridBagDescriptionView footer = factory1.descView("footer");
 
 // 3. new a pdf
 PDFMaker pdf = new PDFMaker(FontUtils.simplified());
@@ -90,6 +98,21 @@ footer.draw();
 // 7. save
 pdf.save(new File("output/gridbag_case1.pdf"));
 ```
+Output:
 
-## Tutorial
-- [Tutorial](tutorial.md)
+![Gridbag Case 1](gridbag_case1.png)
+
+
+## Copyright and License
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+[http://www.apache.org/licenses/LICENSE-2.0](http://www.apache.org/licenses/LICENSE-2.0)
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.

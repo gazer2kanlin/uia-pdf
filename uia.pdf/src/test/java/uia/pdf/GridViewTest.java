@@ -40,18 +40,29 @@ public class GridViewTest {
 	 */
 	@Test
     public void testCase1() throws Exception {
-        GridViewFactory factory1 = GridViewFactory.fromXml("sample/grid/layout.xml");
+		// 1. load layouts for a document
+		GridViewFactory factory1 = GridViewFactory.fromXml("sample/grid/layout.xml");
 
-        // 1. document
-        PDFMaker pdf = new PDFMaker(FontUtils.traditional());
+		// 2. prepare header and footer
+		SimpleHeaderView header = new SimpleHeaderView("UIA4J", 20);
+		SimpleFooterView footer = new SimpleFooterView("UIA4J-0920", "2018-09-20", 11);
 
-        // 2.data
-        GridView view = factory1.mainView(pdf, Paper.A4L, "employee");
-        view.draw(SampleEmployee.create(), "員工基本資料", true);
+		// 3. new a pdf
+		PDFMaker pdf = new PDFMaker(FontUtils.traditional());
 
-        // 3.save
-        pdf.save(new File("output/grid_case1.pdf"));
-    }
+		// 4. add data
+		GridView view = factory1.mainView(pdf, Paper.A4L, "employee");
+		view.setHeaderView(header);
+		view.setFooterView(footer);
+		view.draw(SampleEmployee.create(), "Employee List", true);
+
+		// 5. draw header & footer
+		header.draw();
+		footer.draw();
+
+		// 6.save
+		pdf.save(new File("output/grid_case1.pdf"));
+	}
 
 	/**
 	 * 2 pager sizes.
@@ -216,8 +227,8 @@ public class GridViewTest {
         PDFMaker pdf = new PDFMaker(FontUtils.traditional());
 
         // 2. header & footer
-        GridBagDescriptionView header = factory2.descView(pdf, "header");
-        GridBagDescriptionView footer = factory2.descView(pdf, "footer");
+        GridBagDescriptionView header = factory2.descView("header");
+        GridBagDescriptionView footer = factory2.descView("footer");
 
         // 3.data
         GridView view = factory1.mainView(pdf, Paper.A4L, "employee");

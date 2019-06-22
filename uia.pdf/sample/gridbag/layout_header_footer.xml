@@ -8,11 +8,12 @@
 		</columns>
 		<rows>
 			<row height="100%">
-				<textCell valignment="FAR" fontSize="12">
-					<text>MA ORDER</text>
+				<textCell valignment="FAR" alignment="NEAR" fontSize="12">
+					<text>Main Lab</text>
 				</textCell>
 				<textCell fontSize="18">
-					<text>保密</text>
+					<text>非正式</text>
+					<subtext>Unofficial</subtext>
 				</textCell>
 				<textCell alignment="FAR" valignment="FAR" fontSize="12">
 					<text>Z-0041-105-SJ-1.0</text>

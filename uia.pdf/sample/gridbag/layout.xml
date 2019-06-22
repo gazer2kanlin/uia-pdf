@@ -157,7 +157,7 @@
 			</row>
 		</rows>
 	</gridbag>
-	<gridbag name="result" x="0" y="+" width="100%" height="+100%" background="210,210,210">
+	<gridbag name="result" x="0" y="+" width="100%" height="200" background="210,210,210">
 		<columns>
 			<column width="15%"></column>
 			<column width="@40%"></column>

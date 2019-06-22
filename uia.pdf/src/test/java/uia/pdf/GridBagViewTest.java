@@ -31,40 +31,40 @@ import uia.pdf.papers.Paper;
 public class GridBagViewTest {
 
     @Test
-    public void test1() throws Exception {
-        GridBagFactory factory1 = GridBagFactory.fromXml("sample/gridbag/layout_header_footer.xml");
-        GridBagFactory factory2 = GridBagFactory.fromXml("sample/gridbag/layout.xml");
+    public void testCase1() throws Exception {
+    	// 1. load layouts for a document
+    	GridBagFactory factory1 = GridBagFactory.fromXml("sample/gridbag/layout_header_footer.xml");
+    	GridBagFactory factory2 = GridBagFactory.fromXml("sample/gridbag/layout.xml");
 
-        // 1. new document
-        PDFMaker pdf = new PDFMaker(FontUtils.simplified());
+    	// 2. header & footer
+    	GridBagDescriptionView header = factory1.descView("header");
+    	GridBagDescriptionView footer = factory1.descView("footer");
 
-        // 2. header & footer
-        GridBagDescriptionView header = factory1.descView(pdf, "header");
-        GridBagDescriptionView footer = factory1.descView(pdf, "footer");
+    	// 3. new a pdf
+    	PDFMaker pdf = new PDFMaker(FontUtils.simplified());
 
-        // 3 A4
-        GridBagView cv1 = factory2.mainView(pdf, Paper.A4);
-        cv1.arrange();
-        cv1.setHeaderView(header);
-        cv1.setFooterView(footer);
-        cv1.addPage(prepareData1(), "Inspection Report 1", false);
-        cv1.addPage(prepareData2());
-        cv1.addPage(prepareData3(), "Inspection Report 2", false);
+    	// 4 A4
+    	GridBagView cv1 = factory2.mainView(pdf, Paper.A4);
+    	cv1.setHeaderView(header);
+    	cv1.setFooterView(footer);
+    	cv1.addPage(prepareData1(), "Inspection Report 1", false);
+    	cv1.addPage(prepareData2());
+    	cv1.addPage(prepareData3(), "Inspection Report 2", false);
 
-        // 4 A4L
-        GridBagView cv2 = factory2.mainView(pdf, Paper.A4L);
-        cv1.arrange();
-        cv2.setHeaderView(header);
-        cv2.setFooterView(footer);
-        cv2.addPage(prepareData1(), "Inspection Report 3", false);
-        cv2.addPage(prepareData2());
-        cv2.addPage(prepareData3(), "Inspection Report 4", false);
-        
-        // 5. draw header & footer
-        header.draw();
-        footer.draw();
+    	// 5 A4L
+    	GridBagView cv2 = factory2.mainView(pdf, Paper.A4L);
+    	cv2.setHeaderView(header);
+    	cv2.setFooterView(footer);
+    	cv2.addPage(prepareData1(), "Inspection Report 3", false);
+    	cv2.addPage(prepareData2());
+    	cv2.addPage(prepareData3(), "Inspection Report 4", false);
 
-        pdf.save(new File("output/gridbag_case1.pdf"));
+    	// 6. draw header & footer
+    	header.draw();
+    	footer.draw();
+
+    	// 7. save
+    	pdf.save(new File("output/gridbag_case1.pdf"));
     }
 
     private Map<String, Object> prepareData1() {
