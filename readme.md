@@ -1,7 +1,7 @@
 PDF Document Builder
 ============================
 
-[Chinese](readme_tw.md)
+[中文](readme_tw.md), [Design](design_tw.md)
 
 The API uses model data to build PDF files that are rendered in a Grid or GridBag.
 

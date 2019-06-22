@@ -1,7 +1,7 @@
 PDF Document Builder
 ============================
 
-[英文](readme.md)
+[English](readme.md), [設計](design_tw.md)
 
 本 API 利用模型數據來建立以 Grid 或 GridBag 為呈現方式的 PDF 文件。
 
@@ -10,7 +10,7 @@ PDF 文件使用 [Apache PDFBox](https://pdfbox.apache.org/) 框架產生。
 ## 說明
 頁面配置的基本元素包括：
 * 頁面方向 (Orientation)
-    * 直式 (Portarit)
+    * 直式 (Portrait)
     * 橫式 (Landscape)
 * 主文呈現 (Content)
     * 一般表格 (Grid)
