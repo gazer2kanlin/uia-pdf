@@ -229,7 +229,11 @@ GridBagView
 ## 說明
 
 ### <gridbag\>
-#### - Attributes
+||Element|Description|Multi|
+|:--:|--|--|--|
+|v|columns|Column 集合|1|
+|v|rows|Row 集合|1|
+
 ||Attribute|Type|Description|Default|
 |:--:|--|--|--|--|
 |v|name|string|名稱|-|
@@ -238,41 +242,38 @@ GridBagView
 |v|y|string|高|-|
 |v|width|string|寬|-|
 |v|height|string|高|-|
-#### - Elements
-||Element|Description|Multi|
-|:--:|--|--|--|--|
-|v|columns|Column 集合|1|
-|v|rows|Row 集合|1|
 
 ### <columns\>
-#### - Attributes
+||Element|Description|Multi|
+|:--:|--|--|--|
+|v|column|Column|1..*|
+
 ||Attribute|Type|Description|Default|
 |:--:|--|--|--|--|
 |v|width|string|欄寬|-|
-#### - Elements
-||Element|Description|Multi|
-|:--:|--|--|--|--|
-|v|column|Column|1..*|
+
 
 ### <rows\>
-#### - Elements
 ||Element|Description|Multi|
-|:--:|--|--|--|--|
+|:--:|--|--|--|
 |v|row|Row|1..*|
 
 ### <row\>
-#### - Attributes
+||Element|Description|Multi|
+|:--:|--|--|--|
+|v|textCell|文字內容|1..*|
+
 ||Attribute|Type|Description|Default|
 |:--:|--|--|--|--|
 |v|height|string|欄寬|-|
 ||fontSize|int|字體大小|-|
-#### - Elements
-||Element|Description|Multi|
-|:--:|--|--|--|--|
-|v|textCell|文字內容|1..*|
 
 ### <textCell\>
-#### - Attributes
+||Element|Description|Multi|
+|:--:|--|--|--|
+||text|主要內容|0..1|
+||subtext|次要內容|0..1|
+
 ||Attribute|Type|Description|Default|
 |:--:|--|--|--|--|
 ||colspan|int|跨欄數|1|
@@ -280,8 +281,3 @@ GridBagView
 ||borderSize|int|跨行數|0|
 ||borderColor|int|跨行數|0,0,0|
 ||fontSize|int|字體大小|-|
-#### - Elements
-||Element|Description|Multi|
-|:--:|--|--|--|--|
-||text|主要內容|0..1|
-||subtext|次要內容|0..1|

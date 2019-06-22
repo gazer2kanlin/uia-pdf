@@ -35,29 +35,29 @@ GridView
 ```
 ## 說明
 ### <grid\>
-#### - Attributes
+||Element|Description|Multi|
+|:--:|--|--|--|
+|v|columns|欄位集合|1|
+
 ||Attribute|Type|Description|Default|
 |:--:|--|--|--|--|
 |v|name|string|名稱|-|
-#### - Elements
-||Element|Description|Multi|
-|:--:|--|--|--|--|
-|v|columns|欄位集合|1|
-
 
 ### <columns\>
-#### - Attributes
+||Element|Description|Multi|
+|:--:|--|--|--|
+|v|column|欄位|1..*|
+
 ||Attribute|Type|Description|Default|
 |:--:|--|--|--|--|
 |v|height|string|表頭高度|-|
 ||visible|boolean|表頭是否顯示|true|
-#### - Elements
-||Element|Description|Multi|
-|:--:|--|--|--|--|
-|v|column|欄位|1..*|
 
 ### <column\>
-#### - Attributes
+||Element|Description|Multi|
+|:--:|--|--|--|
+|v|text|表頭文字|-|
+
 ||Attribute|Type|Description|Default|
 |:--:|--|--|--|--|
 |v|width|string|欄寬|-|
