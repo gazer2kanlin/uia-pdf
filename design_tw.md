@@ -27,5 +27,5 @@
 ```
 
 ## 本文
-* [GridView](design_grid_tw.md)
-* [GridBagView](design_gridbag_tw.md)
+* [GridView](design_tw_grid.md)
+* [GridBagView](design_tw_gridbag.md)
