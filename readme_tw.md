@@ -1,10 +1,11 @@
-PDF Document API
+PDF Document Builder
 ============================
 
 [英文](readme.md)
 
-API 使用模型數據來建立以 Grid 或 GridBag 為呈現方式的 PDF 文件。
-本 API 使用 [Apache PDFBox](https://pdfbox.apache.org/) 進行文件製作。
+本 API 利用模型數據來建立以 Grid 或 GridBag 為呈現方式的 PDF 文件。
+
+PDF 文件使用 [Apache PDFBox](https://pdfbox.apache.org/) 框架產生。
 
 ## 說明
 頁面配置的基本元素包括：
