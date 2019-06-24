@@ -82,8 +82,7 @@ public class GridViewXmlFactory extends GridViewFactory {
             x0 += w;
         }
 
-        DefaultGridModel model = new DefaultGridModel(cms, gt.getFontSize());
-        model.setHeaderVisible(columns.isVisible());
+        DefaultGridModel model = new DefaultGridModel(cms, gt.getFontSize(), columns.getHeight(), columns.isVisible());
 
         return model;
     }

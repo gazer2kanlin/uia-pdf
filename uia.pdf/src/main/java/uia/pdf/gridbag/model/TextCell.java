@@ -70,7 +70,7 @@ public class TextCell extends Cell {
                 textLine = topLeft.y - 2 - ch1a;
             }
             else if ("FAR".equals(getVAlignment())) {
-                textLine = topLeft.y - getHeight() + 3 + ch2d + ch2a + 2 + ch1d;
+                textLine = topLeft.y - getHeight() + 3 + ch2d + ch2a + 3 + ch1d;
             }
             else {
                 textLine = topLeft.y - getHeight() / 2 + ch1d + 1;
@@ -92,7 +92,7 @@ public class TextCell extends Cell {
             contentStream.endText();
 
             if (this.subText.value != null) {
-                textLine = textLine - ch1d - 2 - ch2a ;
+                textLine = textLine - ch1d - 3 - ch2a ;
                 contentStream.setFont(font, fontSize2);
                 contentStream.setNonStrokingColor(this.subText.foreground);
                 contentStream.beginText();

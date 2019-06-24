@@ -23,21 +23,23 @@ package uia.pdf.grid;
  *
  */
 public class DefaultGridModel implements GridModel {
+
+    private final ColumnModel[] columnModels;
 	
     private int fontSize;
 
-    private final ColumnModel[] columnModels;
-
-    private CellRenderer renderer;
+    private int headerHeight;
 
     private boolean headerVisible;
+
+    private CellRenderer renderer;
 
     /**
      * Constructor.
      * @param columnModels Column models.
      */
-    public DefaultGridModel(ColumnModel[] columnModels, int fontSize) {
-    	this(columnModels, fontSize, new DefaultCellRenderer());
+    public DefaultGridModel(ColumnModel[] columnModels, int fontSize, int headerHeight, boolean headerVisible) {
+    	this(columnModels, fontSize, headerHeight, headerVisible, new DefaultCellRenderer());
     }
 
     /**
@@ -45,16 +47,12 @@ public class DefaultGridModel implements GridModel {
      * @param columnModels Column models.
      * @param renderer Cell renderer.
      */
-    public DefaultGridModel(ColumnModel[] columnModels, int fontSize, CellRenderer renderer) {
-        this.fontSize = fontSize;
+    public DefaultGridModel(ColumnModel[] columnModels, int fontSize, int headerHeight, boolean headerVisible, CellRenderer renderer) {
         this.columnModels = columnModels;
+        this.fontSize = fontSize;
+        this.headerHeight = headerHeight;
+        this.headerVisible = headerVisible;
         this.renderer = renderer;
-        this.headerVisible = true;
-    }
-
-    @Override
-    public int getFontSize() {
-        return this.fontSize;
     }
 
     @Override
@@ -63,9 +61,13 @@ public class DefaultGridModel implements GridModel {
     }
 
     @Override
-    public CellRenderer getCellRenderer(int row, int column) {
-        ColumnModel model = this.columnModels[column];
-        return model.getCellRenderer() != null ? model.getCellRenderer() : this.renderer;
+    public int getFontSize() {
+        return this.fontSize;
+    }
+    
+    @Override
+    public int getHeaderHeight() {
+    	return this.headerHeight;
     }
 
     @Override
@@ -73,7 +75,9 @@ public class DefaultGridModel implements GridModel {
         return this.headerVisible;
     }
 
-    public void setHeaderVisible(boolean headerVisible) {
-        this.headerVisible = headerVisible;
+    @Override
+    public CellRenderer getCellRenderer(int row, int column) {
+        ColumnModel model = this.columnModels[column];
+        return model.getCellRenderer() != null ? model.getCellRenderer() : this.renderer;
     }
 }

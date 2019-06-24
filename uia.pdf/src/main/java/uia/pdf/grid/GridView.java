@@ -61,14 +61,6 @@ public class GridView extends ContentView {
         this.currPage = currPage;
     }
  
-    public boolean isDrawHeader() {
-        return this.drawHeader;
-    }
-
-    public void setDrawHeader(boolean drawHeader) {
-        this.drawHeader = drawHeader;
-    }
-    
     public GridView beginBookmarkGroup(String text) {
     	this.pdf.beginBookmarkGroup(text);
     	return this;
@@ -200,14 +192,18 @@ public class GridView extends ContentView {
 
         PDFont font = this.pdf.getFont();
 
+        int hh = this.model.getHeaderHeight();
         ColumnModel[] cms = this.model.getColumnModels();
-        int hh = 0;
         for (int i0 = 0; i0 < cms.length; i0++) {
             ArrayList<String> cs = new ArrayList<String>();
-            int h0 = DrawingUtils.getContentWrapHeight(cms[i0].getDisplayName(), font, getFontSize(), cms[i0].getWidth() - 4, cs);
+            int h0 = DrawingUtils.getContentWrapHeight(
+            		cms[i0].getDisplayName(), 
+            		font, 
+            		getFontSize(), 
+            		cms[i0].getWidth() - 4, 
+            		cs);
             hh = Math.max(hh, h0);
         }
-        System.out.println(hh);
 
         if (this.rowV - (4 * hh) < getDrawingBottom()) {
             page = newPage();
@@ -215,7 +211,6 @@ public class GridView extends ContentView {
 
         PDPageContentStream contentStream = new PDPageContentStream(this.pdf.getDocument(), page, AppendMode.APPEND, false, false);
         contentStream.setFont(font, getFontSize());
-
         DefaultCellRenderer renderer = new DefaultCellRenderer();
         for (int i = 0; i < cms.length; i++) {
             if (i == 0) {
@@ -241,11 +236,6 @@ public class GridView extends ContentView {
             other.setHorizontalAlignment(AlignmentType.CENTER);
             other.setBackground(new Color(232, 232, 232));
             renderer.paint(contentStream, new Point(this.columnHz, this.rowV), this, other, content, -1, i);
-
-            //contentStream.beginText();
-            //contentStream.newLineAtOffset(this.columnH + offset, this.rowV - h - 3);
-            //contentStream.showText(content);
-            //contentStream.endText();
         }
         contentStream.moveTo(this.paper.getContentLeft(), this.rowV - hh);
         contentStream.lineTo(this.paper.getContentRight(), this.rowV - hh);
@@ -257,8 +247,11 @@ public class GridView extends ContentView {
     }
 
     private PDPage drawRow(PDPage page, Map<String, Object> rowCells, int row, boolean forceNewPage) throws Exception {
+        PDFont font = this.pdf.getFont();
+
         PDPage currPage = page;
-        if (forceNewPage || (this.rowV - 12) < getDrawingBottom()) {
+        int rh = DrawingUtils.getContentHeight(font, getFontSize());
+        if (forceNewPage || (this.rowV - rh) < getDrawingBottom()) {
             drawGridLine(page);
             currPage = newPage();
             if (this.columnEachPage) {
@@ -266,12 +259,10 @@ public class GridView extends ContentView {
             }
         }
 
-        PDFont font = this.pdf.getFont();
         PDPageContentStream contentStream = new PDPageContentStream(this.pdf.getDocument(), currPage, AppendMode.APPEND, false, false);
         contentStream.setFont(font, getFontSize());
-
         ColumnModel[] cms = this.model.getColumnModels();
-        int h = Short.MIN_VALUE;
+        int h = 0;
         for (int col = 0; col < cms.length; col++) {
             ColumnModel cm = cms[col];
             if (col == 0) {
@@ -284,11 +275,11 @@ public class GridView extends ContentView {
             CellRenderer cr = this.model.getCellRenderer(0, col);
             h = Math.max(h, cr.paint(contentStream, new Point(this.columnHz, this.rowV), this, cm, rowCells.get(cm.getId()), row, col));
         }
-        System.out.println(h);
         this.rowV -= h;
 
-        // handle overlap at footer area
+        // recover: overlap on footer area
         if (!forceNewPage && this.rowV < getDrawingBottom()) {
+        	// erase painted content
             contentStream.setNonStrokingColor(Color.white);
             contentStream.addRect(
             		this.paper.getContentLeft(),
@@ -298,26 +289,28 @@ public class GridView extends ContentView {
             contentStream.fill();
             contentStream.setNonStrokingColor(Color.black);
             contentStream.close();
+        	// move to previous position
             this.rowV += h;
+            
             return drawRow(page, rowCells, row, true);
         }
-        else {
 
-            contentStream.setLineWidth(0.1f);
-            contentStream.moveTo(this.paper.getContentLeft(), this.rowV);
-            contentStream.lineTo(this.paper.getContentRight(), this.rowV);
-            contentStream.stroke();
-
-            contentStream.close();
-        }
+        contentStream.setLineWidth(0.1f);
+        contentStream.moveTo(this.paper.getContentLeft(), this.rowV);
+        contentStream.lineTo(this.paper.getContentRight(), this.rowV);
+        contentStream.stroke();
+        contentStream.close();
 
         return currPage;
     }
 
 
     private PDPage draw2Row(PDPage page, Object data, int row, boolean forceNewPage) throws Exception {
+        PDFont font = this.pdf.getFont();
+
         PDPage currPage = page;
-        if (forceNewPage || (this.rowV - 12) < getDrawingBottom()) {
+        int rh = DrawingUtils.getContentHeight(font, getFontSize());
+        if (forceNewPage || (this.rowV - rh) < getDrawingBottom()) {
             drawGridLine(page);
             currPage = newPage();
             if (this.columnEachPage) {
@@ -325,12 +318,10 @@ public class GridView extends ContentView {
             }
         }
 
-        PDFont font = this.pdf.getFont();
         PDPageContentStream contentStream = new PDPageContentStream(this.pdf.getDocument(), currPage, AppendMode.APPEND, false, false);
         contentStream.setFont(font, getFontSize());
-
         ColumnModel[] cms = this.model.getColumnModels();
-        int h = Short.MIN_VALUE;
+        int h = 0;
         for (int col = 0; col < cms.length; col++) {
             ColumnModel cm = cms[col];
             if (col == 0) {
@@ -346,8 +337,9 @@ public class GridView extends ContentView {
         }
         this.rowV -= h;
 
-        // handle overlap at footer area
+        // recover: overlap on footer area
         if (!forceNewPage && this.rowV < getDrawingBottom()) {
+        	// erase painted content
             contentStream.setNonStrokingColor(Color.white);
             contentStream.addRect(
             		this.paper.getContentLeft(),
@@ -357,18 +349,17 @@ public class GridView extends ContentView {
             contentStream.fill();
             contentStream.setNonStrokingColor(Color.black);
             contentStream.close();
+        	// move to previous position
             this.rowV += h;
+            
             return draw2Row(page, data, row, true);
         }
-        else {
 
-            contentStream.setLineWidth(0.1f);
-            contentStream.moveTo(this.paper.getContentLeft(), this.rowV);
-            contentStream.lineTo(this.paper.getContentRight(), this.rowV);
-            contentStream.stroke();
-
-            contentStream.close();
-        }
+        contentStream.setLineWidth(0.1f);
+        contentStream.moveTo(this.paper.getContentLeft(), this.rowV);
+        contentStream.lineTo(this.paper.getContentRight(), this.rowV);
+        contentStream.stroke();
+        contentStream.close();
 
         return currPage;
     }

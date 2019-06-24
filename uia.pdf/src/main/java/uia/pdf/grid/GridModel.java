@@ -24,10 +24,6 @@ package uia.pdf.grid;
  */
 public interface GridModel {
 
-    public int getFontSize();
-
-    public boolean isHeaderVisible();
-
     /**
      * Get column models.
      * @return Column models.
@@ -35,7 +31,28 @@ public interface GridModel {
     public ColumnModel[] getColumnModels();
 
     /**
+     * Get font size.
+     * @return
+     */
+    public int getFontSize();
+
+    /**
+     * Get height of the header.
+     * 
+     * @return Height.
+     */
+    public int getHeaderHeight();
+
+    /**
+     * Test if header is visible or not.
+     * 
+     * @return Visible or not.
+     */
+    public boolean isHeaderVisible();
+
+    /**
      * Get cell renderer for specific row and column.
+     * 
      * @param row Row index. Start with zero.
      * @param column Column index. Start with zero.
      * @return Cell renderer.

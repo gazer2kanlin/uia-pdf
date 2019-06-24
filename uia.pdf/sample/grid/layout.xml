@@ -5,7 +5,7 @@
 			<column width="100%" bind="imageInfo" cellRenderer="uia.pdf.grid.ImageDescCellRenderer" alignment="CENTER"><text></text></column>
 		</columns>
 	</grid>
-	<grid name="employee" fontSize="12">
+	<grid name="employee">
 		<columns visible="true" height="20">
 			<column width="100" bind="id" wrap="true"><text>編號</text></column>
 			<column width="150" bind="name" wrap="true"><text>姓名</text></column>
@@ -14,7 +14,7 @@
 			<column width="+100%" bind="retired" cellRenderer="uia.pdf.grid.MyBooleanRenderer" alignment="FAR"><text>退休</text></column>
 		</columns>
 	</grid>
-    <grid name="project" fontSize="16">
+    <grid name="project">
 		<columns visible="true" height="20" background="200,255,255">
 			<column width="100" bind="projectName" wrap="true"><text>專案名稱</text></column>
 			<column width="120" bind="startDate" alignment="CENTER"><text>開始日期</text></column>
