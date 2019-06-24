@@ -17,13 +17,24 @@
 package uia.pdf.gridbag;
 
 import java.awt.Color;
+import java.awt.Point;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Map;
 
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.PDPageContentStream.AppendMode;
+import org.apache.pdfbox.pdmodel.font.PDFont;
+
+import uia.pdf.ContentView;
 import uia.pdf.CoordUtils;
 import uia.pdf.DrawingUtils;
 import uia.pdf.gridbag.layout.GridBagType;
 import uia.pdf.gridbag.model.Cell;
 import uia.pdf.gridbag.model.Column;
 import uia.pdf.gridbag.model.Row;
+import uia.utils.ObjectUtils;
 
 /**
  * GridBag.
@@ -119,6 +130,137 @@ public class GridBagModel {
 
         System.out.println();
 	}
+	
+    void drawOn(ContentView cv, PDPage page, Object value) throws IOException {
+        PDPageContentStream contentStream = new PDPageContentStream(
+        		cv.getDoc().getDocument(), 
+        		page, 
+        		AppendMode.APPEND, 
+        		false, 
+        		false);
+        PDFont font = cv.getDoc().getFont();
+        contentStream.setFont(font, 9);
+        contentStream.setLineWidth(0.5f);
+
+        Point topLeft = cv.getDrawingTopLeft();
+        if (this.background != null) {
+            contentStream.setNonStrokingColor(this.background);
+            contentStream.addRect(
+            		topLeft.x + getX(), 
+            		topLeft.y - getY() - getHeight(), 
+            		getWidth(), 
+            		getHeight());
+            contentStream.fill();
+        }
+
+        ArrayList<Cell> colorBorder = new ArrayList<Cell>();
+        // draw grid
+        if (this.borderEnabled) {
+        	int r = -1;
+            for (Cell[] cells : this.cells) {
+            	r++;
+            	int c = -1;
+                for (Cell cell : cells) {
+                	c++;
+                	System.out.println(r + "," + c);
+                    contentStream.setLineWidth(cell.borderSize);
+
+                    Point cellBottomLeft = cell.drawingBottomLeft(topLeft);
+                    Color background = cell.getBackground();
+                    if (background != null) {
+                        contentStream.setNonStrokingColor(background);
+                        contentStream.addRect(
+                        		cellBottomLeft.x, 
+                        		cellBottomLeft.y, 
+                        		cell.getWidth(), 
+                        		cell.getHeight());
+                        contentStream.fill();
+                    }
+
+                    contentStream.addRect(
+                    		cellBottomLeft.x, 
+                    		cellBottomLeft.y, 
+                    		cell.getWidth(), 
+                    		cell.getHeight());
+                    contentStream.stroke();
+
+                    if (cell.borderColor != null) {
+                        colorBorder.add(cell);
+                    }
+                }
+            }
+
+            // draw border
+            for (Cell cell : colorBorder) {
+                Point cellBottomLeft = cell.drawingBottomLeft(topLeft);
+                contentStream.setLineWidth(cell.borderSize);
+                contentStream.setStrokingColor(cell.borderColor);
+                contentStream.addRect(
+                		cellBottomLeft.x, 
+                		cellBottomLeft.y, 
+                		cell.getWidth(), 
+                		cell.getHeight());
+                contentStream.stroke();
+            }
+        }
+
+        // draw data
+        Object bindData = bind(value);
+        int r = 0;
+        for (Cell[] cells : this.cells) {
+            int c = 0;
+            for (Cell cell : cells) {
+                if (cell.col != c && cell.row != r) {
+                    continue;
+                }
+                cell.draw(
+                		contentStream, 
+                		cell.drawingTopLeft(topLeft), 
+                		cv, 
+                		bindData);
+                c++;
+            }
+            r++;
+        }
+
+        if (this.borderEnabled) {
+            contentStream.setStrokingColor(this.borderColor);
+            contentStream.setLineWidth(1.0f);
+            contentStream.addRect(
+            		topLeft.x + getX(), 
+            		topLeft.y - getHeight() - getY(), 
+            		getWidth(), 
+            		getHeight());
+            contentStream.stroke();
+        }
+
+        contentStream.setStrokingColor(Color.black);
+        contentStream.close();
+    }
+    
+    @SuppressWarnings("rawtypes")
+	private Object bind(Object value) {
+    	if(value == null) {
+    		return null;
+    	}
+    	
+    	String name = this.gt.getBind();
+    	if(name == null || "".equals(name)) {
+    		return value;
+    	}
+    	
+    	try {
+	    	if(value instanceof Map) {
+	    		return ((Map)value).get(name);
+	    	}
+	    	else {
+	    		return ObjectUtils.read(value, name);
+	    	}
+    	}
+    	catch(Exception ex) {
+    		return null;
+    	}
+    }
 
 	@Override
     public String toString() {

@@ -41,7 +41,7 @@ import uia.pdf.parsers.ValueParserFactory;
  * @author Kan Lin
  *
  */
-public class PDFMaker {
+public class PDFDoc {
 	
     private final PDDocument doc;
 
@@ -70,7 +70,7 @@ public class PDFMaker {
      * @param font Font.
      * @throws IOException
      */
-    public PDFMaker(PDFont font) throws IOException {
+    public PDFDoc(PDFont font) throws IOException {
         this.temp = new ArrayList<PDOutlineItem>();
         this.doc = new PDDocument();
         this.font = font;
@@ -89,7 +89,7 @@ public class PDFMaker {
         this.bookmarkPages = new ArrayList<BookmarkPage>();
     }
     
-    public PDFMaker(InputStream fontStream) throws IOException {
+    public PDFDoc(InputStream fontStream) throws IOException {
         this.temp = new ArrayList<PDOutlineItem>();
         this.doc = new PDDocument();
         this.font = PDType0Font.load(this.doc, fontStream);
@@ -113,7 +113,7 @@ public class PDFMaker {
      * @param fontFile TTF font file.
      * @throws IOException
      */
-    public PDFMaker(File fontFile) throws IOException {
+    public PDFDoc(File fontFile) throws IOException {
         this.temp = new ArrayList<PDOutlineItem>();
         this.doc = new PDDocument();
         this.font = PDType0Font.load(this.doc, fontFile);
@@ -251,7 +251,7 @@ public class PDFMaker {
         contentStream.setFont(this.font, 16);
         int cw = DrawingUtils.getContentWidth("INDEX", this.font, 11);
         contentStream.beginText();
-        contentStream.newLineAtOffset(paper.getLeft() + (paper.getContentSize().width - cw) / 2, paper.getDrawingTop() - 12);
+        contentStream.newLineAtOffset(paper.getContentLeft() + (paper.getContentSize().width - cw) / 2, paper.getDrawingTop() - 12);
         contentStream.showText("INDEX");
         contentStream.endText();
 
@@ -273,20 +273,20 @@ public class PDFMaker {
             int cw1 = DrawingUtils.getContentWidth(bp.text, this.font, 11);
             int cw2 = DrawingUtils.getContentWidth(bp.pageNo, this.font, 11);
 
-            int right = paper.getRight() - 18;
-            int w = 4 * (int) Math.ceil((right - (paper.getLeft() + cw1 + 10)) / 4);
+            int right = paper.getContentRight() - 18;
+            int w = 4 * (int) Math.ceil((right - (paper.getContentLeft() + cw1 + 10)) / 4);
             contentStream.setLineDashPattern(new float[] { 1, 3 }, 0);
             contentStream.moveTo(right - w - 1, top - 10);
             contentStream.lineTo(right, top - 10);
             contentStream.stroke();
 
             contentStream.beginText();
-            contentStream.newLineAtOffset(paper.getLeft(), top - 10);
+            contentStream.newLineAtOffset(paper.getContentLeft(), top - 10);
             contentStream.showText(bp.text);
             contentStream.endText();
 
             contentStream.beginText();
-            contentStream.newLineAtOffset(paper.getRight() - cw2, top - 10);
+            contentStream.newLineAtOffset(paper.getContentRight() - cw2, top - 10);
             contentStream.showText(bp.pageNo);
             contentStream.endText();
 

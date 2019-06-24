@@ -42,27 +42,28 @@ public class SimpleFooterView extends DescriptionView {
      * @param rightText
      * @param fontSize
      */
-    public SimpleFooterView(String leftText, String rightText, int fontSize) {
+    public SimpleFooterView(PDFDoc doc, String leftText, String rightText, int fontSize) {
+    	super(doc);
         this.leftText = leftText;
         this.rightText = rightText;
         this.fontSize = fontSize;
     }
 
     @Override
-    protected void draw(ContentView cv, PDPage page) throws Exception {
+    protected void drawOn(ContentView cv, PDPage page, Object value) throws Exception {
         PDFont font = cv.getDoc().getFont();
 
-        int fontH = DrawingUtils.getContentHeight("A", font, this.fontSize) + 15;
+        int fontH = DrawingUtils.getContentHeight(font, this.fontSize) + 15;
         
         PDPageContentStream contentStream = new PDPageContentStream(cv.getDoc().getDocument(), page, AppendMode.APPEND, false, false);
         contentStream.setFont(font, this.fontSize);
 
-        contentStream.moveTo(cv.getPaper().getLeft(), cv.getDrawingBottom() - 10);
-        contentStream.lineTo(cv.getPaper().getRight(), cv.getDrawingBottom() - 10);
+        contentStream.moveTo(cv.getPaper().getContentLeft(), cv.getDrawingBottom() - 10);
+        contentStream.lineTo(cv.getPaper().getContentRight(), cv.getDrawingBottom() - 10);
         contentStream.stroke();
 
         contentStream.beginText();
-        contentStream.newLineAtOffset(cv.getPaper().getLeft(), cv.getPaper().getDrawingBottom() - fontH);
+        contentStream.newLineAtOffset(cv.getPaper().getContentLeft(), cv.getPaper().getDrawingBottom() - fontH);
         contentStream.showText(this.leftText);
         contentStream.endText();
 
@@ -75,7 +76,7 @@ public class SimpleFooterView extends DescriptionView {
 
         int rx = DrawingUtils.getContentWidth(this.rightText, font, this.fontSize);
         contentStream.beginText();
-        contentStream.newLineAtOffset(cv.getPaper().getRight() - rx, cv.getPaper().getDrawingBottom() - fontH);
+        contentStream.newLineAtOffset(cv.getPaper().getContentRight() - rx, cv.getPaper().getDrawingBottom() - fontH);
         contentStream.showText(this.rightText);
         contentStream.endText();
 

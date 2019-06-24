@@ -17,14 +17,12 @@
 package uia.pdf.gridbag.model;
 
 import java.awt.Point;
-import java.util.Map;
 
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 
 import uia.pdf.ContentView;
 import uia.pdf.DrawingUtils;
-import uia.pdf.gridbag.GridBagDrawer;
 import uia.pdf.gridbag.GridBagModel;
 import uia.pdf.gridbag.layout.TextCellType;
 
@@ -47,63 +45,65 @@ public class TextCell extends Cell {
     }
 
     @Override
-    public void accept(ContentView cv, GridBagDrawer view, PDPageContentStream contentStream, Point bottomLeft, Map<String, Object> data) {
+    public void draw(PDPageContentStream contentStream, Point topLeft, ContentView cv, Object data) {
         if (this.text.value == null) {
             return;
         }
 
         try {
-            PDFont font = cv.getDoc().getFont();
-
+        	PDFont font = cv.getDoc().getFont();
+        	
             // text
             int fontSize1 = DrawingUtils.fixFontSize(this.text.value, font, this.text.getFontSize(), getWidth());
             int cw1 = DrawingUtils.getContentWidth(this.text.value, font, fontSize1);
-            int ch1 = DrawingUtils.getContentHeight(this.text.value, font, fontSize1);
+            int ch1a = DrawingUtils.getContentAscent(font, fontSize1);
+            int ch1d = DrawingUtils.getContentDescent(font, fontSize1);
 
             // subText
             int fontSize2 = DrawingUtils.fixFontSize(this.subText.value, font, this.subText.getFontSize(), getWidth());
             int cw2 = DrawingUtils.getContentWidth(this.subText.value, font, fontSize2);
-            int ch2 = DrawingUtils.getContentHeight(this.subText.value, font, fontSize2);
+            int ch2a = DrawingUtils.getContentAscent(font, fontSize2);
+            int ch2d = DrawingUtils.getContentDescent(font, fontSize2);
 
-            int textLine = bottomLeft.y + getHeight() / 2 - 3;
+            int textLine = 0;
             if ("NEAR".equals(getVAlignment())) {
-                textLine = bottomLeft.y + getHeight() - ch1 - 3;
+                textLine = topLeft.y - 2 - ch1a;
             }
             else if ("FAR".equals(getVAlignment())) {
-                textLine = ch2 == 0 ? bottomLeft.y + 3 : bottomLeft.y + ch2 + 9;
+                textLine = topLeft.y - getHeight() + 3 + ch2d + ch2a + 2 + ch1d;
             }
             else {
-                textLine = bottomLeft.y + ch2 + (getHeight() - (ch1 + ch2)) / 2 + 1;
+                textLine = topLeft.y - getHeight() / 2 + ch1d + 1;
             }
 
             contentStream.setFont(font, fontSize1);
             contentStream.setNonStrokingColor(this.text.foreground);
             contentStream.beginText();
             if ("NEAR".equalsIgnoreCase(getAlignment())) {
-                contentStream.newLineAtOffset(bottomLeft.x + 2, textLine);
+                contentStream.newLineAtOffset(topLeft.x + 2, textLine);
             }
             else if ("FAR".equalsIgnoreCase(getAlignment())) {
-                contentStream.newLineAtOffset(bottomLeft.x + getWidth() - cw1 - 2, textLine);
+                contentStream.newLineAtOffset(topLeft.x + getWidth() - cw1 - 2, textLine);
             }
             else {
-                contentStream.newLineAtOffset(bottomLeft.x + (getWidth() - cw1) / 2, textLine);
+                contentStream.newLineAtOffset(topLeft.x + (getWidth() - cw1) / 2, textLine);
             }
             contentStream.showText(this.text.value);
             contentStream.endText();
 
             if (this.subText.value != null) {
-                textLine -= (ch2 + 2);
+                textLine = textLine - ch1d - 2 - ch2a ;
                 contentStream.setFont(font, fontSize2);
                 contentStream.setNonStrokingColor(this.subText.foreground);
                 contentStream.beginText();
                 if ("NEAR".equalsIgnoreCase(getAlignment())) {
-                    contentStream.newLineAtOffset(bottomLeft.x + 2, textLine);
+                    contentStream.newLineAtOffset(topLeft.x + 2, textLine);
                 }
                 else if ("FAR".equalsIgnoreCase(getAlignment())) {
-                    contentStream.newLineAtOffset(bottomLeft.x + getWidth() - cw2 - 2, textLine);
+                    contentStream.newLineAtOffset(topLeft.x + getWidth() - cw2 - 2, textLine);
                 }
                 else {
-                    contentStream.newLineAtOffset(bottomLeft.x + (getWidth() - cw2) / 2, textLine);
+                    contentStream.newLineAtOffset(topLeft.x + (getWidth() - cw2) / 2, textLine);
                 }
                 contentStream.showText(this.subText.value);
                 contentStream.endText();

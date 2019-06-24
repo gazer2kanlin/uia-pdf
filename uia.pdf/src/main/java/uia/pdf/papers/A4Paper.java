@@ -24,24 +24,13 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
  * @author Kan Lin
  *
  */
-public class A4Paper extends Paper {
+public final class A4Paper extends Paper {
 
     public static final int WIDTH = (int) PDRectangle.A4.getWidth();
 
-    public static final int HEIGTH = (int) PDRectangle.A4.getHeight();
+    public static final int HEIGHT = (int) PDRectangle.A4.getHeight();
 
-    static A4Paper landscape() {
-        return new A4Paper(true);
-    }
-    
-    static A4Paper portrait() {
-        return new A4Paper(false);
-    }
-
-    /**
-     * Constructor.
-     */
     A4Paper(boolean landscape) {
-        super(landscape ? new PDRectangle(PDRectangle.A4.getHeight(), PDRectangle.A4.getWidth()) : PDRectangle.A4);
+        super(landscape ? new PDRectangle(HEIGHT, WIDTH) : PDRectangle.A4);
     }
 }

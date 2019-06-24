@@ -18,13 +18,11 @@ package uia.pdf.gridbag.model;
 
 import java.awt.Color;
 import java.awt.Point;
-import java.util.Map;
 
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 
 import uia.pdf.ContentView;
 import uia.pdf.DrawingUtils;
-import uia.pdf.gridbag.GridBagDrawer;
 import uia.pdf.gridbag.GridBagModel;
 import uia.pdf.gridbag.layout.CellType;
 
@@ -34,7 +32,7 @@ import uia.pdf.gridbag.layout.CellType;
  * @author Kan Lin
  *
  */
-public class Cell {
+public abstract class Cell {
 
     public final GridBagModel grid;
 
@@ -63,12 +61,11 @@ public class Cell {
         this.borderColor = DrawingUtils.toColor(ct.getBorderColor());
     }
 
-    /**
-     * Convert bottom-left point to PdfBox coordinates system.
-     * @param contentTopLeft Top-left point of PdfBox coordinates system.
-     * @return Result.
-     */
-    public Point bottomLeft(Point contentTopLeft) {
+    public Point drawingTopLeft(Point contentTopLeft) {
+        return new Point(contentTopLeft.x + getX(), contentTopLeft.y - getY());
+    }
+
+    public Point drawingBottomLeft(Point contentTopLeft) {
         return new Point(contentTopLeft.x + getX(), contentTopLeft.y - getY() - getHeight());
     }
 
@@ -128,18 +125,10 @@ public class Cell {
         return this.ct.getValignment();
     }
 
+    public abstract void draw(PDPageContentStream contentStream, Point topLeft, ContentView cv, Object data);
+
     @Override
     public String toString() {
         return String.format("cell[%2s,%2s](x=%3s,y=%3s,w=%3s,h=%3s)", this.row, this.col, getX(), getY(), getWidth(), getHeight());
-    }
-
-    /**
-     * Draw nothing.
-     * @param view View.
-     * @param contentStream Content stream.
-     * @param topLeft Coordinate of bottom-left.
-     * @param data Data used to draw.
-     */
-    public void accept(ContentView cv, GridBagDrawer view, PDPageContentStream contentStream, Point topLeft, Map<String, Object> data) {
     }
 }

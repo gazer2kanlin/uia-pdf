@@ -3,7 +3,7 @@ package uia.pdf.grid;
 import java.io.File;
 
 import uia.pdf.Layout;
-import uia.pdf.PDFMaker;
+import uia.pdf.PDFDoc;
 import uia.pdf.papers.Paper;
 
 public abstract class GridViewFactory {
@@ -18,8 +18,8 @@ public abstract class GridViewFactory {
 		return new GridViewXmlFactory(Layout.GRID_TYPE.fromXml(new File(filename)));
 	}
     
-    public GridView mainView(PDFMaker pdf, Paper paper, String gridName) {
-    	return new GridView(pdf, paper.clone(), createModel(gridName, paper));
+    public GridView mainView(PDFDoc pdf, Paper paper, String gridName) {
+    	return new GridView(pdf, paper, createModel(gridName, paper));
     }
 
     /**

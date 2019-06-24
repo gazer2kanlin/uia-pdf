@@ -22,7 +22,8 @@ import java.util.TreeMap;
 
 import org.junit.Test;
 
-import uia.pdf.PDFMaker;
+import uia.pdf.PDFDoc;
+import uia.pdf.grid.layout.SampleResult;
 import uia.pdf.gridbag.GridBagDescriptionView;
 import uia.pdf.gridbag.GridBagFactory;
 import uia.pdf.gridbag.GridBagView;
@@ -36,15 +37,15 @@ public class GridBagViewTest {
     	GridBagFactory factory1 = GridBagFactory.fromXml("sample/gridbag/layout_header_footer.xml");
     	GridBagFactory factory2 = GridBagFactory.fromXml("sample/gridbag/layout.xml");
 
-    	// 2. header & footer
-    	GridBagDescriptionView header = factory1.descView("header");
-    	GridBagDescriptionView footer = factory1.descView("footer");
+    	// 2. new a PDF
+    	PDFDoc pdf = new PDFDoc(FontUtils.simplified());
 
-    	// 3. new a pdf
-    	PDFMaker pdf = new PDFMaker(FontUtils.simplified());
+    	// 3. header & footer
+    	GridBagDescriptionView header = factory1.descView(pdf, "header");
+    	GridBagDescriptionView footer = factory1.descView(pdf, "footer");
 
     	// 4 A4
-    	GridBagView cv1 = factory2.mainView(pdf, Paper.A4);
+    	GridBagView cv1 = factory2.mainView(pdf, Paper.A4.paddingTB(100, 100));
     	cv1.setHeaderView(header);
     	cv1.setFooterView(footer);
     	cv1.addPage(prepareData1(), "Inspection Report 1", false);
@@ -70,18 +71,19 @@ public class GridBagViewTest {
     private Map<String, Object> prepareData1() {
         TreeMap<String, Object> row1 = new TreeMap<String, Object>();
         row1.put("titleInfo", "Inspection Report 1 - 0102851");
+        row1.put("result", new SampleResult());
         return row1;
     }
 
     private Map<String, Object> prepareData2() {
         TreeMap<String, Object> row1 = new TreeMap<String, Object>();
-        row1.put("titleInfo", "Inspection Report 1 - 0829987");
+        row1.put("titleInfo", "Inspection Report 2 - 0829987");
         return row1;
     }
 
     private Map<String, Object> prepareData3() {
         TreeMap<String, Object> row1 = new TreeMap<String, Object>();
-        row1.put("titleInfo", "Inspection Report 2 - 0098011");
+        row1.put("titleInfo", "Inspection Report 3 - 0098011");
         return row1;
     }
 }

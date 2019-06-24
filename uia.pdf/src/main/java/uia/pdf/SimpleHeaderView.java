@@ -41,20 +41,21 @@ public class SimpleHeaderView extends DescriptionView {
      * @param title
      * @param fontSize
      */
-    public SimpleHeaderView(String title, int fontSize) {
+    public SimpleHeaderView(PDFDoc doc, String title, int fontSize) {
+    	super(doc);
         this.title = title;
         this.fontSize = fontSize;
     }
 
     @Override
-    protected void draw(ContentView cv, PDPage page) throws IOException {
+    protected void drawOn(ContentView cv, PDPage page, Object value) throws IOException {
         PDFont font = cv.getDoc().getFont();
 
         PDPageContentStream contentStream = new PDPageContentStream(cv.getDoc().getDocument(), page, AppendMode.APPEND, false, false);
         contentStream.setFont(font, this.fontSize);
 
         contentStream.beginText();
-        contentStream.newLineAtOffset(cv.getPaper().getLeft(), cv.getPaper().getDrawingTop() + 9);
+        contentStream.newLineAtOffset(cv.getPaper().getContentLeft(), cv.getPaper().getDrawingTop() + 9);
         contentStream.showText(this.title);
         contentStream.endText();
 

@@ -238,10 +238,14 @@ GridBagView
 |:--:|--|--|--|--|
 |v|name|string|名稱|-|
 |v|y|string|X 座標|-|
-|v|x|string|Y 座標|-|
-|v|y|string|高|-|
+|v|y|string|Y 座標|-|
 |v|width|string|寬|-|
 |v|height|string|高|-|
+||borderEnabled|boolean|是否顯示邊框|true|
+||borderSize|float|邊框寬度|1.0|
+||borderColor|string|邊框顏色 (R,G,B)|0,0,0|
+||background|string|背景色|-|
+||fontSize|int|字型大小|9|
 
 ### <columns\>
 ||Element|Description|Multi|
@@ -251,6 +255,7 @@ GridBagView
 ||Attribute|Type|Description|Default|
 |:--:|--|--|--|--|
 |v|width|string|欄寬|-|
+||background|string|背景色|-|
 
 
 ### <rows\>
@@ -266,7 +271,12 @@ GridBagView
 ||Attribute|Type|Description|Default|
 |:--:|--|--|--|--|
 |v|height|string|欄寬|-|
-||fontSize|int|字體大小|-|
+||borderSize|float|邊框寬度|0.5|
+||borderColor|string|邊框顏色 (R,G,B)|-|
+||background|string|背景色|-|
+||fontSize|int|字型大小|-|
+||alignment|string|字型大小|CENTER|
+||valignment|string|字型大小|CENTER|
 
 ### <textCell\>
 ||Element|Description|Multi|
@@ -278,6 +288,9 @@ GridBagView
 |:--:|--|--|--|--|
 ||colspan|int|跨欄數|1|
 ||rowspan|int|跨行數|1|
-||borderSize|int|跨行數|0|
-||borderColor|int|跨行數|0,0,0|
-||fontSize|int|字體大小|-|
+||borderSize|float|邊框寬度|0.5|
+||borderColor|string|邊框顏色 (R,G,B)|-|
+||background|string|背景色|-|
+||fontSize|int|字型大小|-|
+||alignment|string|字型大小|CENTER|
+||valignment|string|字型大小|CENTER|

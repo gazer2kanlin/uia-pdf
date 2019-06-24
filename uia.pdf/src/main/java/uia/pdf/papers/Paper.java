@@ -35,49 +35,74 @@ public class Paper {
 	/**
 	 * A3 portrait
 	 */
-	public static final Paper A3 = A3Paper.portrait();
+	public static final Paper A3 = new A3Paper(false);
 	
 	/**
 	 * A3 landscape
 	 */
-	public static final Paper A3L = A3Paper.landscape();
+	public static final Paper A3L = new A3Paper(true);
 	
 	/**
 	 * A4 portrait
 	 */
-	public static final Paper A4 = A4Paper.portrait();
+	public static final Paper A4 = new A4Paper(false);
 	
 	/**
 	 * A4 landscape
 	 */
-	public static final Paper A4L = A4Paper.landscape();
+	public static final Paper A4L = new A4Paper(true);
+	/**
+	 * B4 portrait
+	 */
+	public static final Paper B4 = new B4Paper(false);
+	
+	/**
+	 * B4 landscape
+	 */
+	public static final Paper B4L = new B4Paper(true);
 	
     private final PDRectangle rect;
 
-    private int leftPadding;
+    private final int leftPadding;
 
-    private int rightPadding;
+    private final int rightPadding;
 
-    private int topPadding;
+    private final int topPadding;
 
-    private int bottomPadding;
+    private final int bottomPadding;
 
     /**
      * Constructor.<br>
-     * Default value of padding is 30.
      *
      * @param rect Rectangle of page.
      */
     protected Paper(PDRectangle rect) {
+    	this(rect, 30, 60, 30, 60);
+    }
+
+    /**
+     * Constructor.<br>
+     *
+     * @param rect Rectangle of page.
+     */
+    protected Paper(PDRectangle rect, int left, int top, int right, int bottom) {
         this.rect = rect;
-        this.leftPadding = 30;
-        this.rightPadding = 30;
-        this.topPadding = 60;
-        this.bottomPadding = 60;
+        this.leftPadding = left;
+        this.topPadding = top;
+        this.rightPadding = right;
+        this.bottomPadding = bottom;
     }
     
-    public Paper clone() {
-    	return new Paper(this.rect);
+    public Paper padding(int left, int top, int right, int bottom) {
+    	return new Paper(this.rect, left, top, right, bottom); 
+    }
+    
+    public Paper paddingLR(int left, int right) {
+    	return new Paper(this.rect, left, this.topPadding, right, this.bottomPadding); 
+    }
+    
+    public Paper paddingTB(int top, int bottom) {
+    	return new Paper(this.rect, this.leftPadding, top, this.rightPadding, bottom); 
     }
 
     /**
@@ -90,15 +115,6 @@ public class Paper {
     }
 
     /**
-     * Get padding size at the left.
-     * 
-     * @param leftPadding size.
-     */
-    public void setLeftPadding(int leftPadding) {
-        this.leftPadding = leftPadding;
-    }
-
-    /**
      * Get padding size of right side.
      * 
      * @return The size.
@@ -108,29 +124,11 @@ public class Paper {
     }
 
     /**
-     * Get padding size at the right.
-     * 
-     * @param rightPadding The size.
-     */
-    public void setRightPadding(int rightPadding) {
-        this.rightPadding = rightPadding;
-    }
-
-    /**
      * Get padding size of top side.
      * @return The size.
      */
     public int getTopPadding() {
         return this.topPadding;
-    }
-
-    /**
-     * Get padding size of top side.
-     * 
-     * @param topPadding The size.
-     */
-    public void setTopPadding(int topPadding) {
-        this.topPadding = topPadding;
     }
 
     /**
@@ -143,12 +141,21 @@ public class Paper {
     }
 
     /**
-     * Get padding size of bottom side.
+     * Get the coordinates of the left side of the content view.
      * 
-     * @return bottomPadding The size.
+     * @return The coordinates.
      */
-    public void setBottomPadding(int bottomPadding) {
-        this.bottomPadding = bottomPadding;
+    public int getContentLeft() {
+        return this.leftPadding;
+    }
+
+    /**
+     * Get the coordinates of the right side of the content view.
+     * 
+     * @return The coordinates.
+     */
+    public int getContentRight() {
+        return (int) this.rect.getWidth() - this.rightPadding;
     }
 
     /**
@@ -160,21 +167,12 @@ public class Paper {
     }
 
     /**
-     * Get the coordinates of the left side of the content view.
+     * Get the size of the content view.
      * 
-     * @return The coordinates.
+     * @return The size.
      */
-    public int getLeft() {
-        return this.leftPadding;
-    }
-
-    /**
-     * Get the coordinates of the right side of the content view.
-     * 
-     * @return The coordinates.
-     */
-    public int getRight() {
-        return (int) this.rect.getWidth() - this.rightPadding;
+    public Dimension getContentSize() {
+        return new Dimension(getContentRight() - getContentLeft(), getDrawingTop() - getDrawingBottom());
     }
 
     /**
@@ -203,19 +201,10 @@ public class Paper {
     public PDPage createPage() {
         return new PDPage(this.rect);
     }
-
-    /**
-     * Get the size of the content view.
-     * 
-     * @return The size.
-     */
-    public Dimension getContentSize() {
-        return new Dimension(getRight() - getLeft(), getDrawingTop() - getDrawingBottom());
-    }
     
     @Override
     public String toString() {
-    	return String.format("paper:(%s,%s) viewport:(%s,%s)", 
+    	return String.format("paper:(%s,%s) content:(%s,%s)", 
     			this.rect.getWidth(), 
     			this.rect.getHeight(),
     			getContentSize().width,

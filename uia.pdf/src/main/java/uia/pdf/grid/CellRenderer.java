@@ -39,5 +39,5 @@ public interface CellRenderer {
      * @param col Column index.
      * @return height of cell.
      */
-    public int paint(PDPageContentStream contentStream, Point topLeft, AbstractGridView view, ColumnModel cm, Object value, int row, int col);
+    public int paint(PDPageContentStream contentStream, Point topLeft, GridView view, ColumnModel cm, Object value, int row, int col);
 }

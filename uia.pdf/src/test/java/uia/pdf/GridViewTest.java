@@ -20,7 +20,7 @@ import java.io.File;
 
 import org.junit.Test;
 
-import uia.pdf.PDFMaker;
+import uia.pdf.PDFDoc;
 import uia.pdf.SimpleFooterView;
 import uia.pdf.SimpleHeaderView;
 import uia.pdf.grid.SampleEmployee;
@@ -43,15 +43,15 @@ public class GridViewTest {
 		// 1. load layouts for a document
 		GridViewFactory factory1 = GridViewFactory.fromXml("sample/grid/layout.xml");
 
-		// 2. prepare header and footer
-		SimpleHeaderView header = new SimpleHeaderView("UIA4J", 20);
-		SimpleFooterView footer = new SimpleFooterView("UIA4J-0920", "2018-09-20", 11);
+		// 2. new a pdf
+		PDFDoc pdf = new PDFDoc(FontUtils.traditional());
 
-		// 3. new a pdf
-		PDFMaker pdf = new PDFMaker(FontUtils.traditional());
+		// 3. prepare header and footer
+		SimpleHeaderView header = new SimpleHeaderView(pdf, "UIA4J", 20);
+		SimpleFooterView footer = new SimpleFooterView(pdf, "UIA4J-0920", "2018-09-20", 11);
 
 		// 4. add data
-		GridView view = factory1.mainView(pdf, Paper.A4L, "employee");
+		GridView view = factory1.mainView(pdf, Paper.A4L.paddingLR(100, 100), "employee");
 		view.setHeaderView(header);
 		view.setFooterView(footer);
 		view.draw(SampleEmployee.create(), "Employee List", true);
@@ -74,7 +74,7 @@ public class GridViewTest {
         GridViewFactory factory1 = GridViewFactory.fromXml("sample/grid/layout.xml");
 
         // 1. document
-        PDFMaker pdf = new PDFMaker(FontUtils.traditional());
+        PDFDoc pdf = new PDFDoc(FontUtils.traditional());
         
         // 2.1 data: employee
         GridView view1 = factory1.mainView(pdf, Paper.A4, "employee");
@@ -96,12 +96,12 @@ public class GridViewTest {
         GridViewFactory factory1 = GridViewFactory.fromXml("sample/grid/layout.xml");
 
         // 1. document
-        PDFMaker pdf = new PDFMaker(FontUtils.traditional());
+        PDFDoc pdf = new PDFDoc(FontUtils.traditional());
         
         // 2. header & footer
-        SimpleHeaderView header1 = new SimpleHeaderView("Employee List", 20);
-        SimpleHeaderView header2 = new SimpleHeaderView("Project List", 20);
-        SimpleFooterView footer = new SimpleFooterView("DOC-HR-00001", "2015-11-06", 11);
+        SimpleHeaderView header1 = new SimpleHeaderView(pdf, "Employee List", 20);
+        SimpleHeaderView header2 = new SimpleHeaderView(pdf, "Project List", 20);
+        SimpleFooterView footer = new SimpleFooterView(pdf, "DOC-HR-00001", "2015-11-06", 11);
         
         // 3.1 data:employee
         GridView view1 = factory1.mainView(pdf, Paper.A4, "employee");
@@ -133,12 +133,12 @@ public class GridViewTest {
         GridViewFactory factory1 = GridViewFactory.fromXml("sample/grid/layout.xml");
 
         // 1. document
-        PDFMaker pdf = new PDFMaker(FontUtils.traditional());
+        PDFDoc pdf = new PDFDoc(FontUtils.traditional());
         
         // 3. header & footer
-        SimpleFooterView footer = new SimpleFooterView("DOC-HR-00001", "2015-11-06", 11);
-        SimpleHeaderView header1 = new SimpleHeaderView("員工基本資料", 20);
-        SimpleHeaderView header2 = new SimpleHeaderView("專案基本資料", 20);
+        SimpleFooterView footer = new SimpleFooterView(pdf, "DOC-HR-00001", "2015-11-06", 11);
+        SimpleHeaderView header1 = new SimpleHeaderView(pdf, "員工基本資料", 20);
+        SimpleHeaderView header2 = new SimpleHeaderView(pdf, "專案基本資料", 20);
         
         // 3. bookmark group: begin 
         pdf.beginBookmarkGroup("基本資料");
@@ -177,12 +177,12 @@ public class GridViewTest {
         GridViewFactory factory1 = GridViewFactory.fromXml("sample/grid/layout.xml");
 
         // 1. document
-        PDFMaker pdf = new PDFMaker(FontUtils.traditional());
+        PDFDoc pdf = new PDFDoc(FontUtils.traditional());
         
         // 3. header & footer
-        SimpleFooterView footer = new SimpleFooterView("DOC-HR-00001", "2015-11-06", 11);
-        SimpleHeaderView header1 = new SimpleHeaderView("Employee List", 20);
-        SimpleHeaderView header2 = new SimpleHeaderView("Project List", 20);
+        SimpleFooterView footer = new SimpleFooterView(pdf, "DOC-HR-00001", "2015-11-06", 11);
+        SimpleHeaderView header1 = new SimpleHeaderView(pdf, "Employee List", 20);
+        SimpleHeaderView header2 = new SimpleHeaderView(pdf, "Project List", 20);
         
         // 3. bookmark group: begin 
         pdf.beginBookmarkGroup("基本資料");
@@ -224,11 +224,11 @@ public class GridViewTest {
         GridBagFactory factory2 = GridBagFactory.fromXml("sample/gridbag/layout_header_footer.xml");
 
         // 1. document
-        PDFMaker pdf = new PDFMaker(FontUtils.traditional());
+        PDFDoc pdf = new PDFDoc(FontUtils.traditional());
 
         // 2. header & footer
-        GridBagDescriptionView header = factory2.descView("header");
-        GridBagDescriptionView footer = factory2.descView("footer");
+        GridBagDescriptionView header = factory2.descView(pdf, "header");
+        GridBagDescriptionView footer = factory2.descView(pdf, "footer");
 
         // 3.data
         GridView view = factory1.mainView(pdf, Paper.A4L, "employee");

@@ -17,19 +17,14 @@
 package uia.pdf.gridbag;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TreeMap;
 
 import uia.pdf.Layout;
-import uia.pdf.PDFException;
-import uia.pdf.PDFMaker;
+import uia.pdf.PDFDoc;
 import uia.pdf.gridbag.layout.BindCellType;
 import uia.pdf.gridbag.layout.CellType;
 import uia.pdf.gridbag.layout.ColumnType;
 import uia.pdf.gridbag.layout.GridBagType;
 import uia.pdf.gridbag.layout.ImageCellType;
-import uia.pdf.gridbag.layout.LayoutType;
 import uia.pdf.gridbag.layout.RowType;
 import uia.pdf.gridbag.layout.TextCellType;
 import uia.pdf.gridbag.model.BindCell;
@@ -40,40 +35,17 @@ import uia.pdf.gridbag.model.Row;
 import uia.pdf.gridbag.model.TextCell;
 import uia.pdf.papers.Paper;
 
-public class GridBagFactory {
+public abstract class GridBagFactory {
 
-    private final LayoutType layoutType;
-
-    private final TreeMap<String, GridBagType> gbts;
-    
     public static GridBagFactory fromXml(String filename) throws Exception {
-    	return new GridBagFactory(Layout.GRIDBAG_TYPE.fromXml(new File(filename)));
-    }
-
-    GridBagFactory(LayoutType layoutType) {
-        this.layoutType = layoutType;
-        this.gbts = new TreeMap<String, GridBagType>();
-        for (GridBagType gbt : this.layoutType.getGridbag()) {
-            this.gbts.put(gbt.getName(), gbt);
-        }
+    	return new GridBagXmlFactory(Layout.GRIDBAG_TYPE.fromXml(new File(filename)));
     }
     
-    public GridBagView mainView(PDFMaker pdf, Paper paper) throws PDFException {
-    	return new GridBagView(pdf, paper.clone(), createModels());
-    }
+    public abstract GridBagView mainView(PDFDoc pdf, Paper paper);
     
-    public GridBagDescriptionView descView(String name) throws PDFException {
-    	return new GridBagDescriptionView(
-    			createModel(name));
-    }
+    public abstract GridBagDescriptionView descView(PDFDoc pdf, String name);
 
-    public GridBagType getGridBagType(String name) {
-        return this.gbts.get(name);
-    }
-
-    public GridBagModel createModel(String name) {
-    	GridBagType gbt = this.gbts.get(name);
-
+    protected GridBagModel createModel(GridBagType gbt) {
         GridBagModel grid = new GridBagModel(gbt);
 
         // columns
@@ -99,17 +71,14 @@ public class GridBagFactory {
                 }
 
                 Cell cell = null;
-                if (ct instanceof TextCellType) {
-                    cell = new TextCell((TextCellType) ct, grid, rowIndex, cellIndex);
-                }
-                else if (ct instanceof BindCellType) {
+                if (ct instanceof BindCellType) {
                     cell = new BindCell((BindCellType) ct, grid, rowIndex, cellIndex);
                 }
                 else if (ct instanceof ImageCellType) {
                     cell = new ImageCell((ImageCellType) ct, grid, rowIndex, cellIndex);
                 }
                 else {
-                    cell = new Cell(ct, grid, rowIndex, cellIndex);
+                    cell = new TextCell((TextCellType) ct, grid, rowIndex, cellIndex);
                 }
 
                 // handle row & column span
@@ -125,63 +94,5 @@ public class GridBagFactory {
         }
         
         return grid;
-    }
-
-    public List<GridBagModel> createModels() {
-        ArrayList<GridBagModel> grids = new ArrayList<GridBagModel>();
-        for (GridBagType gbt : this.layoutType.getGridbag()) {
-            GridBagModel grid = new GridBagModel(gbt);
-            grids.add(grid);
-
-            // columns
-            int colIndex = 0;
-            for (ColumnType ct : gbt.getColumns().getColumn()) {
-                Column col = new Column(ct, grid, colIndex);
-                grid.columns[colIndex] = col;
-                colIndex++;
-            }
-
-            // rows
-            int rowIndex = 0;
-            for (RowType rt : gbt.getRows().getRow()) {
-                Row row = new Row(rt, grid, rowIndex);
-                grid.rows[rowIndex] = row;
-
-                // cells
-                int cellIndex = 0;
-                for (CellType ct : rt.getTextCellOrBindCellOrImageCell()) {
-                    // handle column span
-                    while (grid.cells[rowIndex][cellIndex] != null) {
-                        cellIndex++;
-                    }
-
-                    Cell cell = null;
-                    if (ct instanceof TextCellType) {
-                        cell = new TextCell((TextCellType) ct, grid, rowIndex, cellIndex);
-                    }
-                    else if (ct instanceof BindCellType) {
-                        cell = new BindCell((BindCellType) ct, grid, rowIndex, cellIndex);
-                    }
-                    else if (ct instanceof ImageCellType) {
-                        cell = new ImageCell((ImageCellType) ct, grid, rowIndex, cellIndex);
-                    }
-                    else {
-                        cell = new Cell(ct, grid, rowIndex, cellIndex);
-                    }
-
-                    // handle row & column span
-                    for (int cs = 0; cs < cell.colspan; cs++) {
-                        for (int rs = 0; rs < cell.rowspan; rs++) {
-                            grid.cells[rowIndex + rs][cellIndex] = cell;
-                        }
-                        cellIndex++;
-                    }
-                }
-
-                rowIndex++;
-            }
-        }
-        
-        return grids;
     }
 }

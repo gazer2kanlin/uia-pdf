@@ -23,7 +23,7 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 public class MyBooleanRenderer extends DefaultCellRenderer {
 
     @Override
-    public int paint(PDPageContentStream contentStream, Point topLeft, AbstractGridView view, ColumnModel cm, Object value, int row, int col) {
+    public int paint(PDPageContentStream contentStream, Point topLeft, GridView view, ColumnModel cm, Object value, int row, int col) {
         if (((Boolean) value).booleanValue()) {
             return super.paint(contentStream, topLeft, view, cm, "Yes", row, col);
         }

@@ -27,17 +27,28 @@ import org.apache.pdfbox.pdmodel.PDPage;
  *
  */
 public abstract class DescriptionView {
+	
+	private final PDFDoc pdf;
 
     private final ArrayList<ContentView> cvs;
 
-    public DescriptionView() {
+    protected DescriptionView(PDFDoc pdf) {
+    	this.pdf = pdf;
         this.cvs = new ArrayList<ContentView>();
     }
 
     public void draw() throws Exception {
         for (ContentView view : this.cvs) {
             for (PDPage page : view.getPages()) {
-                draw(view, page);
+                drawOn(view, page, null);
+            }
+        }
+    }
+
+    public void draw(Object value) throws Exception {
+        for (ContentView view : this.cvs) {
+            for (PDPage page : view.getPages()) {
+                drawOn(view, page, value);
             }
         }
     }
@@ -62,6 +73,10 @@ public abstract class DescriptionView {
         }
         return 0;
     }
+    
+    public PDFDoc getDoc() {
+    	return this.pdf;
+    }
 
     /**
      * Get page count this view handles.
@@ -76,7 +91,7 @@ public abstract class DescriptionView {
         return pc;
     }
 
-    protected abstract void draw(ContentView cv, PDPage page) throws Exception;
+    protected abstract void drawOn(ContentView cv, PDPage page, Object value) throws Exception;
 
     void add(ContentView view) {
         if (!this.cvs.contains(view)) {

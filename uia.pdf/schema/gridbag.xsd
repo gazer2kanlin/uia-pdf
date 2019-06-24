@@ -37,6 +37,7 @@
     	<attribute name="borderEnabled" type="boolean" default="true"></attribute>
     	<attribute name="borderSize" type="float" default="1.0"></attribute>
     	<attribute name="borderColor" type="string" default="0,0,0"></attribute>
+    	<attribute name="bind" type="string"></attribute>
 		<!-- can be replaced by row, cell, column -->			
     	<attribute name="background" type="string"></attribute>
         <attribute name="fontSize" type="int" default="9" />
@@ -102,7 +103,8 @@
         <complexContent>
             <extension base="uia:CellType">
 		    	<sequence>
-		    		<element name="id" type="string"></element>
+		    		<element name="bind" type="string"></element>
+		    		<element name="renderer" type="string"  minOccurs ="0"></element>
 		    	</sequence>
 		    </extension>
 	    </complexContent>

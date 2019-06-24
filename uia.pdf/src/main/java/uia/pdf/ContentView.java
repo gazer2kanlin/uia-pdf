@@ -39,7 +39,7 @@ public abstract class ContentView {
 
     private Date time;
 
-    protected final PDFMaker pdf;
+    protected final PDFDoc pdf;
 
     protected final Paper paper;
 
@@ -54,7 +54,7 @@ public abstract class ContentView {
      * @param pdf PDF maker.
      * @param paper paper.
      */
-    protected ContentView(PDFMaker pdf, Paper paper) {
+    protected ContentView(PDFDoc pdf, Paper paper) {
         this.pdf = pdf;
         this.paper = paper;
         this.pages = new ArrayList<PDPage>();
@@ -132,14 +132,6 @@ public abstract class ContentView {
     }
 
     /**
-     * Get PDF document.
-     * @return PDF document.
-     */
-    public PDFMaker getDoc() {
-        return this.pdf;
-    }
-
-    /**
      * Get paper.
      * @return Paper.
      */
@@ -156,27 +148,12 @@ public abstract class ContentView {
     }
 
     /**
-     * Get left margin coordinate.
-     * @return Left margin coordinate.
-     */
-    public int getLeft() {
-        return this.paper.getLeft();
-    }
-
-    /**
-     * Get right margin coordinate.
-     * @return Right margin coordinate.
-     */
-    public int getRight() {
-        return this.paper.getRight();
-    }
-
-    /**
-     * Get top-left margin coordinate.
-     * @return Top-left coordinate.
+     * Get top-left coordinates for drawing.
+     * 
+     * @return Top-left coordinates.
      */
     public Point getDrawingTopLeft() {
-        return new Point(this.paper.getLeft(), getDrawingTop());
+        return new Point(this.paper.getContentLeft(), getDrawingTop());
     }
 
     /**
@@ -186,10 +163,9 @@ public abstract class ContentView {
     public int getWidth() {
         return this.paper.getContentSize().width;
     }
-    
-    @Override
-    public String toString() {
-    	return String.format("content:(%s,%s)", getWidth(), getHeight());
+
+    public int getHeight() {
+        return this.paper.getDrawingTop() - this.paper.getDrawingBottom();
     }
 
     /**
@@ -202,8 +178,13 @@ public abstract class ContentView {
      */
     public abstract PDPage drawBookmarks(PDPage page, List<PDOutlineItem> ois) throws IOException;
 
-    public int getHeight() {
-        return this.paper.getDrawingTop() - this.paper.getDrawingBottom();
+    public PDFDoc getDoc() {
+        return this.pdf;
+    }
+
+    @Override
+    public String toString() {
+    	return String.format("content:(%s,%s)", getWidth(), getHeight());
     }
 
     protected int getDrawingTop() {

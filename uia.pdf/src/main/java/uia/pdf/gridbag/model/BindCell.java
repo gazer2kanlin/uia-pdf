@@ -22,9 +22,12 @@ import java.util.Map;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 
 import uia.pdf.ContentView;
-import uia.pdf.gridbag.GridBagDrawer;
 import uia.pdf.gridbag.GridBagModel;
 import uia.pdf.gridbag.layout.BindCellType;
+import uia.pdf.renderers.DataBlock;
+import uia.pdf.renderers.DataRenderer;
+import uia.pdf.renderers.TextDataRenderer;
+import uia.utils.PropertyBeanUtils;
 
 /**
  * Binding cell.
@@ -33,25 +36,54 @@ import uia.pdf.gridbag.layout.BindCellType;
  *
  */
 public class BindCell extends Cell {
+	
+	private static final TextDataRenderer TEXT_DATA_RENDERER = new TextDataRenderer();
 
-    public final String id;
+    public final BindCellType bct;
 
     public BindCell(BindCellType bct, GridBagModel grid, int rowIndex, int columnIndex) {
         super(bct, grid, rowIndex, columnIndex);
-        this.id = bct.getId();
+        this.bct = bct;
     }
 
     @Override
-    public void accept(ContentView cv, GridBagDrawer view, PDPageContentStream contentStream, Point bottomLeft, Map<String, Object> data) {
+    public void draw(PDPageContentStream contentStream, Point topLeft, ContentView cv, Object value) {
         try {
-            Object value = data == null ? null : data.get(this.id);
-            if (value == null) {
+        	String bindName = this.bct.getBind();
+        	if(bindName == null || "".equals(bindName)) {
+        		return;
+        		
+        	}
+        	@SuppressWarnings("rawtypes")
+			Object data = value instanceof Map 
+        			? ((Map)value).get(this.bct.getBind()) 
+        			: PropertyBeanUtils.read(value, bct.getBind());
+            if (data == null) {
                 return;
             }
-
-            view.getBindRenderer(this.id, value).paint(contentStream, bottomLeft, cv, this, value);
+            
+            DataBlock block = new DataBlock(
+    				getX(), 
+    				getY(), 
+    				getWidth(), 
+    				getHeight(), 
+    				getFontSize(), 
+    				DataBlock.AlignmentType.valueOf(getAlignment()),
+    				DataBlock.AlignmentType.valueOf(getVAlignment()));
+            
+            String cls = this.bct.getRenderer();
+            DataRenderer renderer = cls == null 
+            		? TEXT_DATA_RENDERER
+            		: (DataRenderer)Class.forName(cls).newInstance();
+            renderer.paint(
+            		contentStream, 
+            		topLeft, 
+            		cv, 
+            		data,
+            		block);
         }
         catch (Exception ex) {
+        	
         }
     }
 
@@ -64,6 +96,6 @@ public class BindCell extends Cell {
                 getY(),
                 getWidth(),
                 getHeight(),
-                this.id);
+                this.bct.getBind());
     }
 }

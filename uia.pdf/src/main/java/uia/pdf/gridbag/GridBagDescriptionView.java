@@ -17,53 +17,37 @@
 package uia.pdf.gridbag;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.TreeMap;
 
 import org.apache.pdfbox.pdmodel.PDPage;
 
 import uia.pdf.ContentView;
 import uia.pdf.DescriptionView;
-import uia.pdf.PDFException;
+import uia.pdf.PDFDoc;
 
+/**
+ * GridBag style description view.
+ * 
+ * @author Kyle K. Lin
+ *
+ */
 public class GridBagDescriptionView extends DescriptionView {
 	
 	private final GridBagModel model;
 
-    private GridBagDrawer bagDrawer;
-
-    private Map<String, Object> data;
-
-    public GridBagDescriptionView(GridBagModel model) throws PDFException {
-        this(model, new TreeMap<String, Object>());
-    }
-
-    public GridBagDescriptionView(GridBagModel model, Map<String, Object> data) throws PDFException {
-        try {
-        	this.model = model;
-            this.bagDrawer = new GridBagDrawer(Arrays.asList(model));
-            this.data = data;
-        }
-        catch (PDFException ex1) {
-            throw ex1;
-        }
-        catch (Exception ex2) {
-            throw new PDFException(ex2.getMessage(), ex2);
-        }
-    }
-
-    public Map<String, Object> getData() {
-        return this.data;
-    }
-
-    public void setData(Map<String, Object> data) {
-        this.data = data;
+	/**
+	 * Constructor.
+	 * 
+	 * @param pdf The PDF.
+	 * @param model The layout model.
+	 */
+    public GridBagDescriptionView(PDFDoc pdf, GridBagModel model) {
+    	super(pdf);
+    	this.model = model;
     }
 
     @Override
-    protected void draw(ContentView cv, PDPage page) throws IOException {
+    protected void drawOn(ContentView cv, PDPage page, Object value) throws IOException {
     	this.model.arrange(0, cv.getWidth(), cv.getHeight());
-        this.bagDrawer.draw(cv, page, this.data);
+    	this.model.drawOn(cv, page, value);
     }
 }

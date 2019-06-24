@@ -17,13 +17,11 @@
 package uia.pdf.gridbag.model;
 
 import java.awt.Point;
-import java.util.Map;
 
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 import uia.pdf.ContentView;
-import uia.pdf.gridbag.GridBagDrawer;
 import uia.pdf.gridbag.GridBagModel;
 import uia.pdf.gridbag.layout.ImageCellType;
 
@@ -43,7 +41,7 @@ public class ImageCell extends Cell {
     }
 
     @Override
-    public void accept(ContentView cv, GridBagDrawer view, PDPageContentStream contentStream, Point bottomLeft, Map<String, Object> data) {
+    public void draw(PDPageContentStream contentStream, Point topLeft, ContentView cv, Object data) {
         PDImageXObject img = null;
         try {
             img = PDImageXObject.createFromFile(
@@ -52,8 +50,8 @@ public class ImageCell extends Cell {
             float pct = (float) getHeight() / (float) img.getHeight();
             contentStream.drawImage(
                     img,
-                    bottomLeft.x,
-                    bottomLeft.y,
+                    topLeft.x,
+                    topLeft.y - getHeight(),
                     img.getWidth() * pct,
                     img.getHeight() * pct);
         }

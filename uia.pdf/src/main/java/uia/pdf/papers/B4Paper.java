@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 uia.pdf
+ * Copyright 2015 uia.pdf
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,34 +14,23 @@
  * limitations under the License.
  */
 
-package uia.pdf.grid;
+package uia.pdf.papers;
 
-import uia.pdf.PDFMaker;
-import uia.pdf.papers.Paper;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
 
 /**
- * Abstract grid view.
+ * Paper of A4 size.
  *
  * @author Kan Lin
  *
  */
-public interface AbstractGridView {
+public final class B4Paper extends Paper {
 
-    /**
-     * Get paper.
-     * @return paper.
-     */
-    public Paper getPaper();
+    public static final int WIDTH = (int) PDRectangle.A4.getHeight();
 
-    /**
-     * Get PDF maker.
-     * @return
-     */
-    public PDFMaker getDoc();
+    public static final int HEIGHT = (int) PDRectangle.A4.getWidth() * 2;
 
-    /**
-     * Get default font size.
-     * @return
-     */
-    public int getFontSize();
+    B4Paper(boolean landscape) {
+        super(landscape ? new PDRectangle(HEIGHT, WIDTH) : new PDRectangle(WIDTH, HEIGHT));
+    }
 }

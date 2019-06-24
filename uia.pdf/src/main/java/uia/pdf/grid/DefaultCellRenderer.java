@@ -38,7 +38,7 @@ public class DefaultCellRenderer implements CellRenderer {
     }
 
     @Override
-    public int paint(PDPageContentStream contentStream, Point topLeft, AbstractGridView view, ColumnModel cm, Object value, int row, int col) {
+    public int paint(PDPageContentStream contentStream, Point topLeft, GridView view, ColumnModel cm, Object value, int row, int col) {
         if (cm.isWrap()) {
             return wrap(contentStream, topLeft, view, cm, value, row, col);
         }
@@ -48,12 +48,12 @@ public class DefaultCellRenderer implements CellRenderer {
 
     }
 
-    private int nowrap(PDPageContentStream contentStream, Point topLeft, AbstractGridView view, ColumnModel cm, Object value, int row, int col) {
+    private int nowrap(PDPageContentStream contentStream, Point topLeft, GridView view, ColumnModel cm, Object value, int row, int col) {
         int h = view.getFontSize();
 
         try {
             PDFont font = view.getDoc().getFont();
-            h = DrawingUtils.getContentHeight("", font, view.getFontSize());
+            h = DrawingUtils.getContentHeight(font, view.getFontSize());
 
             if (cm.getBackground() != null) {
                 contentStream.setNonStrokingColor(cm.getBackground());
@@ -91,12 +91,12 @@ public class DefaultCellRenderer implements CellRenderer {
         return h + 8;
     }
 
-    private int wrap(PDPageContentStream contentStream, Point topLeft, AbstractGridView view, ColumnModel cm, Object value, int row, int col) {
+    private int wrap(PDPageContentStream contentStream, Point topLeft, GridView view, ColumnModel cm, Object value, int row, int col) {
         int h = view.getFontSize();
 
         try {
             PDFont font = view.getDoc().getFont();
-            h = DrawingUtils.getContentHeight("", font, view.getFontSize());
+            h = DrawingUtils.getContentHeight(font, view.getFontSize());
 
             String content = view.getDoc().getValueParserFactory().parse(value);
 
@@ -123,7 +123,7 @@ public class DefaultCellRenderer implements CellRenderer {
                 ht += (h + 8);
             }
 
-            ht += 5;
+            ht += 2;
 
             return ht;
         }

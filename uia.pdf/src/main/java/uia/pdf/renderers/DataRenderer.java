@@ -14,31 +14,25 @@
  * limitations under the License.
  */
 
-package uia.pdf.gridbag;
+package uia.pdf.renderers;
 
 import java.awt.Point;
-import java.io.IOException;
 
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 
 import uia.pdf.ContentView;
-import uia.pdf.gridbag.model.Cell;
 
 /**
  *
  * @author Kan Lin
  *
  */
-public interface GridBagCellRenderer {
+public interface DataRenderer {
 
-    /**
-     *
-     * @param contentStream
-     * @param bottomLeft
-     * @param view
-     * @param cell
-     * @param value
-     * @throws IOException
-     */
-    public void paint(PDPageContentStream contentStream, Point bottomLeft, ContentView view, Cell cell, Object value) throws Exception;
+    public void paint(
+    		PDPageContentStream contentStream, 
+    		Point bottomLeft, 
+    		ContentView view, 
+    		Object data, 
+    		DataBlock block) throws Exception;
 }

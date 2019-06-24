@@ -45,28 +45,36 @@ public class DrawingUtils {
         return widths;
     }
 
-    public static int getContentHeight(String content, PDFont font, int fontSize) {
-        return content == null ? 0 : (int) (font.getFontDescriptor().getAscent() / 1000 * fontSize);
+    public static int getContentAscent(PDFont font, int fontSize) {
+    	float h = font.getFontDescriptor().getAscent();
+        return (int) (fontSize * h / 1000);
+    }
+
+    public static int getContentHeight(PDFont font, int fontSize) {
+    	float h = font.getFontDescriptor().getDescent() + font.getFontDescriptor().getAscent() ;
+        return (int) (h / 1000 * fontSize);
+    }
+
+    public static int getContentDescent(PDFont font, int fontSize) {
+    	float h = font.getFontDescriptor().getDescent();
+        return (int) (fontSize * h / 1000);
     }
 
     public static int getContentWrapHeight(String content, PDFont font, int fontSize, int maxWidth, List<String> splitResult) throws Exception {
+        int h = getContentHeight(font, fontSize);
         if (content == null) {
-            return getContentHeight("", font, fontSize) + 8;
+            return h;
         }
 
         for (int c = 2; c <= content.length(); c++) {
             if (getContentWidth(content.substring(0, c), font, fontSize) >= maxWidth) {
                 splitResult.add(content.substring(0, c - 1));
                 getContentWrapHeight(content.substring(c - 1, content.length()), font, fontSize, maxWidth, splitResult);
-
-                int h = getContentHeight("", font, fontSize);
-                return splitResult.size() * (h + 8);
+                return splitResult.size() * (h + 2);
             }
         }
         splitResult.add(content);
-
-        int h = getContentHeight("", font, fontSize);
-        return splitResult.size() * (h + 8);
+        return splitResult.size() * (h + 2);
     }
 
     /**
