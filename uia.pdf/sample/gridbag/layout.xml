@@ -50,7 +50,7 @@
 					<subtext>Production Date</subtext>
 				</textCell>
 				<bindCell><bind></bind></bindCell>
-				<textCell fontSize="14">
+				<textCell fontSize="12">
 					<text>效期</text>
 					<subtext>Expiry Date</subtext>
 				</textCell>

@@ -35,7 +35,7 @@ GridView
 ```
 ## 說明
 ### <grid\>
-||Element|Description|Multi|
+||Element|Description|multiple|
 |:--:|--|--|--|
 |v|columns|欄位集合|1|
 
@@ -44,7 +44,7 @@ GridView
 |v|name|string|名稱|-|
 
 ### <columns\>
-||Element|Description|Multi|
+||Element|Description|multiple|
 |:--:|--|--|--|
 |v|column|欄位|1..*|
 
@@ -54,7 +54,7 @@ GridView
 ||visible|boolean|表頭是否顯示|true|
 
 ### <column\>
-||Element|Description|Multi|
+||Element|Description|multiple|
 |:--:|--|--|--|
 |v|text|表頭文字|-|
 
@@ -63,5 +63,5 @@ GridView
 |v|width|string|欄寬|-|
 |v|bind|string|聯繫欄位|-|
 ||alignment|string|水平對齊方式 (NEAR, CENTER, FAR)|CENTER|
-||wrap|string|自動換行|false|
-||cellRenderer|string|資料渲染類別<br> 實作 uia.pdf.grid.CellRenderer 或是<br>繼承 uia.pdf.grid.DefaultCellRenderer|-|
+||wrap|boolean|自動換行|false|
+||cellRenderer|string|資料渲染介面<br> 實作 uia.pdf.grid.CellRenderer 或是<br>繼承 uia.pdf.grid.DefaultCellRenderer|-|

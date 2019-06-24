@@ -38,15 +38,15 @@ Source code: __uia.pdf.GridViewTest__
 // 1. load layouts for a document
 GridViewFactory factory1 = GridViewFactory.fromXml("sample/grid/layout.xml");
 
-// 2. prepare header and footer
-SimpleHeaderView header = new SimpleHeaderView("UIA4J", 20);
-SimpleFooterView footer = new SimpleFooterView("UIA4J-0920", "2018-09-20", 11);
+// 2. new a pdf
+PDFDoc pdf = new PDFDoc(FontUtils.traditional());
 
-// 3. new a pdf
-PDFMaker pdf = new PDFMaker(FontUtils.traditional());
+// 3. prepare header and footer
+SimpleHeaderView header = new SimpleHeaderView(pdf, "UIA4J", 20);
+SimpleFooterView footer = new SimpleFooterView(pdf, "UIA4J-0920", "2018-09-20", 11);
 
 // 4. add data
-GridView view = factory1.mainView(pdf, Paper.A4L, "employee");
+GridView view = factory1.mainView(pdf, Paper.A4L.paddingLR(100, 100), "employee");
 view.setHeaderView(header);
 view.setFooterView(footer);
 view.draw(SampleEmployee.create(), "Employee List", true);
@@ -69,15 +69,15 @@ Source code: __uia.pdf.GridBagViewTest__
 GridBagFactory factory1 = GridBagFactory.fromXml("sample/gridbag/layout_header_footer.xml");
 GridBagFactory factory2 = GridBagFactory.fromXml("sample/gridbag/layout.xml");
 
-// 2. header & footer
-GridBagDescriptionView header = factory1.descView("header");
-GridBagDescriptionView footer = factory1.descView("footer");
+// 2. new a PDF
+PDFDoc pdf = new PDFDoc(FontUtils.simplified());
 
-// 3. new a pdf
-PDFMaker pdf = new PDFMaker(FontUtils.simplified());
+// 3. header & footer
+GridBagDescriptionView header = factory1.descView(pdf, "header");
+GridBagDescriptionView footer = factory1.descView(pdf, "footer");
 
 // 4 A4
-GridBagView cv1 = factory2.mainView(pdf, Paper.A4);
+GridBagView cv1 = factory2.mainView(pdf, Paper.A4.paddingTB(100, 100));
 cv1.setHeaderView(header);
 cv1.setFooterView(footer);
 cv1.addPage(prepareData1(), "Inspection Report 1", false);
